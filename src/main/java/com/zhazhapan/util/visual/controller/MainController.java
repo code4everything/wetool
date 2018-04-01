@@ -72,7 +72,7 @@ public class MainController {
                         }
                         break;
                     case LocalValueConsts.FILE_MANAGER:
-                        WeUtils.putFilesInSelectedListViewOfRenameTab(file);
+                        WeUtils.putFilesInListViewOfFileManagerTab(file);
                         break;
                     default:
                         break;
@@ -117,7 +117,7 @@ public class MainController {
                 String tabText = Checker.checkNull(tab.getText());
                 switch (tabText) {
                     case LocalValueConsts.FILE_MANAGER:
-                        WeUtils.putFilesInSelectedListViewOfRenameTab(files);
+                        WeUtils.putFilesInListViewOfFileManagerTab(files);
                         break;
                     default:
                         break;

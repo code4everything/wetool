@@ -1,7 +1,8 @@
 package com.zhazhapan.util.visual.controller;
 
-import com.zhazhapan.config.JsonParser;
-import com.zhazhapan.modules.constant.ValueConsts;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONPath;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.dialog.Alerts;
@@ -41,8 +42,15 @@ public class JsonParserController {
 
     public void parseJson() {
         try {
-            JsonParser jsonParser = new JsonParser(jsonContent.getText(), ValueConsts.FALSE);
-            String parsedJson = jsonParser.getStringUseEval(Checker.checkNull(jsonPath.getText()));
+            JSONArray jsonArray = JSON.parseArray("[" + jsonContent.getText() + "]");
+            String path = jsonPath.getText();
+            Object object = JSONPath.eval(jsonArray, "[0]");
+            String parsedJson;
+            if (Checker.isEmpty(path)) {
+                parsedJson = object.toString();
+            } else {
+                parsedJson = JSONPath.eval(object, (object instanceof JSONArray ? "" : ".") + path).toString();
+            }
             parsedJsonContent.setText(Formatter.formatJson(Checker.checkNull(parsedJson)));
         } catch (Exception e) {
             Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.PARSE_JSON_ERROR);

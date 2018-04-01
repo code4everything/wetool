@@ -6,6 +6,14 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final String MERAGE_FILE_ERROR = "合并文件失败";
+
+    public static final String OPERATION_SUCCESS = "操作成功";
+
+    public static final String SPLIT_FILE_ERROR = "拆分文件失败";
+
+    public static final String COPY_FILE_ERROR = "复制文件失败";
+
     public static final String AFTER_FILENAME = "文件名称之后";
 
     public static final String BEFORE_FILENAME = "文件名称之前";

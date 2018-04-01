@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.*?>
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.zhazhapan.util.visual.controller.FileManagerController">
-    <TabPane prefHeight="272.0" prefWidth="600.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+    <TabPane fx:id="fileManagerTab" prefHeight="272.0" prefWidth="600.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE"
+             VBox.vgrow="ALWAYS">
         <Tab closable="false" text="重命名文件">
             <SplitPane dividerPositions="0.4816666666666667" prefHeight="160.0" prefWidth="200.0">
                 <VBox>
@@ -77,8 +78,8 @@
                                 </padding>
                                 <TextField fx:id="fileAddableText" onKeyReleased="#generateRenameDestFilesOfAddable"
                                            promptText="文本内容" VBox.vgrow="NEVER"/>
-                                <ComboBox fx:id="fileAddableCombo" maxWidth="1.7976931348623157E308"
-                                          prefHeight="27.0" prefWidth="293.0" VBox.vgrow="NEVER">
+                                <ComboBox fx:id="fileAddableCombo" maxWidth="1.7976931348623157E308" prefHeight="27.0"
+                                          prefWidth="293.0" VBox.vgrow="NEVER">
                                     <VBox.margin>
                                         <Insets top="10.0"/>
                                     </VBox.margin>
@@ -103,8 +104,132 @@
                 </padding>
             </SplitPane>
         </Tab>
-        <Tab closable="false" text="复制文件"/>
-        <Tab closable="false" text="拆分文件"/>
-        <Tab closable="false" text="合并文件"/>
+        <Tab closable="false" text="复制文件">
+            <VBox prefHeight="200.0" prefWidth="100.0">
+                <padding>
+                    <Insets left="10.0" right="10.0" top="10.0"/>
+                </padding>
+                <HBox VBox.vgrow="NEVER">
+                    <TextField fx:id="destFolderOfCopyTab" onDragDropped="#dragFileDroppedOfCopyTab"
+                               onDragOver="#dragFileOver" promptText="目标文件夹" HBox.hgrow="ALWAYS"/>
+                    <Button mnemonicParsing="false" onAction="#browseSrcFolder" text="浏览"
+                            HBox.hgrow="NEVER">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                </HBox>
+                <ListView fx:id="selectedFilesOfCopyTab" onDragDropped="#dragFileDroppedOfCopyTab"
+                          onDragOver="#dragFileOver" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets top="10.0"/>
+                    </VBox.margin>
+                    <contextMenu>
+                        <ContextMenu>
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#removeFilesOfCopyTab" text="删除"/>
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                </ListView>
+                <HBox prefHeight="31.0" prefWidth="580.0" VBox.vgrow="NEVER">
+                    <padding>
+                        <Insets bottom="10.0" top="10.0"/>
+                    </padding>
+                    <CheckBox fx:id="isDeleteSrcOfCopyTab" mnemonicParsing="false" text="删除源文件">
+                        <HBox.margin>
+                            <Insets top="5.0"/>
+                        </HBox.margin>
+                    </CheckBox>
+                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#copyFiles"
+                            prefHeight="27.0" prefWidth="368.0" text="批量复制文件" HBox.hgrow="ALWAYS">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                </HBox>
+            </VBox>
+        </Tab>
+        <Tab closable="false" text="拆分文件">
+            <VBox prefHeight="200.0" prefWidth="100.0">
+                <padding>
+                    <Insets left="10.0" right="10.0" top="10.0"/>
+                </padding>
+                <HBox prefHeight="24.0" prefWidth="580.0" VBox.vgrow="NEVER">
+                    <TextField fx:id="destFolderOfSplitTab" onDragDropped="#dragFileDroppedOfSplitTab"
+                               onDragOver="#dragFileOver" promptText="目标文件夹" HBox.hgrow="ALWAYS"/>
+                    <Button mnemonicParsing="false" onAction="#browseSrcFolder" text="浏览"
+                            HBox.hgrow="NEVER">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                </HBox>
+                <TextArea fx:id="fileContent" onDragDropped="#dragFileDroppedOfSplitTab"
+                          onDragOver="#dragFileOver" onMouseClicked="#generateSplitPoint" prefHeight="200.0"
+                          prefWidth="200.0" promptText="文件内容, 可拖曳文件至此" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets top="10.0"/>
+                    </VBox.margin>
+                </TextArea>
+                <TextField fx:id="splitPoint" onMouseClicked="#scrollTo" promptText="拆分点" VBox.vgrow="NEVER">
+                    <VBox.margin>
+                        <Insets top="10.0"/>
+                    </VBox.margin>
+                </TextField>
+                <HBox prefHeight="31.0" prefWidth="580.0">
+                    <padding>
+                        <Insets bottom="10.0" top="10.0"/>
+                    </padding>
+                    <CheckBox fx:id="isDeleteSrcOfSplitTab" mnemonicParsing="false" text="删除源文件">
+                        <HBox.margin>
+                            <Insets top="5.0"/>
+                        </HBox.margin>
+                    </CheckBox>
+                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#splitFile"
+                            prefHeight="27.0" prefWidth="368.0" text="拆分文件" HBox.hgrow="ALWAYS">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                </HBox>
+            </VBox>
+        </Tab>
+        <Tab closable="false" text="合并文件">
+            <VBox prefHeight="200.0" prefWidth="100.0">
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                </padding>
+                <ListView fx:id="selectedFilesOfMergeTab" onDragDropped="#dragFileDropped"
+                          onDragOver="#dragFileOver" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <contextMenu>
+                        <ContextMenu>
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#goForward" text="上移"/>
+                                <MenuItem mnemonicParsing="false" onAction="#goBack" text="下移"/>
+                                <MenuItem mnemonicParsing="false" onAction="#removeFilesOfMergeTab" text="删除"/>
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                </ListView>
+                <HBox prefHeight="23.0" prefWidth="580.0">
+                    <VBox.margin>
+                        <Insets top="10.0"/>
+                    </VBox.margin>
+                    <TextField fx:id="contentFilter" promptText="文本过滤（正则表达式）" HBox.hgrow="ALWAYS"/>
+                    <CheckBox fx:id="deleteSrcOfMergeTab" mnemonicParsing="false" text="删除源文件"
+                              HBox.hgrow="NEVER">
+                        <HBox.margin>
+                            <Insets left="10.0" top="5.0"/>
+                        </HBox.margin>
+                    </CheckBox>
+                    <Button mnemonicParsing="false" onAction="#mergeFiles" text="合并文件" HBox.hgrow="NEVER">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                </HBox>
+            </VBox>
+        </Tab>
     </TabPane>
 </VBox>
