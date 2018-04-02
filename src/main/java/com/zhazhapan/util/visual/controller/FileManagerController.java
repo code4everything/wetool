@@ -179,7 +179,7 @@ public class FileManagerController {
             for (File file : list) {
                 String fn = file.getName().replaceAll(Checker.checkNull(fileQueryStringOfRenameTab.getText()),
                         Checker.checkNull(fileReplaceStringOfRenameTab.getText()));
-                destFiles.add(file.getParent() + ValueConsts.SEPARATOR + fn);
+                destFiles.add(file.getParent() + ValueConsts.SEPARATOR + WeUtils.replaceVariable(fn));
             }
         }
     }

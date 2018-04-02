@@ -28,7 +28,11 @@
                 <Insets left="10.0" right="10.0"/>
             </padding>
             <TextArea fx:id="jsonContent" onDragDropped="#dragFileDropped" onDragOver="#dragFileOver" prefHeight="200.0"
-                      prefWidth="200.0" promptText="可拖曳文件至此" VBox.vgrow="ALWAYS"/>
+                      prefWidth="200.0" promptText="可拖曳文件至此" VBox.vgrow="ALWAYS">
+                <tooltip>
+                    <Tooltip autoHide="true" text="拖曳文件至此"/>
+                </tooltip>
+            </TextArea>
         </VBox>
         <VBox>
             <padding>

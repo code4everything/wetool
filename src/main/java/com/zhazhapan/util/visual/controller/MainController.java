@@ -1,13 +1,12 @@
 package com.zhazhapan.util.visual.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ReflectUtils;
 import com.zhazhapan.util.dialog.Alerts;
-import com.zhazhapan.util.visual.WeToolApplication;
 import com.zhazhapan.util.visual.WeUtils;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
+import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,6 +15,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -24,26 +24,26 @@ import java.util.List;
  */
 public class MainController {
 
-    private static final String TAB_PATH = "initialize.tabs.load";
-
     @FXML
     public TabPane tabPane;
 
     @FXML
     private void initialize() {
-        try {
-            JSONArray array = WeToolApplication.config.getArray(TAB_PATH);
-            for (Object tabName : array) {
+        for (Object tabName : ConfigModel.getTabs()) {
+            try {
                 ReflectUtils.invokeMethod(this, "open" + tabName + "Tab", null);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.FXML_LOAD_ERROR);
             }
-        } catch (Exception e) {
-            openJsonParserTab();
-            openFileManagerTab();
         }
     }
 
     public void quit() {
         WeUtils.exitSystem();
+    }
+
+    public void openRandomGeneratorTab() {
+        addTab(new Tab(LocalValueConsts.RANDOM_GENERATOR), LocalValueConsts.RANDOM_GENERATOR_VIEW);
     }
 
     public void openJsonParserTab() {
@@ -149,5 +149,9 @@ public class MainController {
 
     public void about() {
         Alerts.showInformation(LocalValueConsts.MAIN_TITLE, LocalValueConsts.ABOUT_APP, LocalValueConsts.ABOUT_DETAIL);
+    }
+
+    public void closeAllTab() {
+        tabPane.getTabs().clear();
     }
 }

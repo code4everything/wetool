@@ -11,11 +11,13 @@
             <MenuItem mnemonicParsing="false" text="批量打开" onAction="#openMultiFile"/>
             <MenuItem mnemonicParsing="false" text="保存" onAction="#saveFile"/>
             <!--<MenuItem mnemonicParsing="false" text="设置"/>-->
+            <MenuItem mnemonicParsing="false" text="关闭所有标签" onAction="#closeAllTab"/>
             <MenuItem mnemonicParsing="false" onAction="#quit" text="退出"/>
         </Menu>
         <Menu mnemonicParsing="false" text="工具">
             <MenuItem mnemonicParsing="false" onAction="#openJsonParserTab" text="JSON解析"/>
             <MenuItem mnemonicParsing="false" onAction="#openFileManagerTab" text="文件批处理"/>
+            <MenuItem mnemonicParsing="false" onAction="#openRandomGeneratorTab" text="随机生成器"/>
         </Menu>
         <Menu mnemonicParsing="false" text="帮助">
             <MenuItem mnemonicParsing="false" text="关于" onAction="#about"/>

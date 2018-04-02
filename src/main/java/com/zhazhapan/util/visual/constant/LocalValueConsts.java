@@ -6,6 +6,12 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final String RANDOM_GENERATOR_VIEW = "/view/RandomGeneratorView.fxml";
+
+    public static final String RANDOM_GENERATOR = "随机生成器";
+
+    public static final String FILE_NOT_MATCH = "文件不匹配";
+
     public static final String CONFIG_PATH = "/config.json";
 
     public static final String LOAD_CONFIG_ERROR = "加载配置文件失败";

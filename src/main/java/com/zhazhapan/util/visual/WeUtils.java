@@ -8,6 +8,7 @@ import com.zhazhapan.util.Utils;
 import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.controller.FileManagerController;
+import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -19,12 +20,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import static com.zhazhapan.util.visual.WeToolApplication.stage;
 
 /**
  * @author pantao
  * @since 2018/3/31
  */
 public class WeUtils {
+
+    private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
 
     public static void mergeFiles(ObservableList<File> fileObservableList, String filter, boolean isDelete) {
         if (Checker.isNotEmpty(fileObservableList)) {
@@ -104,6 +110,11 @@ public class WeUtils {
         return result > -1 ? result : 0;
     }
 
+    public static double stringToDouble(String digit) {
+        double result = Formatter.stringToDouble(digit);
+        return result < 0 ? 0 : result;
+    }
+
     @SuppressWarnings("unchecked")
     public static void putFilesInListViewOfFileManagerTab(Object files) {
         FileManagerController fileManagerController = ControllerModel.getFileManagerController();
@@ -158,10 +169,15 @@ public class WeUtils {
     @SuppressWarnings("unchecked")
     private static void putFilesInListView(File file, ObservableList items) {
         if (Checker.isNotNull(file)) {
-            if (file.isDirectory()) {
-                putFilesInListView((List<File>) FileExecutor.listFiles(file, null, ValueConsts.TRUE), items);
-            } else if (!items.contains(file)) {
-                items.add(file);
+            if (FILE_FILTER.matcher(file.getName()).matches()) {
+                if (file.isDirectory()) {
+                    putFilesInListView((List<File>) FileExecutor.listFiles(file, null, ValueConsts.TRUE), items);
+                } else if (!items.contains(file)) {
+                    items.add(file);
+                }
+            } else if (ConfigModel.isFileFilterTip()) {
+                Alerts.showInformation(LocalValueConsts.MAIN_TITLE, LocalValueConsts.FILE_NOT_MATCH, file
+                        .getAbsolutePath());
             }
         }
     }
@@ -186,15 +202,15 @@ public class WeUtils {
     }
 
     public static File getSaveFile() {
-        return getFileChooser().showSaveDialog(WeToolApplication.stage);
+        return getFileChooser().showSaveDialog(stage);
     }
 
     public static List<File> getChooseFiles() {
-        return getFileChooser().showOpenMultipleDialog(WeToolApplication.stage);
+        return getFileChooser().showOpenMultipleDialog(stage);
     }
 
     public static File getChooseFile() {
-        return getFileChooser().showOpenDialog(WeToolApplication.stage);
+        return getFileChooser().showOpenDialog(stage);
     }
 
     private static FileChooser getFileChooser() {
