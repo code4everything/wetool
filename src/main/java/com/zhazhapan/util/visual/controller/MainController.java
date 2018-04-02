@@ -1,8 +1,11 @@
 package com.zhazhapan.util.visual.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
+import com.zhazhapan.util.ReflectUtils;
 import com.zhazhapan.util.dialog.Alerts;
+import com.zhazhapan.util.visual.WeToolApplication;
 import com.zhazhapan.util.visual.WeUtils;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ControllerModel;
@@ -21,20 +24,29 @@ import java.util.List;
  */
 public class MainController {
 
+    private static final String TAB_PATH = "initialize.tabs.load";
+
     @FXML
     public TabPane tabPane;
 
     @FXML
     private void initialize() {
-        openParseJsonTab();
-        openFileManagerTab();
+        try {
+            JSONArray array = WeToolApplication.config.getArray(TAB_PATH);
+            for (Object tabName : array) {
+                ReflectUtils.invokeMethod(this, "open" + tabName + "Tab", null);
+            }
+        } catch (Exception e) {
+            openJsonParserTab();
+            openFileManagerTab();
+        }
     }
 
     public void quit() {
         WeUtils.exitSystem();
     }
 
-    public void openParseJsonTab() {
+    public void openJsonParserTab() {
         addTab(new Tab(LocalValueConsts.JSON_PARSER), LocalValueConsts.JSON_PARSER_VIEW);
     }
 

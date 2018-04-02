@@ -1,6 +1,17 @@
 {
     "initialize": {
         "width": 1000,
-        "height": 700
+        "height": 700,
+        "tabs": {
+            "load": [
+                "JsonParser",
+                "FileManager"
+            ],
+            "support": [
+                "FileManager",
+                "JsonParser",
+                "RandomGenerator"
+            ]
+        }
     }
 }

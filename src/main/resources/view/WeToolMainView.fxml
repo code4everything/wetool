@@ -14,7 +14,7 @@
             <MenuItem mnemonicParsing="false" onAction="#quit" text="退出"/>
         </Menu>
         <Menu mnemonicParsing="false" text="工具">
-            <MenuItem mnemonicParsing="false" onAction="#openParseJsonTab" text="JSON解析"/>
+            <MenuItem mnemonicParsing="false" onAction="#openJsonParserTab" text="JSON解析"/>
             <MenuItem mnemonicParsing="false" onAction="#openFileManagerTab" text="文件批处理"/>
         </Menu>
         <Menu mnemonicParsing="false" text="帮助">
