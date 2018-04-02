@@ -10,7 +10,7 @@
             <MenuItem mnemonicParsing="false" text="打开" onAction="#openFile"/>
             <MenuItem mnemonicParsing="false" text="批量打开" onAction="#openMultiFile"/>
             <MenuItem mnemonicParsing="false" text="保存" onAction="#saveFile"/>
-            <MenuItem mnemonicParsing="false" text="设置"/>
+            <!--<MenuItem mnemonicParsing="false" text="设置"/>-->
             <MenuItem mnemonicParsing="false" onAction="#quit" text="退出"/>
         </Menu>
         <Menu mnemonicParsing="false" text="工具">
@@ -18,7 +18,7 @@
             <MenuItem mnemonicParsing="false" onAction="#openFileManagerTab" text="文件批处理"/>
         </Menu>
         <Menu mnemonicParsing="false" text="帮助">
-            <MenuItem mnemonicParsing="false" text="关于"/>
+            <MenuItem mnemonicParsing="false" text="关于" onAction="#about"/>
         </Menu>
     </MenuBar>
     <TabPane VBox.vgrow="ALWAYS" fx:id="tabPane">

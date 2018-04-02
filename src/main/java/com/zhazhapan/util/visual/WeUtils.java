@@ -41,7 +41,7 @@ public class WeUtils {
                 }
                 showSuccessInfo();
             } catch (IOException e) {
-                Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.MERAGE_FILE_ERROR);
+                Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.MERGE_FILE_ERROR);
             }
         }
     }

@@ -6,7 +6,16 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
-    public static final String MERAGE_FILE_ERROR = "合并文件失败";
+    public static final String CONFIG_PATH = "/config.json";
+
+    public static final String LOAD_CONFIG_ERROR = "加载配置文件失败";
+
+    public static final String ABOUT_DETAIL = "当前版本：V1.0\r\n\r\n项目地址：https://github" + "" + "" + "" + "" + "" + "" +
+            ".com/zhazhapan/wetool\r\n\r\n项目依赖：\r\n\tcom.zhazhapan.util: v1.0.6\r\n\tcn.hutool: v4.0.9";
+
+    public static final String ABOUT_APP = "关于应用";
+
+    public static final String MERGE_FILE_ERROR = "合并文件失败";
 
     public static final String OPERATION_SUCCESS = "操作成功";
 
@@ -50,5 +59,5 @@ public class LocalValueConsts {
 
     public static final String JSON_PARSER = "JSON解析器";
 
-    public static final String MAIN_TITLE = "Visual Util Tool";
+    public static final String MAIN_TITLE = "Visual Commons Tool";
 }

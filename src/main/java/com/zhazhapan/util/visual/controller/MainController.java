@@ -95,6 +95,15 @@ public class MainController {
                             fileContent = jsonParserController.parsedJsonContent.getText();
                         }
                         break;
+                    case LocalValueConsts.FILE_MANAGER:
+                        FileManagerController fileManagerController = ControllerModel.getFileManagerController();
+                        if (Checker.isNotNull(fileManagerController)) {
+                            int idx = fileManagerController.fileManagerTab.getSelectionModel().getSelectedIndex();
+                            if (idx == ValueConsts.TWO_INT) {
+                                fileContent = fileManagerController.fileContent.getText();
+                            }
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -124,5 +133,9 @@ public class MainController {
                 }
             }
         }
+    }
+
+    public void about() {
+        Alerts.showInformation(LocalValueConsts.MAIN_TITLE, LocalValueConsts.ABOUT_APP, LocalValueConsts.ABOUT_DETAIL);
     }
 }

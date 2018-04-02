@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.zhazhapan.util.visual.controller.RandomGeneratorController"
+      prefHeight="400.0" prefWidth="600.0">
+
+</VBox>
