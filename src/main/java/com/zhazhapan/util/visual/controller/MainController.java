@@ -42,6 +42,10 @@ public class MainController {
         WeUtils.exitSystem();
     }
 
+    public void openClipboardHistoryTab() {
+        addTab(new Tab(LocalValueConsts.CLIPBOARD_HISTORY), LocalValueConsts.CLIPBOARD_HISTORY_VIEW);
+    }
+
     public void openRandomGeneratorTab() {
         addTab(new Tab(LocalValueConsts.RANDOM_GENERATOR), LocalValueConsts.RANDOM_GENERATOR_VIEW);
     }

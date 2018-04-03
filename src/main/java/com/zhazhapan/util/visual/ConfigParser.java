@@ -25,6 +25,8 @@ public class ConfigParser {
 
     private static final String TAB_PATH = "initialize.tabs.load";
 
+    private static final String CLIPBOARD_SIZE_PATH = "clipboardSize";
+
     public static void parserConfig() {
         try {
             JsonParser parser = new JsonParser(FileExecutor.read(WeToolApplication.class.getResourceAsStream
@@ -34,6 +36,7 @@ public class ConfigParser {
             ConfigModel.setTabs(parser.getArray(TAB_PATH));
             ConfigModel.setFileFilterRegex(parser.getString(FILE_REGEX_PATH));
             ConfigModel.setFileFilterTip(parser.getBooleanUseEval(FILE_FILTER_TIP_PATH));
+            ConfigModel.setClipboardSize(parser.getIntegerUseEval(CLIPBOARD_SIZE_PATH));
         } catch (IOException e) {
             Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.LOAD_CONFIG_ERROR);
         }

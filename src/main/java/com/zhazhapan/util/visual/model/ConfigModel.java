@@ -2,6 +2,9 @@ package com.zhazhapan.util.visual.model;
 
 import com.alibaba.fastjson.JSONArray;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
+
 /**
  * @author pantao
  * @since 2018/4/2
@@ -18,10 +21,23 @@ public class ConfigModel {
 
     private static boolean fileFilterTip = true;
 
+    private static int clipboardSize = 20;
+
+    public static Queue<String> clipboardHistoryQueue = new PriorityQueue<>();
+
+    public static int getClipboardSize() {
+        return clipboardSize;
+    }
+
+    public static void setClipboardSize(int clipboardSize) {
+        ConfigModel.clipboardSize = clipboardSize;
+    }
+
     static {
         tabs.add("JsonParser");
         tabs.add("FileManager");
         tabs.add("RandomGenerator");
+        tabs.add("ClipboardHistory");
     }
 
     public static double getWidth() {

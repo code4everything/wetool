@@ -6,6 +6,10 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final String CLIPBOARD_HISTORY_VIEW = "/view/ClipboardHistoryView.fxml";
+
+    public static final String CLIPBOARD_HISTORY = "剪贴板历史";
+
     public static final String RANDOM_GENERATOR_VIEW = "/view/RandomGeneratorView.fxml";
 
     public static final String RANDOM_GENERATOR = "随机生成器";

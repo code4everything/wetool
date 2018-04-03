@@ -18,6 +18,7 @@
             <MenuItem mnemonicParsing="false" onAction="#openJsonParserTab" text="JSON解析"/>
             <MenuItem mnemonicParsing="false" onAction="#openFileManagerTab" text="文件批处理"/>
             <MenuItem mnemonicParsing="false" onAction="#openRandomGeneratorTab" text="随机生成器"/>
+            <MenuItem mnemonicParsing="false" onAction="#openClipboardHistoryTab" text="剪贴板历史"/>
         </Menu>
         <Menu mnemonicParsing="false" text="帮助">
             <MenuItem mnemonicParsing="false" text="关于" onAction="#about"/>

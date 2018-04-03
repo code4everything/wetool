@@ -1,5 +1,6 @@
 package com.zhazhapan.util.visual.model;
 
+import com.zhazhapan.util.visual.controller.ClipboardHistoryController;
 import com.zhazhapan.util.visual.controller.FileManagerController;
 import com.zhazhapan.util.visual.controller.JsonParserController;
 
@@ -12,6 +13,16 @@ public class ControllerModel {
     private static JsonParserController jsonParserController = null;
 
     private static FileManagerController fileManagerController = null;
+
+    private static ClipboardHistoryController clipboardHistoryController = null;
+
+    public static ClipboardHistoryController getClipboardHistoryController() {
+        return clipboardHistoryController;
+    }
+
+    public static void setClipboardHistoryController(ClipboardHistoryController clipboardHistoryController) {
+        ControllerModel.clipboardHistoryController = clipboardHistoryController;
+    }
 
     public static FileManagerController getFileManagerController() {
         return fileManagerController;
