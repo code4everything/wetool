@@ -1,5 +1,6 @@
 package com.zhazhapan.util.visual.controller;
 
+import cn.hutool.core.util.ClipboardUtil;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ReflectUtils;
@@ -8,6 +9,7 @@ import com.zhazhapan.util.visual.WeUtils;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
@@ -16,7 +18,10 @@ import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author pantao
@@ -29,6 +34,34 @@ public class MainController {
 
     @FXML
     private void initialize() {
+        // 监听剪贴板
+        ConfigModel.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                String clipboard = ClipboardUtil.getStr();
+                String last = ConfigModel.getLastClipboardHistoryItem().getValue();
+                if (Checker.isNotEmpty(clipboard) && !last.equals(clipboard)) {
+                    Date date = new Date();
+                    ConfigModel.appendClipboardHistory(date, clipboard);
+                    Platform.runLater(() -> {
+                        for (Tab tab : tabPane.getTabs()) {
+                            if (LocalValueConsts.CLIPBOARD_HISTORY.equals(tab.getText())) {
+                                ClipboardHistoryController controller = ControllerModel.getClipboardHistoryController();
+                                if (Checker.isNotNull(controller)) {
+                                    controller.insert(date, clipboard);
+                                }
+                                break;
+                            }
+                        }
+                    });
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(task, LocalValueConsts.ONE_THOUSAND, LocalValueConsts.ONE_THOUSAND);
+
+        // 打开页面
         for (Object tabName : ConfigModel.getTabs()) {
             try {
                 ReflectUtils.invokeMethod(this, "open" + tabName + "Tab", null);

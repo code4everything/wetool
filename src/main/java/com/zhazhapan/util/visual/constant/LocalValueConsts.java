@@ -6,6 +6,8 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final int ONE_THOUSAND = 1000;
+
     public static final String CLIPBOARD_HISTORY_VIEW = "/view/ClipboardHistoryView.fxml";
 
     public static final String CLIPBOARD_HISTORY = "剪贴板历史";

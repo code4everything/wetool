@@ -1,15 +1,23 @@
 package com.zhazhapan.util.visual.model;
 
+import cn.hutool.core.util.ClipboardUtil;
 import com.alibaba.fastjson.JSONArray;
+import com.zhazhapan.modules.constant.ValueConsts;
+import com.zhazhapan.util.Checker;
+import javafx.util.Pair;
 
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author pantao
  * @since 2018/4/2
  */
 public class ConfigModel {
+
+    private static List<Pair<Date, String>> clipboardHistory = new LinkedList<>();
 
     private static double width = 1000;
 
@@ -23,21 +31,40 @@ public class ConfigModel {
 
     private static int clipboardSize = 20;
 
-    public static Queue<String> clipboardHistoryQueue = new PriorityQueue<>();
-
-    public static int getClipboardSize() {
-        return clipboardSize;
-    }
-
-    public static void setClipboardSize(int clipboardSize) {
-        ConfigModel.clipboardSize = clipboardSize;
-    }
-
     static {
         tabs.add("JsonParser");
         tabs.add("FileManager");
         tabs.add("RandomGenerator");
         tabs.add("ClipboardHistory");
+    }
+
+    public static int getClipboardHistorySize() {
+        return clipboardHistory.size();
+    }
+
+    public static void appendClipboardHistory(Date date, String content) {
+        if (getClipboardHistorySize() < clipboardSize) {
+            clipboardHistory.add(new Pair<>(date, Checker.checkNull(content)));
+        } else {
+            clipboardHistory.remove(ValueConsts.ZERO_INT);
+            appendClipboardHistory(date, content);
+        }
+    }
+
+    public static Pair<Date, String> getLastClipboardHistoryItem() {
+        Optional<Pair<Date, String>> last = Optional.ofNullable(getClipboardHistoryItem(getClipboardHistorySize() - 1));
+        return last.orElse(new Pair<>(new Date(), Checker.checkNull(ClipboardUtil.getStr())));
+    }
+
+    public static Pair<Date, String> getClipboardHistoryItem(int index) {
+        if (index >= 0 && index < clipboardSize) {
+            return clipboardHistory.get(index);
+        }
+        return null;
+    }
+
+    public static void setClipboardSize(int clipboardSize) {
+        ConfigModel.clipboardSize = clipboardSize;
     }
 
     public static double getWidth() {
