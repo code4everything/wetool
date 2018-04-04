@@ -77,6 +77,10 @@ public class MainController {
         WeUtils.exitSystem();
     }
 
+    public void openCharsetConverterTab() {
+        addTab(new Tab(LocalValueConsts.CHARSET_CONVERTER), LocalValueConsts.CHARSET_CONVERTER_VIEW);
+    }
+
     public void openClipboardHistoryTab() {
         addTab(new Tab(LocalValueConsts.CLIPBOARD_HISTORY), LocalValueConsts.CLIPBOARD_HISTORY_VIEW);
     }
@@ -135,6 +139,13 @@ public class MainController {
                         if (Checker.isNotNull(qrCodeGeneratorController)) {
                             qrCodeGeneratorController.content.setText(fileContent);
                         }
+                    case LocalValueConsts.CHARSET_CONVERTER:
+                        CharsetConverterController charsetConverterController = ControllerModel
+                                .getCharsetConverterController();
+                        if (Checker.isNotNull(charsetConverterController)) {
+                            charsetConverterController.originalContent.setText(fileContent);
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -170,6 +181,13 @@ public class MainController {
                                 .getClipboardHistoryController();
                         if (Checker.isNotNull(clipboardHistoryController)) {
                             fileContent = clipboardHistoryController.clipboardHistory.getText();
+                        }
+                        break;
+                    case LocalValueConsts.CHARSET_CONVERTER:
+                        CharsetConverterController charsetConverterController = ControllerModel
+                                .getCharsetConverterController();
+                        if (Checker.isNotNull(charsetConverterController)) {
+                            fileContent = charsetConverterController.convertedContent.getText();
                         }
                         break;
                     default:

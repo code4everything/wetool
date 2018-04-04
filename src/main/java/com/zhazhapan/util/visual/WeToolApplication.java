@@ -60,7 +60,9 @@ public class WeToolApplication extends Application {
         stage.setFullScreen(ConfigModel.isFullscreen());
         ControllerModel.getMainController().loadTabs();
         WeToolApplication.stage = stage;
-        enableTray();
+        if (Checker.isWindows()) {
+            enableTray();
+        }
         stage.show();
     }
 

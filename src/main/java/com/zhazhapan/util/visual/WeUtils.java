@@ -13,6 +13,8 @@ import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.DragEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
@@ -31,6 +33,13 @@ import static com.zhazhapan.util.visual.WeToolApplication.stage;
 public class WeUtils {
 
     private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
+
+    public static void putDragFileInTextArea(TextArea textArea, DragEvent event) {
+        List<File> files = event.getDragboard().getFiles();
+        if (Checker.isNotEmpty(files)) {
+            textArea.setText(readFile(files.get(0)));
+        }
+    }
 
     public static void mergeFiles(ObservableList<File> fileObservableList, String filter, boolean isDelete) {
         if (Checker.isNotEmpty(fileObservableList)) {

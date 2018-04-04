@@ -20,6 +20,7 @@
             <MenuItem mnemonicParsing="false" onAction="#openRandomGeneratorTab" text="随机生成器"/>
             <MenuItem mnemonicParsing="false" onAction="#openClipboardHistoryTab" text="剪贴板历史"/>
             <MenuItem mnemonicParsing="false" onAction="#openQrCodeGeneratorTab" text="二维码生成器"/>
+            <MenuItem mnemonicParsing="false" onAction="#openCharsetConverterTab" text="编码转换器"/>
         </Menu>
         <Menu mnemonicParsing="false" text="帮助">
             <MenuItem mnemonicParsing="false" text="关于" onAction="#about"/>

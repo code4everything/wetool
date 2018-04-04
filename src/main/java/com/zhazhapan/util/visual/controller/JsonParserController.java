@@ -17,9 +17,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 
-import java.io.File;
-import java.util.List;
-
 /**
  * @author pantao
  * @since 2018/3/31
@@ -66,10 +63,7 @@ public class JsonParserController {
     }
 
     public void dragFileDropped(DragEvent event) {
-        List<File> files = event.getDragboard().getFiles();
-        if (Checker.isNotEmpty(files)) {
-            jsonContent.setText(WeUtils.readFile(files.get(0)));
-        }
+        WeUtils.putDragFileInTextArea(jsonContent, event);
     }
 
     public void jsonPathEnter(KeyEvent keyEvent) {

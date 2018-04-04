@@ -18,6 +18,16 @@ public class ControllerModel {
 
     private static QrCodeGeneratorController qrCodeGeneratorController = null;
 
+    private static CharsetConverterController charsetConverterController = null;
+
+    public static CharsetConverterController getCharsetConverterController() {
+        return charsetConverterController;
+    }
+
+    public static void setCharsetConverterController(CharsetConverterController charsetConverterController) {
+        ControllerModel.charsetConverterController = charsetConverterController;
+    }
+
     public static QrCodeGeneratorController getQrCodeGeneratorController() {
         return qrCodeGeneratorController;
     }

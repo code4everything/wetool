@@ -33,20 +33,21 @@ public class ConfigModel {
 
     private static boolean fullscreen = false;
 
-    public static boolean isFullscreen() {
-        return fullscreen;
-    }
-
-    public static void setFullscreen(boolean fullscreen) {
-        ConfigModel.fullscreen = fullscreen;
-    }
-
     static {
         tabs.add("JsonParser");
         tabs.add("FileManager");
         tabs.add("RandomGenerator");
         tabs.add("ClipboardHistory");
         tabs.add("QrCodeGenerator");
+        tabs.add("CharsetConverter");
+    }
+
+    public static boolean isFullscreen() {
+        return fullscreen;
+    }
+
+    public static void setFullscreen(boolean fullscreen) {
+        ConfigModel.fullscreen = fullscreen;
     }
 
     public static int getClipboardHistorySize() {

@@ -9,14 +9,16 @@
                 "FileManager",
                 "RandomGenerator",
                 "ClipboardHistory",
-                "QrCodeGenerator"
+                "QrCodeGenerator",
+                "CharsetConverter"
             ],
             "support": [
                 "FileManager",
                 "JsonParser",
                 "RandomGenerator",
                 "ClipboardHistory",
-                "QrCodeGenerator"
+                "QrCodeGenerator",
+                "CharsetConverter"
             ]
         }
     },
