@@ -2,6 +2,7 @@
     "initialize": {
         "width": 1000,
         "height": 700,
+        "fullscreen": false,
         "tabs": {
             "load": [
                 "JsonParser",

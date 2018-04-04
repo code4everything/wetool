@@ -6,6 +6,14 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final String TRAY_ERROR = "设置系统托盘失败";
+
+    public static final String HIDE = "hide";
+
+    public static final String SHOW = "show";
+
+    public static final String EXIT = "exit";
+
     public static final int ONE_THOUSAND = 1000;
 
     public static final String CLIPBOARD_HISTORY_VIEW = "/view/ClipboardHistoryView.fxml";

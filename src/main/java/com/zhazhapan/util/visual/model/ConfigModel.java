@@ -31,6 +31,16 @@ public class ConfigModel {
 
     private static int clipboardSize = 20;
 
+    private static boolean fullscreen = false;
+
+    public static boolean isFullscreen() {
+        return fullscreen;
+    }
+
+    public static void setFullscreen(boolean fullscreen) {
+        ConfigModel.fullscreen = fullscreen;
+    }
+
     static {
         tabs.add("JsonParser");
         tabs.add("FileManager");

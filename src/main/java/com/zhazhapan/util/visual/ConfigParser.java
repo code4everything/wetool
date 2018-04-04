@@ -1,15 +1,11 @@
 package com.zhazhapan.util.visual;
 
-import cn.hutool.core.util.ClipboardUtil;
 import com.zhazhapan.config.JsonParser;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.FileExecutor;
 import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ConfigModel;
-
-import java.io.IOException;
-import java.util.Date;
 
 /**
  * @author pantao
@@ -29,6 +25,8 @@ public class ConfigParser {
 
     private static final String CLIPBOARD_SIZE_PATH = "clipboardSize";
 
+    private static final String FULLSCREEN = "initialize.fullscreen";
+
     public static void parserConfig() {
         try {
             JsonParser parser = new JsonParser(FileExecutor.read(WeToolApplication.class.getResourceAsStream
@@ -39,7 +37,8 @@ public class ConfigParser {
             ConfigModel.setFileFilterRegex(parser.getString(FILE_REGEX_PATH));
             ConfigModel.setFileFilterTip(parser.getBooleanUseEval(FILE_FILTER_TIP_PATH));
             ConfigModel.setClipboardSize(parser.getIntegerUseEval(CLIPBOARD_SIZE_PATH));
-        } catch (IOException e) {
+            ConfigModel.setFullscreen(parser.getBooleanUseEval(FULLSCREEN));
+        } catch (Exception e) {
             Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.LOAD_CONFIG_ERROR);
         }
     }
