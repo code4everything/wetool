@@ -60,8 +60,10 @@ public class MainController {
             }
         };
         timer.scheduleAtFixedRate(task, LocalValueConsts.ONE_THOUSAND, LocalValueConsts.ONE_THOUSAND);
+        ControllerModel.setMainController(this);
+    }
 
-        // 打开页面
+    public void loadTabs() {
         for (Object tabName : ConfigModel.getTabs()) {
             try {
                 ReflectUtils.invokeMethod(this, "open" + tabName + "Tab", null);
@@ -81,6 +83,10 @@ public class MainController {
 
     public void openRandomGeneratorTab() {
         addTab(new Tab(LocalValueConsts.RANDOM_GENERATOR), LocalValueConsts.RANDOM_GENERATOR_VIEW);
+    }
+
+    public void openQrCodeGeneratorTab() {
+        addTab(new Tab(LocalValueConsts.QR_CODE_GENERATOR), LocalValueConsts.QR_CODE_GENERATOR_VIEW);
     }
 
     public void openJsonParserTab() {
@@ -123,6 +129,12 @@ public class MainController {
                     case LocalValueConsts.FILE_MANAGER:
                         WeUtils.putFilesInListViewOfFileManagerTab(file);
                         break;
+                    case LocalValueConsts.QR_CODE_GENERATOR:
+                        QrCodeGeneratorController qrCodeGeneratorController = ControllerModel
+                                .getQrCodeGeneratorController();
+                        if (Checker.isNotNull(qrCodeGeneratorController)) {
+                            qrCodeGeneratorController.content.setText(fileContent);
+                        }
                     default:
                         break;
                 }
@@ -151,6 +163,13 @@ public class MainController {
                             if (idx == ValueConsts.TWO_INT) {
                                 fileContent = fileManagerController.fileContent.getText();
                             }
+                        }
+                        break;
+                    case LocalValueConsts.CLIPBOARD_HISTORY:
+                        ClipboardHistoryController clipboardHistoryController = ControllerModel
+                                .getClipboardHistoryController();
+                        if (Checker.isNotNull(clipboardHistoryController)) {
+                            fileContent = clipboardHistoryController.clipboardHistory.getText();
                         }
                         break;
                     default:

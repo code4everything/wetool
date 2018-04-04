@@ -1,8 +1,6 @@
 package com.zhazhapan.util.visual.model;
 
-import com.zhazhapan.util.visual.controller.ClipboardHistoryController;
-import com.zhazhapan.util.visual.controller.FileManagerController;
-import com.zhazhapan.util.visual.controller.JsonParserController;
+import com.zhazhapan.util.visual.controller.*;
 
 /**
  * @author pantao
@@ -15,6 +13,26 @@ public class ControllerModel {
     private static FileManagerController fileManagerController = null;
 
     private static ClipboardHistoryController clipboardHistoryController = null;
+
+    private static MainController mainController = null;
+
+    private static QrCodeGeneratorController qrCodeGeneratorController = null;
+
+    public static QrCodeGeneratorController getQrCodeGeneratorController() {
+        return qrCodeGeneratorController;
+    }
+
+    public static void setQrCodeGeneratorController(QrCodeGeneratorController qrCodeGeneratorController) {
+        ControllerModel.qrCodeGeneratorController = qrCodeGeneratorController;
+    }
+
+    public static MainController getMainController() {
+        return mainController;
+    }
+
+    public static void setMainController(MainController mainController) {
+        ControllerModel.mainController = mainController;
+    }
 
     public static ClipboardHistoryController getClipboardHistoryController() {
         return clipboardHistoryController;

@@ -5,6 +5,7 @@ import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ConfigModel;
+import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -57,6 +58,7 @@ public class WeToolApplication extends Application {
         stage.setWidth(ConfigModel.getWidth());
         stage.setHeight(ConfigModel.getHeight());
         stage.setFullScreen(ConfigModel.isFullscreen());
+        ControllerModel.getMainController().loadTabs();
         WeToolApplication.stage = stage;
         enableTray();
         stage.show();
@@ -136,7 +138,6 @@ public class WeToolApplication extends Application {
             tray.add(trayIcon);
             isTraySuccess = true;
         } catch (Exception e) {
-            e.printStackTrace();
             Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.TRAY_ERROR);
         }
     }

@@ -6,6 +6,12 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final String QR_CODE_ERROR = "生成二维码失败";
+
+    public static final String QR_CODE_GENERATOR_VIEW = "/view/QrCodeGeneratorView.fxml";
+
+    public static final String QR_CODE_GENERATOR = "二维码生成器";
+
     public static final String TRAY_ERROR = "设置系统托盘失败";
 
     public static final String HIDE = "hide";
@@ -31,7 +37,8 @@ public class LocalValueConsts {
     public static final String LOAD_CONFIG_ERROR = "加载配置文件失败";
 
     public static final String ABOUT_DETAIL = "当前版本：V1.0\r\n\r\n项目地址：https://github" + "" + "" + "" + "" + "" + "" +
-            ".com/zhazhapan/wetool\r\n\r\n项目依赖：\r\n\tcom.zhazhapan.util: v1.0.6\r\n\tcn.hutool: v4.0.9";
+            ".com/zhazhapan/wetool\r\n\r\n项目依赖：\r\n\tcom.zhazhapan.util: v1.0.6\r\n\tcn.hutool: v4.0.9\r\n\tcom" +
+            ".google.zxing.core: v3.3.1";
 
     public static final String ABOUT_APP = "关于应用";
 

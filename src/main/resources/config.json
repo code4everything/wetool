@@ -8,13 +8,15 @@
                 "JsonParser",
                 "FileManager",
                 "RandomGenerator",
-                "ClipboardHistory"
+                "ClipboardHistory",
+                "QrCodeGenerator"
             ],
             "support": [
                 "FileManager",
                 "JsonParser",
                 "RandomGenerator",
-                "ClipboardHistory"
+                "ClipboardHistory",
+                "QrCodeGenerator"
             ]
         }
     },

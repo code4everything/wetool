@@ -46,6 +46,7 @@ public class ConfigModel {
         tabs.add("FileManager");
         tabs.add("RandomGenerator");
         tabs.add("ClipboardHistory");
+        tabs.add("QrCodeGenerator");
     }
 
     public static int getClipboardHistorySize() {
