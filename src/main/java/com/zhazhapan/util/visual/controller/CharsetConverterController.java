@@ -17,7 +17,7 @@ import javafx.scene.input.TransferMode;
  */
 public class CharsetConverterController {
 
-    private final String BASE = "BASE64";
+    private final String BASE64 = "BASE64";
 
     @FXML
     public TextArea originalContent;
@@ -33,7 +33,7 @@ public class CharsetConverterController {
 
     @FXML
     private void initialize() {
-        String[] charset = {"UTF-8", "ISO-8859-1", "GBK", BASE};
+        String[] charset = {"UTF-8", "ISO-8859-1", "GBK", BASE64};
         originalCharset.getItems().addAll(charset);
         originalCharset.getSelectionModel().selectFirst();
         convertCharset.getItems().addAll(charset);
@@ -49,8 +49,8 @@ public class CharsetConverterController {
         String srcCharset = originalCharset.getSelectionModel().getSelectedItem();
         String destCharset = convertCharset.getSelectionModel().getSelectedItem();
         String result;
-        boolean isBase1 = BASE.equals(srcCharset);
-        boolean isBase2 = BASE.equals(destCharset);
+        boolean isBase1 = BASE64.equals(srcCharset);
+        boolean isBase2 = BASE64.equals(destCharset);
         if (isBase1 && isBase2) {
             result = originalText;
         } else if (isBase1) {
