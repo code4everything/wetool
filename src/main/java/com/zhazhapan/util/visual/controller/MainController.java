@@ -228,4 +228,9 @@ public class MainController {
     public void closeAllTab() {
         tabPane.getTabs().clear();
     }
+
+    public void openAllTab() {
+        ConfigModel.setTabs(ConfigModel.getSupportTabs());
+        loadTabs();
+    }
 }

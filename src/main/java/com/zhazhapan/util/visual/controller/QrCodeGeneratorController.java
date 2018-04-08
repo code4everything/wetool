@@ -15,6 +15,7 @@ import javafx.scene.input.TransferMode;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * @author pantao
@@ -38,7 +39,9 @@ public class QrCodeGeneratorController {
         File image = new File(ValueConsts.USER_DESKTOP + ValueConsts.SEPARATOR + "qrcode.jpg");
         try {
             QrCodeUtil.generate(content.getText(), size, size, image);
-            qrCode.setImage(new Image(new FileInputStream(image)));
+            InputStream is = new FileInputStream(image);
+            qrCode.setImage(new Image(is));
+            is.close();
             image.delete();
         } catch (Exception e) {
             Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.QR_CODE_ERROR);

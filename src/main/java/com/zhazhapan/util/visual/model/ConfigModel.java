@@ -1,6 +1,7 @@
 package com.zhazhapan.util.visual.model;
 
 import cn.hutool.core.util.ClipboardUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
@@ -23,7 +24,7 @@ public class ConfigModel {
 
     private static double height = 700;
 
-    private static JSONArray tabs = new JSONArray();
+    private static JSONArray supportTabs;
 
     private static String fileFilterRegex = "^[^.].*$";
 
@@ -31,7 +32,10 @@ public class ConfigModel {
 
     private static int clipboardSize = 20;
 
+    private static JSONArray tabs = new JSONArray();
+
     private static boolean fullscreen = false;
+
 
     static {
         tabs.add("JsonParser");
@@ -40,6 +44,11 @@ public class ConfigModel {
         tabs.add("ClipboardHistory");
         tabs.add("QrCodeGenerator");
         tabs.add("CharsetConverter");
+        supportTabs = ObjectUtil.cloneByStream(tabs);
+    }
+
+    public static JSONArray getSupportTabs() {
+        return supportTabs;
     }
 
     public static boolean isFullscreen() {

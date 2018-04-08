@@ -45,22 +45,24 @@ public class CharsetConverterController {
     }
 
     private void convert() {
-        String originalText = Checker.checkNull(originalContent.getText());
-        String srcCharset = originalCharset.getSelectionModel().getSelectedItem();
-        String destCharset = convertCharset.getSelectionModel().getSelectedItem();
-        String result;
-        boolean isBase1 = BASE64.equals(srcCharset);
-        boolean isBase2 = BASE64.equals(destCharset);
-        if (isBase1 && isBase2) {
-            result = originalText;
-        } else if (isBase1) {
-            result = Base64.decodeStr(originalText);
-        } else if (isBase2) {
-            result = Base64.encode(originalText);
-        } else {
-            result = CharsetUtil.convert(originalText, srcCharset, destCharset);
+        String originalText = originalContent.getText();
+        if (Checker.isNotEmpty(originalText)) {
+            String srcCharset = originalCharset.getSelectionModel().getSelectedItem();
+            String destCharset = convertCharset.getSelectionModel().getSelectedItem();
+            String result;
+            boolean baseDecode = BASE64.equals(srcCharset);
+            boolean baseEncode = BASE64.equals(destCharset);
+            if (baseDecode && baseEncode) {
+                result = originalText;
+            } else if (baseDecode) {
+                result = Base64.decodeStr(originalText);
+            } else if (baseEncode) {
+                result = Base64.encode(originalText);
+            } else {
+                result = CharsetUtil.convert(originalText, srcCharset, destCharset);
+            }
+            convertedContent.setText(result);
         }
-        convertedContent.setText(result);
     }
 
     public void dragFileDropped(DragEvent event) {
