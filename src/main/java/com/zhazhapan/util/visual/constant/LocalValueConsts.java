@@ -40,7 +40,7 @@ public class LocalValueConsts {
 
     public static final String LOAD_CONFIG_ERROR = "加载配置文件失败";
 
-    public static final String ABOUT_DETAIL = "当前版本：V1.0\r\n\r\n项目地址：https://github" + ".com/zhazhapan/wetool";
+    public static final String ABOUT_DETAIL = "当前版本：V1.1\r\n\r\n项目地址：https://github" + ".com/zhazhapan/wetool";
 
     public static final String ABOUT_APP = "关于应用";
 

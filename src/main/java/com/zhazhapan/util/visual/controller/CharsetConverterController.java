@@ -4,6 +4,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.visual.WeUtils;
+import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -41,6 +42,8 @@ public class CharsetConverterController {
         originalCharset.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) -> convert());
         convertCharset.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) -> convert());
         originalContent.textProperty().addListener((o, ov, nv) -> convert());
+        originalContent.setWrapText(ConfigModel.isAutoWrap());
+        convertedContent.setWrapText(ConfigModel.isAutoWrap());
         ControllerModel.setCharsetConverterController(this);
     }
 

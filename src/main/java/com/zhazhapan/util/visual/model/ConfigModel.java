@@ -36,6 +36,7 @@ public class ConfigModel {
 
     private static boolean fullscreen = false;
 
+    private static boolean autoWrap = false;
 
     static {
         tabs.add("JsonParser");
@@ -49,6 +50,14 @@ public class ConfigModel {
 
     public static JSONArray getSupportTabs() {
         return supportTabs;
+    }
+
+    public static boolean isAutoWrap() {
+        return autoWrap;
+    }
+
+    public static void setAutoWrap(boolean autoWrap) {
+        ConfigModel.autoWrap = autoWrap;
     }
 
     public static boolean isFullscreen() {

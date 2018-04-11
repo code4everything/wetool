@@ -27,6 +27,8 @@ public class ConfigParser {
 
     private static final String FULLSCREEN = "initialize.fullscreen";
 
+    public static final String AUTO_WRAP = "autoWrap";
+
     public static void parserConfig() {
         try {
             JsonParser parser = new JsonParser(FileExecutor.read(WeToolApplication.class.getResourceAsStream
@@ -38,6 +40,7 @@ public class ConfigParser {
             ConfigModel.setFileFilterTip(parser.getBooleanUseEval(FILE_FILTER_TIP_PATH));
             ConfigModel.setClipboardSize(parser.getIntegerUseEval(CLIPBOARD_SIZE_PATH));
             ConfigModel.setFullscreen(parser.getBooleanUseEval(FULLSCREEN));
+            ConfigModel.setAutoWrap(parser.getBooleanUseEval(AUTO_WRAP));
         } catch (Exception e) {
             Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.LOAD_CONFIG_ERROR);
         }

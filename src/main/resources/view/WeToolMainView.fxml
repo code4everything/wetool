@@ -11,8 +11,8 @@
             <MenuItem mnemonicParsing="false" text="批量打开" onAction="#openMultiFile"/>
             <MenuItem mnemonicParsing="false" text="保存" onAction="#saveFile"/>
             <!--<MenuItem mnemonicParsing="false" text="设置"/>-->
-            <MenuItem mnemonicParsing="false" text="关闭所有标签" onAction="#closeAllTab"/>
             <MenuItem mnemonicParsing="false" text="打开所有标签" onAction="#openAllTab"/>
+            <MenuItem mnemonicParsing="false" text="关闭所有标签" onAction="#closeAllTab"/>
             <MenuItem mnemonicParsing="false" onAction="#quit" text="退出"/>
         </Menu>
         <Menu mnemonicParsing="false" text="工具">

@@ -7,6 +7,7 @@ import com.zhazhapan.util.FileExecutor;
 import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.visual.WeUtils;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
+import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -103,7 +104,7 @@ public class FileManagerController {
         fileAddableCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
                 generateRenameDestFilesOfAddable());
 
-        fileContent.setWrapText(true);
+        fileContent.setWrapText(ConfigModel.isAutoWrap());
         ControllerModel.setFileManagerController(this);
     }
 

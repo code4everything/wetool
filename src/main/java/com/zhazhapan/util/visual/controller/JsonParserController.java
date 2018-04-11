@@ -8,6 +8,7 @@ import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.WeUtils;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
+import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -34,6 +35,8 @@ public class JsonParserController {
 
     @FXML
     private void initialize() {
+        jsonContent.setWrapText(ConfigModel.isAutoWrap());
+        parsedJsonContent.setWrapText(ConfigModel.isAutoWrap());
         ControllerModel.setJsonParserController(this);
     }
 
