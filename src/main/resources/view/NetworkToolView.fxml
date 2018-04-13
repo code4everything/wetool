@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.zhazhapan.util.visual.controller.NetworkToolController">
+    <Accordion VBox.vgrow="ALWAYS">
+        <panes>
+            <TitledPane animated="false" text="本机网络">
+                <VBox/>
+            </TitledPane>
+            <TitledPane animated="false" text="IP查询">
+                <VBox/>
+            </TitledPane>
+            <TitledPane animated="false" text="端口扫描">
+                <VBox/>
+            </TitledPane>
+            <TitledPane animated="false" text="网络抓包">
+                <VBox/>
+            </TitledPane>
+            <TitledPane animated="false" text="接口测试">
+                <VBox/>
+            </TitledPane>
+            <TitledPane animated="false" text="网络文件下载">
+                <VBox/>
+            </TitledPane>
+            <TitledPane animated="false" text="WHOIS查询">
+                <VBox/>
+            </TitledPane>
+        </panes>
+    </Accordion>
+</VBox>

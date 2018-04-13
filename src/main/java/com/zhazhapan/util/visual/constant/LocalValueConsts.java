@@ -6,6 +6,10 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final String NETWORK_TOOL_VIEW = "/view/NetworkToolView.fxml";
+
+    public static final String NETWORK_TOOL = "网络工具";
+
     public static final String CHARSET_CONVERTER_VIEW = "/view/CharsetConverterView.fxml";
 
     public static final String CHARSET_CONVERTER = "编码转换器";

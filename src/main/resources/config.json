@@ -10,7 +10,8 @@
                 "RandomGenerator",
                 "ClipboardHistory",
                 "QrCodeGenerator",
-                "CharsetConverter"
+                "CharsetConverter",
+                "NetworkTool"
             ],
             "support": [
                 "FileManager",
@@ -18,7 +19,8 @@
                 "RandomGenerator",
                 "ClipboardHistory",
                 "QrCodeGenerator",
-                "CharsetConverter"
+                "CharsetConverter",
+                "NetworkTool"
             ]
         }
     },

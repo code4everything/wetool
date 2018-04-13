@@ -77,6 +77,10 @@ public class MainController {
         WeUtils.exitSystem();
     }
 
+    public void openNetworkToolTab() {
+        addTab(new Tab(LocalValueConsts.NETWORK_TOOL), LocalValueConsts.NETWORK_TOOL_VIEW);
+    }
+
     public void openCharsetConverterTab() {
         addTab(new Tab(LocalValueConsts.CHARSET_CONVERTER), LocalValueConsts.CHARSET_CONVERTER_VIEW);
     }

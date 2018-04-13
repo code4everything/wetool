@@ -45,6 +45,7 @@ public class ConfigModel {
         tabs.add("ClipboardHistory");
         tabs.add("QrCodeGenerator");
         tabs.add("CharsetConverter");
+        tabs.add("NetworkTool");
         supportTabs = ObjectUtil.cloneByStream(tabs);
     }
 
