@@ -8,6 +8,8 @@ import com.zhazhapan.util.visual.controller.*;
  */
 public class ControllerModel {
 
+    private static NetworkToolController networkToolController = null;
+
     private static JsonParserController jsonParserController = null;
 
     private static FileManagerController fileManagerController = null;
@@ -19,6 +21,14 @@ public class ControllerModel {
     private static QrCodeGeneratorController qrCodeGeneratorController = null;
 
     private static CharsetConverterController charsetConverterController = null;
+
+    public static NetworkToolController getNetworkToolController() {
+        return networkToolController;
+    }
+
+    public static void setNetworkToolController(NetworkToolController networkToolController) {
+        ControllerModel.networkToolController = networkToolController;
+    }
 
     public static CharsetConverterController getCharsetConverterController() {
         return charsetConverterController;

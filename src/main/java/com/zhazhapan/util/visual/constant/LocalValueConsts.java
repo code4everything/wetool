@@ -6,6 +6,8 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final String NETWORK_ERROR = "网络异常";
+
     public static final String NETWORK_TOOL_VIEW = "/view/NetworkToolView.fxml";
 
     public static final String NETWORK_TOOL = "网络工具";
