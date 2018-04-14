@@ -2,6 +2,7 @@ package com.zhazhapan.util.visual;
 
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
+import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ConfigModel;
@@ -33,6 +34,7 @@ public class WeToolApplication extends Application {
     private boolean isTraySuccess = false;
 
     public static void main(String[] args) {
+        ThreadPool.init();
         launch(args);
     }
 
@@ -43,6 +45,7 @@ public class WeToolApplication extends Application {
             Alerts.showError(ValueConsts.FATAL_ERROR, LocalValueConsts.INIT_ERROR);
             WeUtils.exitSystem();
         }
+        assert root != null;
         stage.setScene(new Scene(root));
         stage.getIcons().add(new Image(getClass().getResourceAsStream(LocalValueConsts.ICON)));
         stage.setTitle(LocalValueConsts.MAIN_TITLE);

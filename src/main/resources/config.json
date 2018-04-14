@@ -11,7 +11,8 @@
                 "ClipboardHistory",
                 "QrCodeGenerator",
                 "CharsetConverter",
-                "NetworkTool"
+                "NetworkTool",
+                "QiniuTool"
             ],
             "support": [
                 "FileManager",
@@ -20,7 +21,8 @@
                 "ClipboardHistory",
                 "QrCodeGenerator",
                 "CharsetConverter",
-                "NetworkTool"
+                "NetworkTool",
+                "QiniuTool"
             ]
         }
     },

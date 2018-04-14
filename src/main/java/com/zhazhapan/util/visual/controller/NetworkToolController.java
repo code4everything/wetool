@@ -3,9 +3,11 @@ package com.zhazhapan.util.visual.controller;
 import cn.hutool.core.util.NetUtil;
 import com.zhazhapan.config.JsonParser;
 import com.zhazhapan.util.NetUtils;
+import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ControllerModel;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TextField;
@@ -48,17 +50,25 @@ public class NetworkToolController {
     private void initialize() {
         accordion.setExpandedPane(firstTitledPane);
         ControllerModel.setNetworkToolController(this);
-        try {
-            privateIpv4.setText(NetUtils.getLocalIp());
-            JsonParser parser = NetUtils.getPublicIpAndLocation();
-            publicIp.setText(parser.getStringUseEval("ip"));
-            publicAddress.setText(parser.getStringUseEval("address"));
-            macAddress.setText(NetUtil.getLocalMacAddress());
-            computerName.setText(NetUtils.getComputerName());
-            systemInfo.setText(NetUtils.getSystemName() + " " + NetUtils.getSystemArch() + " " + NetUtils
-                    .getSystemVersion());
-        } catch (Exception e) {
-            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_TOOL);
-        }
+        //防止UI线程阻塞
+        ThreadPool.executor.submit(() -> {
+            try {
+                JsonParser parser = NetUtils.getPublicIpAndLocation();
+                Platform.runLater(() -> {
+                    try {
+                        publicIp.setText(parser.getStringUseEval("ip"));
+                        publicAddress.setText(parser.getStringUseEval("address"));
+                        privateIpv4.setText(NetUtils.getLocalIp());
+                        macAddress.setText(NetUtil.getLocalMacAddress());
+                        systemInfo.setText(NetUtils.getSystemName() + " " + NetUtils.getSystemArch() + " " + NetUtils
+                                .getSystemVersion());
+                    } catch (Exception e) {
+                        Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_ERROR);
+                    }
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_ERROR));
+            }
+        });
     }
 }

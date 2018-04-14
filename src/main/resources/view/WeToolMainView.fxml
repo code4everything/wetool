@@ -23,6 +23,7 @@
             <MenuItem mnemonicParsing="false" onAction="#openQrCodeGeneratorTab" text="二维码生成器"/>
             <MenuItem mnemonicParsing="false" onAction="#openCharsetConverterTab" text="编码转换器"/>
             <MenuItem mnemonicParsing="false" onAction="#openNetworkToolTab" text="网络工具"/>
+            <MenuItem mnemonicParsing="false" onAction="#openQiniuToolTab" text="七牛云对象存储"/>
         </Menu>
         <Menu mnemonicParsing="false" text="帮助">
             <MenuItem mnemonicParsing="false" text="关于" onAction="#about"/>

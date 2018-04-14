@@ -2,6 +2,8 @@ package com.zhazhapan.util.visual.controller;
 
 import cn.hutool.core.util.ClipboardUtil;
 import com.zhazhapan.modules.constant.ValueConsts;
+import com.zhazhapan.qiniu.QiniuApplication;
+import com.zhazhapan.qiniu.view.MainWindow;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ReflectUtils;
 import com.zhazhapan.util.dialog.Alerts;
@@ -236,5 +238,12 @@ public class MainController {
     public void openAllTab() {
         ConfigModel.setTabs(ConfigModel.getSupportTabs());
         loadTabs();
+    }
+
+    public void openQiniuToolTab() {
+        QiniuApplication.initLoad(ValueConsts.TRUE);
+        Tab tab = new Tab(LocalValueConsts.QINIU_TOOL);
+        tab.setOnCloseRequest((event) -> MainWindow.setOnClosed(event, ValueConsts.TRUE));
+        addTab(tab, LocalValueConsts.QINIU_TOOL_VIEW);
     }
 }

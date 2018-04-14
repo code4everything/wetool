@@ -46,6 +46,7 @@ public class ConfigModel {
         tabs.add("QrCodeGenerator");
         tabs.add("CharsetConverter");
         tabs.add("NetworkTool");
+        tabs.add("QiniuTool");
         supportTabs = ObjectUtil.cloneByStream(tabs);
     }
 

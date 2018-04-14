@@ -6,6 +6,10 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final String QINIU_TOOL_VIEW = "/view/MainWindow.fxml";
+
+    public static final String QINIU_TOOL = "七牛云对象存储";
+
     public static final String NETWORK_ERROR = "网络异常";
 
     public static final String NETWORK_TOOL_VIEW = "/view/NetworkToolView.fxml";
@@ -46,7 +50,8 @@ public class LocalValueConsts {
 
     public static final String LOAD_CONFIG_ERROR = "加载配置文件失败";
 
-    public static final String ABOUT_DETAIL = "当前版本：V1.1\r\n\r\n项目地址：https://github" + ".com/zhazhapan/wetool";
+    public static final String ABOUT_DETAIL = "当前版本：V1.2\r\n\r\n项目地址：https://github" + "" + "" +
+            ".com/zhazhapan/wetool\r\n\r\n外部依赖：\r\n\thttps://gitee.com/zhazhapan_admin/qiniu";
 
     public static final String ABOUT_APP = "关于应用";
 
