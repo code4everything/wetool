@@ -5,11 +5,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONPath;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.Formatter;
+import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.WeUtils;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -41,20 +43,24 @@ public class JsonParserController {
     }
 
     public void parseJson() {
-        try {
-            JSONArray jsonArray = JSON.parseArray("[" + jsonContent.getText() + "]");
-            String path = jsonPath.getText();
-            Object object = JSONPath.eval(jsonArray, "[0]");
-            String parsedJson;
-            if (Checker.isEmpty(path)) {
-                parsedJson = object.toString();
-            } else {
-                parsedJson = JSONPath.eval(object, (object instanceof JSONArray ? "" : ".") + path).toString();
+        String json = jsonContent.getText();
+        String path = jsonPath.getText();
+        ThreadPool.executor.submit(() -> {
+            try {
+                JSONArray jsonArray = JSON.parseArray("[" + json + "]");
+                Object object = JSONPath.eval(jsonArray, "[0]");
+                String parsedJson;
+                if (Checker.isEmpty(path)) {
+                    parsedJson = object.toString();
+                } else {
+                    parsedJson = JSONPath.eval(object, (object instanceof JSONArray ? "" : ".") + path).toString();
+                }
+                Platform.runLater(() -> parsedJsonContent.setText(Formatter.formatJson(Checker.checkNull(parsedJson))));
+            } catch (Exception e) {
+                Platform.runLater(() -> Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts
+                        .PARSE_JSON_ERROR));
             }
-            parsedJsonContent.setText(Formatter.formatJson(Checker.checkNull(parsedJson)));
-        } catch (Exception e) {
-            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.PARSE_JSON_ERROR);
-        }
+        });
     }
 
     public void seeJsonPathGrammar() {

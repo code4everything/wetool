@@ -1,10 +1,7 @@
 package com.zhazhapan.util.visual;
 
 import com.zhazhapan.modules.constant.ValueConsts;
-import com.zhazhapan.util.Checker;
-import com.zhazhapan.util.FileExecutor;
-import com.zhazhapan.util.Formatter;
-import com.zhazhapan.util.Utils;
+import com.zhazhapan.util.*;
 import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.controller.FileManagerController;
@@ -33,6 +30,15 @@ import static com.zhazhapan.util.visual.WeToolApplication.stage;
 public class WeUtils {
 
     private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
+
+    public static String getLocationByIp(String ip) {
+        try {
+            return NetUtils.getLocationByIp(ip);
+        } catch (Exception e) {
+            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_ERROR);
+            return null;
+        }
+    }
 
     public static void putDragFileInTextArea(TextArea textArea, DragEvent event) {
         List<File> files = event.getDragboard().getFiles();
@@ -86,21 +92,23 @@ public class WeUtils {
 
     public static void copyFiles(ObservableList<File> list, String folder, boolean deleteSrc) {
         if (Checker.isNotEmpty(list) && Checker.isNotEmpty(folder)) {
-            File[] files = new File[list.size()];
-            list.toArray(files);
-            try {
-                FileExecutor.copyFiles(files, folder);
-                if (deleteSrc) {
-                    int i = 0;
-                    for (File f : list) {
-                        list.set(i++, new File(folder + ValueConsts.SEPARATOR + f.getName()));
-                        f.delete();
+            ThreadPool.executor.submit(() -> {
+                File[] files = new File[list.size()];
+                list.toArray(files);
+                try {
+                    FileExecutor.copyFiles(files, folder);
+                    if (deleteSrc) {
+                        int i = 0;
+                        for (File f : list) {
+                            list.set(i++, new File(folder + ValueConsts.SEPARATOR + f.getName()));
+                            f.delete();
+                        }
                     }
+                    showSuccessInfo();
+                } catch (IOException e) {
+                    Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.COPY_FILE_ERROR);
                 }
-                showSuccessInfo();
-            } catch (IOException e) {
-                Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.COPY_FILE_ERROR);
-            }
+            });
         }
     }
 

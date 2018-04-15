@@ -100,7 +100,7 @@ public class FileManagerController {
         destFilesOfRenameTab.setEditable(true);
 
         fileAddableCombo.getItems().addAll(LocalValueConsts.BEFORE_FILENAME, LocalValueConsts.AFTER_FILENAME);
-        fileAddableCombo.getSelectionModel().selectFirst();
+        fileAddableCombo.getSelectionModel().selectLast();
         fileAddableCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
                 generateRenameDestFilesOfAddable());
 
@@ -132,10 +132,12 @@ public class FileManagerController {
             destFiles.clear();
             for (File file : list) {
                 String postfix = WeUtils.replaceVariable(filePostfixOfRenameTab.getText());
+                if (Checker.isEmpty(postfix) || ValueConsts.DOT_SIGN.equals(postfix)) {
+                    postfix = FileExecutor.getFileSuffix(file);
+                }
                 String prefix = WeUtils.replaceVariable(filePrefixOfRenameTab.getText());
                 String fileName = prefix + Formatter.numberFormat(i++, numLen) + (postfix.startsWith(ValueConsts
-                        .DOT_SIGN) ? postfix : (Checker.isEmpty(postfix) ? ValueConsts.EMPTY_STRING : ValueConsts
-                        .DOT_SIGN + postfix));
+                        .DOT_SIGN) ? postfix : ValueConsts.DOT_SIGN + postfix);
                 destFiles.add(file.getParent() + ValueConsts.SEPARATOR + fileName);
             }
         }

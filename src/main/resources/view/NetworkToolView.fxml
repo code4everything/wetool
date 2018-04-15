@@ -90,25 +90,33 @@
                             </HBox.margin>
                         </TextField>
                     </HBox>
-                    <HBox visible="false" VBox.vgrow="NEVER">
+                    <HBox VBox.vgrow="NEVER">
                         <VBox.margin>
                             <Insets top="10.0"/>
                         </VBox.margin>
-                        <Label text="本机名:" HBox.hgrow="NEVER">
+                        <Label text="IP归属地查询:" HBox.hgrow="NEVER">
                             <HBox.margin>
                                 <Insets top="5.0"/>
                             </HBox.margin>
                         </Label>
-                        <TextField fx:id="computerName" editable="false" maxWidth="300.0" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="ipAddress" maxWidth="200.0" promptText="IP地址" HBox.hgrow="ALWAYS">
+                            <HBox.margin>
+                                <Insets left="10.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#queryIpLocation" text="查询" HBox.hgrow="NEVER">
+                            <HBox.margin>
+                                <Insets left="10.0"/>
+                            </HBox.margin>
+                        </Button>
+                        <TextField fx:id="ipLocation" editable="false" maxWidth="300.0" promptText="归属地"
+                                   HBox.hgrow="ALWAYS">
                             <HBox.margin>
                                 <Insets left="10.0"/>
                             </HBox.margin>
                         </TextField>
                     </HBox>
                 </VBox>
-            </TitledPane>
-            <TitledPane animated="false" text="IP查询">
-                <VBox/>
             </TitledPane>
             <TitledPane animated="false" text="端口扫描">
                 <VBox/>

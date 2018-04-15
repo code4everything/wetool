@@ -57,7 +57,7 @@
                                     </TextField>
                                     <TextField fx:id="startNumberOfRenameTab"
                                                onKeyReleased="#generateRenameDestFilesOfFormat" prefHeight="27.0"
-                                               prefWidth="107.0" promptText="开始数字" text="0" HBox.hgrow="ALWAYS">
+                                               prefWidth="107.0" promptText="开始数字" text="1" HBox.hgrow="ALWAYS">
                                         <HBox.margin>
                                             <Insets left="10.0"/>
                                         </HBox.margin>

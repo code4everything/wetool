@@ -2,9 +2,11 @@ package com.zhazhapan.util.visual.controller;
 
 import cn.hutool.core.util.NetUtil;
 import com.zhazhapan.config.JsonParser;
+import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.NetUtils;
 import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
+import com.zhazhapan.util.visual.WeUtils;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.application.Platform;
@@ -35,9 +37,6 @@ public class NetworkToolController {
     public TextField macAddress;
 
     @FXML
-    public TextField computerName;
-
-    @FXML
     public TextField systemInfo;
 
     @FXML
@@ -45,6 +44,12 @@ public class NetworkToolController {
 
     @FXML
     public Accordion accordion;
+
+    @FXML
+    public TextField ipAddress;
+
+    @FXML
+    public TextField ipLocation;
 
     @FXML
     private void initialize() {
@@ -70,5 +75,17 @@ public class NetworkToolController {
                 Platform.runLater(() -> Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_ERROR));
             }
         });
+    }
+
+    public void queryIpLocation() {
+        String ip = ipAddress.getText();
+        if (Checker.isNotEmpty(ip)) {
+            ThreadPool.executor.submit(() -> {
+                String location = WeUtils.getLocationByIp(ip);
+                if (Checker.isNotEmpty(location)) {
+                    Platform.runLater(() -> ipLocation.setText(location));
+                }
+            });
+        }
     }
 }
