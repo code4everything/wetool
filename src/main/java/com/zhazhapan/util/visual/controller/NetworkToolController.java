@@ -11,9 +11,8 @@ import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Accordion;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 
 /**
  * @author pantao
@@ -40,20 +39,19 @@ public class NetworkToolController {
     public TextField systemInfo;
 
     @FXML
-    public TitledPane firstTitledPane;
-
-    @FXML
-    public Accordion accordion;
-
-    @FXML
     public TextField ipAddress;
 
     @FXML
     public TextField ipLocation;
 
     @FXML
+    public TextField domain;
+
+    @FXML
+    public TextArea whoisResult;
+
+    @FXML
     private void initialize() {
-        accordion.setExpandedPane(firstTitledPane);
         ControllerModel.setNetworkToolController(this);
         //防止UI线程阻塞
         ThreadPool.executor.submit(() -> {
@@ -86,6 +84,16 @@ public class NetworkToolController {
                     Platform.runLater(() -> ipLocation.setText(location));
                 }
             });
+        }
+    }
+
+    public void queryWhois() {
+        String domainName = domain.getText();
+        if (Checker.isNotEmpty(domainName)) {
+            String result = WeUtils.whois(domainName);
+            if (Checker.isNotEmpty(result)) {
+                whoisResult.setText(result);
+            }
         }
     }
 }

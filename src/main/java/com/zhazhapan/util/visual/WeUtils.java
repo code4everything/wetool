@@ -31,6 +31,15 @@ public class WeUtils {
 
     private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
 
+    public static String whois(String domain) {
+        try {
+            return NetUtils.whois(domain);
+        } catch (Exception e) {
+            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_ERROR);
+            return null;
+        }
+    }
+
     public static String getLocationByIp(String ip) {
         try {
             return NetUtils.getLocationByIp(ip);
@@ -200,10 +209,12 @@ public class WeUtils {
     }
 
     public static void saveFile(File file, String fileContent) {
-        try {
-            FileExecutor.saveFile(file, fileContent);
-        } catch (IOException e) {
-            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.SAVE_FILE_ERROR);
+        if (Checker.isNotEmpty(fileContent)) {
+            try {
+                FileExecutor.saveFile(file, fileContent);
+            } catch (IOException e) {
+                Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.SAVE_FILE_ERROR);
+            }
         }
     }
 

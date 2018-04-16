@@ -47,17 +47,10 @@ public class MainController {
                 if (Checker.isNotEmpty(clipboard) && !last.equals(clipboard)) {
                     Date date = new Date();
                     ConfigModel.appendClipboardHistory(date, clipboard);
-                    Platform.runLater(() -> {
-                        for (Tab tab : tabPane.getTabs()) {
-                            if (LocalValueConsts.CLIPBOARD_HISTORY.equals(tab.getText())) {
-                                ClipboardHistoryController controller = ControllerModel.getClipboardHistoryController();
-                                if (Checker.isNotNull(controller)) {
-                                    controller.insert(date, clipboard);
-                                }
-                                break;
-                            }
-                        }
-                    });
+                    ClipboardHistoryController controller = ControllerModel.getClipboardHistoryController();
+                    if (Checker.isNotNull(controller)) {
+                        Platform.runLater(() -> controller.insert(date, clipboard));
+                    }
                 }
             }
         };
@@ -196,6 +189,11 @@ public class MainController {
                             fileContent = charsetConverterController.convertedContent.getText();
                         }
                         break;
+                    case LocalValueConsts.NETWORK_TOOL:
+                        NetworkToolController networkToolController = ControllerModel.getNetworkToolController();
+                        if (Checker.isNotNull(networkToolController)) {
+                            fileContent = networkToolController.whoisResult.getText();
+                        }
                     default:
                         break;
                 }
