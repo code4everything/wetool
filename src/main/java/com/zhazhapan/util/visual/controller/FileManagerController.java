@@ -179,9 +179,18 @@ public class FileManagerController {
         if (Checker.isNotEmpty(list)) {
             ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
             destFiles.clear();
+            final String dateVariable = "%date%";
+            final String timeVariable = "%time%";
             for (File file : list) {
-                String fn = file.getName().replaceAll(Checker.checkNull(fileQueryStringOfRenameTab.getText()),
-                        Checker.checkNull(fileReplaceStringOfRenameTab.getText()));
+                String fn = file.getName();
+                String queryStr = Checker.checkNull(fileQueryStringOfRenameTab.getText());
+                if (queryStr.toLowerCase().contains(dateVariable)) {
+                    fn = fn.replaceAll("\\d{4}-\\d{2}-\\d{2}", dateVariable);
+                }
+                if (queryStr.toLowerCase().contains(timeVariable)) {
+                    fn = fn.replaceAll("\\d{2}\\.\\d{2}\\.\\d{2}", timeVariable);
+                }
+                fn = fn.replaceAll(queryStr, Checker.checkNull(fileReplaceStringOfRenameTab.getText()));
                 destFiles.add(file.getParent() + ValueConsts.SEPARATOR + WeUtils.replaceVariable(fn));
             }
         }
