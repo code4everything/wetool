@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.zhazhapan.util.visual.controller.WaveController">
+    <HBox prefHeight="37.0" prefWidth="600.0" VBox.vgrow="NEVER">
+        <VBox.margin>
+            <Insets/>
+        </VBox.margin>
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <ComboBox fx:id="tableCombo" maxWidth="200.0" prefWidth="150.0" HBox.hgrow="ALWAYS"/>
+        <Label text="开始日期" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets left="10.0" top="5.0"/>
+            </HBox.margin>
+        </Label>
+        <DatePicker fx:id="startDate" onAction="#getWaveDataToLineChart" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets left="10.0"/>
+            </HBox.margin>
+        </DatePicker>
+        <Label text="截止日期" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets left="10.0" top="5.0"/>
+            </HBox.margin>
+        </Label>
+        <DatePicker fx:id="endDate" onAction="#getWaveDataToLineChart" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets left="10.0"/>
+            </HBox.margin>
+        </DatePicker>
+    </HBox>
+    <LineChart fx:id="chart" maxHeight="600.0" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+        <xAxis>
+            <CategoryAxis side="BOTTOM"/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis side="LEFT"/>
+        </yAxis>
+        <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </VBox.margin>
+    </LineChart>
+    <HBox prefHeight="32.0" prefWidth="750.0">
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <ComboBox fx:id="crudMethod" prefWidth="150.0" HBox.hgrow="NEVER"/>
+        <DatePicker fx:id="sqlDate" onAction="#generateSql" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets left="10.0"/>
+            </HBox.margin>
+        </DatePicker>
+        <TextField fx:id="sqlNumber" onKeyReleased="#generateSql" prefHeight="27.0" prefWidth="78.0"
+                   promptText="波动数" text="0" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets left="10.0"/>
+            </HBox.margin>
+        </TextField>
+        <TextField fx:id="sql" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                   promptText="SQL, 支持变量" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets left="10.0"/>
+            </HBox.margin>
+        </TextField>
+        <Button mnemonicParsing="false" onAction="#executeSql" text="执行" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets left="10.0"/>
+            </HBox.margin>
+        </Button>
+    </HBox>
+</VBox>

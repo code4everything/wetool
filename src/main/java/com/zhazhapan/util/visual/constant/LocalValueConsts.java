@@ -6,6 +6,10 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final String WAVE_VIEW = "/view/WaveView.fxml";
+
+    public static final String WAVE_VIEWER = "波动图表";
+
     public static final String QINIU_TOOL_VIEW = "/view/MainWindow.fxml";
 
     public static final String QINIU_TOOL = "七牛云对象存储";
@@ -50,7 +54,7 @@ public class LocalValueConsts {
 
     public static final String LOAD_CONFIG_ERROR = "加载配置文件失败";
 
-    public static final String ABOUT_DETAIL = "当前版本：V1.2\r\n\r\n项目地址：https://github" + "" + "" +
+    public static final String ABOUT_DETAIL = "当前版本：V1.2\r\n\r\n项目地址：https://github" + "" + "" + "" + "" +
             ".com/zhazhapan/wetool\r\n\r\n外部依赖：\r\n\thttps://gitee.com/zhazhapan_admin/qiniu";
 
     public static final String ABOUT_APP = "关于应用";

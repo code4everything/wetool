@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -243,5 +244,25 @@ public class MainController {
         Tab tab = new Tab(LocalValueConsts.QINIU_TOOL);
         tab.setOnCloseRequest((event) -> MainWindow.setOnClosed(event, ValueConsts.TRUE));
         addTab(tab, LocalValueConsts.QINIU_TOOL_VIEW);
+    }
+
+    public void openWaveViewerTab() {
+        Tab tab = new Tab(LocalValueConsts.WAVE_VIEWER);
+        tab.setOnCloseRequest(event -> {
+            WaveController controller = ControllerModel.getWaveController();
+            if (Checker.isNotNull(controller)) {
+                try {
+                    if (Checker.isNotNull(controller.statement)) {
+                        controller.statement.close();
+                    }
+                    if (Checker.isNotNull(controller.connection)) {
+                        controller.connection.close();
+                    }
+                } catch (SQLException e) {
+                    Alerts.showError(LocalValueConsts.MAIN_TITLE, e.getMessage());
+                }
+            }
+        });
+        addTab(tab, LocalValueConsts.WAVE_VIEW);
     }
 }

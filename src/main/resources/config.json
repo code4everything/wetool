@@ -11,7 +11,8 @@
                 "ClipboardHistory",
                 "QrCodeGenerator",
                 "CharsetConverter",
-                "NetworkTool"
+                "NetworkTool",
+                "WaveViewer"
             ],
             "support": [
                 "FileManager",
@@ -21,7 +22,8 @@
                 "QrCodeGenerator",
                 "CharsetConverter",
                 "NetworkTool",
-                "QiniuTool"
+                "QiniuTool",
+                "WaveViewer"
             ]
         }
     },
@@ -33,17 +35,19 @@
     "clipboardSize": 20,
     "autoWrap": false,
     "mysql": {
-        "host": "127.0.0.1",
-        "port": 3306,
+        "host": "127.0.0.1:3306",
         "database": "efo",
         "condition": "useUnicode=true&characterEncoding=utf-8&useSSL=true",
         "username": "zhazhapan",
         "password": "zhazhapan"
     },
-    "waveViewer": {
-        "tableName": "wave",
-        "dataField": "wave_data",
-        "dateFiled": "wave_date",
-        "firstResultSize": 30
-    }
+    "waveViewer": [
+        {
+            "title": "频率计算器",
+            "tableName": "frequency",
+            "dataField": "fre_data",
+            "dateField": "fre_date",
+            "firstResultSize": 30
+        }
+    ]
 }

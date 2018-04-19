@@ -7,10 +7,7 @@ import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import javafx.util.Pair;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author pantao
@@ -38,6 +35,18 @@ public class ConfigModel {
 
     private static boolean autoWrap = false;
 
+    private static String host = "127.0.0.1:3306";
+
+    private static String database = "efo";
+
+    private static String condition = "useUnicode=true&characterEncoding=utf-8&useSSL=true";
+
+    private static String username = "zhazhapan";
+
+    private static String password = "zhazhapan";
+
+    private static List<WaverModel> waver = new ArrayList<>();
+
     static {
         tabs.add("JsonParser");
         tabs.add("FileManager");
@@ -47,7 +56,52 @@ public class ConfigModel {
         tabs.add("CharsetConverter");
         tabs.add("NetworkTool");
         tabs.add("QiniuTool");
+        tabs.add("WaveViewer");
         supportTabs = ObjectUtil.cloneByStream(tabs);
+    }
+
+    public static String getHost() {
+        return host;
+    }
+
+    public static void setHost(String host) {
+        ConfigModel.host = host;
+    }
+
+    public static String getDatabase() {
+        return database;
+    }
+
+    public static void setDatabase(String database) {
+        ConfigModel.database = database;
+    }
+
+    public static String getCondition() {
+        return condition;
+    }
+
+    public static void setCondition(String condition) {
+        ConfigModel.condition = condition;
+    }
+
+    public static String getUsername() {
+        return username;
+    }
+
+    public static void setUsername(String username) {
+        ConfigModel.username = username;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
+
+    public static void setPassword(String password) {
+        ConfigModel.password = password;
+    }
+
+    public static List<WaverModel> getWaver() {
+        return waver;
     }
 
     public static JSONArray getSupportTabs() {
