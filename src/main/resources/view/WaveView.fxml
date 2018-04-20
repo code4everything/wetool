@@ -39,6 +39,11 @@
                 <Insets left="10.0"/>
             </HBox.margin>
         </DatePicker>
+        <Button mnemonicParsing="false" onAction="#getWaveDataToLineChart" text="刷新" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets left="10.0"/>
+            </HBox.margin>
+        </Button>
     </HBox>
     <AreaChart fx:id="chart" maxHeight="600.0" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
         <xAxis>

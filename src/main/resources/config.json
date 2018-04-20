@@ -5,14 +5,7 @@
         "fullscreen": false,
         "tabs": {
             "load": [
-                "JsonParser",
-                "FileManager",
-                "RandomGenerator",
-                "ClipboardHistory",
-                "QrCodeGenerator",
-                "CharsetConverter",
-                "NetworkTool",
-                "WaveViewer"
+                "ClipboardHistory"
             ],
             "support": [
                 "FileManager",
