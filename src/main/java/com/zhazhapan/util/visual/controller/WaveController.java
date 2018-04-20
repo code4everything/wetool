@@ -7,10 +7,11 @@ import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.WeUtils;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ConfigModel;
+import com.zhazhapan.util.visual.model.ControllerModel;
 import com.zhazhapan.util.visual.model.WaverModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.chart.LineChart;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -43,7 +44,7 @@ public class WaveController {
     public DatePicker endDate;
 
     @FXML
-    public LineChart<String, Object> chart;
+    public AreaChart<String, Object> chart;
 
     @FXML
     public ComboBox<String> crudMethod;
@@ -81,6 +82,7 @@ public class WaveController {
             crudMethod.getSelectionModel().selectFirst();
             crudMethod.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) -> generateSql());
         }
+        ControllerModel.setWaveController(this);
     }
 
     public void generateSql() {
@@ -110,6 +112,7 @@ public class WaveController {
 
     public void getWaveDataToLineChart() {
         if (Checker.isNotNull(statement)) {
+            chart.getData().clear();
             WaverModel wave = ConfigModel.getWaver().get(tableCombo.getSelectionModel().getSelectedIndex());
             String sql = "select " + wave.getDataField() + "," + wave.getDateField() + " from " + wave.getTableName();
             LocalDate startLocalDate = startDate.getValue();
@@ -137,6 +140,7 @@ public class WaveController {
                 sql += " limit 0," + wave.getFirstResultSize();
             }
             XYChart.Series<String, Object> series = new XYChart.Series<>();
+            series.setName(wave.getTitle());
             try {
                 ResultSet resultSet = statement.executeQuery(sql);
                 while (resultSet.next()) {
@@ -160,7 +164,6 @@ public class WaveController {
                 System.out.println(sql);
                 Alerts.showError(LocalValueConsts.MAIN_TITLE, e.getMessage());
             }
-            chart.getData().clear();
             chart.getData().add(series);
             chart.setTitle(wave.getTitle());
         }
