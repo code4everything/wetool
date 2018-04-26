@@ -31,6 +31,20 @@ public class WeUtils {
 
     private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
 
+    public static void deleteFiles(File file) {
+        if (Checker.isNotNull(file)) {
+            if (file.isDirectory()) {
+                try {
+                    FileExecutor.deleteDirectory(file);
+                } catch (IOException e) {
+                    Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.DELETE_FILE_ERROR);
+                }
+            } else {
+                FileExecutor.deleteFile(file);
+            }
+        }
+    }
+
     public static String whois(String domain) {
         try {
             return NetUtils.whois(domain);
@@ -169,6 +183,11 @@ public class WeUtils {
                     break;
                 case 3:
                     putFilesInListView(files, fileManagerController.selectedFilesOfMergeTab);
+                    break;
+                case 4:
+                    if (files instanceof File) {
+                        fileManagerController.srcFolderOfDeleteTab.setText(getFolder((File) files));
+                    }
                     break;
                 default:
                     break;

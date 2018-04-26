@@ -6,6 +6,8 @@ package com.zhazhapan.util.visual.constant;
  */
 public class LocalValueConsts {
 
+    public static final String DELETE_FILE_ERROR = "删除文件失败";
+
     public static final String WAVE_VIEW = "/view/WaveView.fxml";
 
     public static final String WAVE_VIEWER = "波动图表";

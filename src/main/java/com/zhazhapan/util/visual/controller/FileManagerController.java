@@ -5,11 +5,13 @@ import com.zhazhapan.util.ArrayUtils;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.FileExecutor;
 import com.zhazhapan.util.Formatter;
+import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.WeUtils;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
@@ -19,6 +21,7 @@ import javafx.scene.input.TransferMode;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author pantao
@@ -88,6 +91,12 @@ public class FileManagerController {
 
     @FXML
     public CheckBox deleteSrcOfMergeTab;
+
+    @FXML
+    public TextField srcFolderOfDeleteTab;
+
+    @FXML
+    public TextArea filenameOfDeleteTab;
 
     @FXML
     private void initialize() {
@@ -350,5 +359,52 @@ public class FileManagerController {
 
     public void removeFilesOfMergeTab() {
         WeUtils.removeSelectedItems(selectedFilesOfMergeTab);
+    }
+
+    public void deleteFiles() {
+        String filenames = filenameOfDeleteTab.getText();
+        if (Checker.isNotEmpty(filenames)) {
+            deleteFiles(new File(srcFolderOfDeleteTab.getText()), filenames.split(ValueConsts.COMMA_SIGN));
+            Alerts.showInformation(LocalValueConsts.MAIN_TITLE, LocalValueConsts.OPERATION_SUCCESS);
+        }
+    }
+
+    private void deleteFiles(File folder, String[] filenames) {
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (Checker.isNotNull(files) && files.length > 0) {
+                for (File file : files) {
+                    String filename = file.getName();
+                    for (String fn : filenames) {
+                        String nf = fn.trim();
+                        if (Checker.isNotEmpty(nf) && filename.endsWith(fn)) {
+                            WeUtils.deleteFiles(file);
+                            break;
+                        }
+                    }
+                    if (file.isDirectory()) {
+                        deleteFiles(file, filenames);
+                    }
+                }
+            }
+        }
+    }
+
+    public void dragFileDroppedOfDeleteTab(DragEvent event) {
+        List<File> files = event.getDragboard().getFiles();
+        if (Checker.isNotEmpty(files)) {
+            srcFolderOfDeleteTab.setText(WeUtils.getFolder(files.get(0)));
+        }
+    }
+
+    public void dragFilesDroppedOfDeleteTab(DragEvent event) {
+        List<File> files = event.getDragboard().getFiles();
+        if (Checker.isNotEmpty(files)) {
+            for (File file : files) {
+                String fns = Checker.checkNull(filenameOfDeleteTab.getText()).trim();
+                boolean endsWith = Checker.isEmpty(fns) || fns.endsWith(ValueConsts.COMMA_SIGN);
+                filenameOfDeleteTab.appendText((endsWith ? "" : ", ") + file.getName());
+            }
+        }
     }
 }
