@@ -10,6 +10,8 @@ import javafx.util.Pair;
 import java.util.*;
 
 /**
+ * 配置参数
+ *
  * @author pantao
  * @since 2018/4/2
  */

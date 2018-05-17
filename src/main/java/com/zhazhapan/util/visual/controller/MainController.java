@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -32,6 +33,7 @@ import java.util.TimerTask;
  */
 public class MainController {
 
+    private static Logger logger = Logger.getLogger(MainController.class);
     @FXML
     public TabPane tabPane;
 
@@ -43,14 +45,24 @@ public class MainController {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                String clipboard = ClipboardUtil.getStr();
-                String last = ConfigModel.getLastClipboardHistoryItem().getValue();
+                String clipboard;
+                String last;
+                try {
+                    // 忽略系统休眠时抛出的异常
+                    clipboard = ClipboardUtil.getStr();
+                    last = ConfigModel.getLastClipboardHistoryItem().getValue();
+                } catch (Exception e) {
+                    logger.warn(e.getMessage());
+                    clipboard = last = ValueConsts.EMPTY_STRING;
+
+                }
                 if (Checker.isNotEmpty(clipboard) && !last.equals(clipboard)) {
                     Date date = new Date();
                     ConfigModel.appendClipboardHistory(date, clipboard);
                     ClipboardHistoryController controller = ControllerModel.getClipboardHistoryController();
                     if (Checker.isNotNull(controller)) {
-                        Platform.runLater(() -> controller.insert(date, clipboard));
+                        final String clip = clipboard;
+                        Platform.runLater(() -> controller.insert(date, clip));
                     }
                 }
             }

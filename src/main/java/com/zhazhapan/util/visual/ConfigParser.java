@@ -56,6 +56,9 @@ class ConfigParser {
 
     private static final String RESULT_SIZE = "firstResultSize";
 
+    /**
+     * 解析配置文件到 {@link ConfigModel}
+     */
     static void parserConfig() {
         try {
             JsonParser parser = new JsonParser(FileExecutor.read(WeToolApplication.class.getResourceAsStream

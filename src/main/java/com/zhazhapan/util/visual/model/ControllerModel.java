@@ -3,6 +3,8 @@ package com.zhazhapan.util.visual.model;
 import com.zhazhapan.util.visual.controller.*;
 
 /**
+ * 保存打开的窗口controller对象
+ *
  * @author pantao
  * @since 2018/3/31
  */
