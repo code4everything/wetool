@@ -5,6 +5,7 @@ import com.zhazhapan.util.*;
 import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.controller.FileManagerController;
+import com.zhazhapan.util.visual.controller.WaveController;
 import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.collections.ObservableList;
@@ -17,6 +18,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -30,6 +32,22 @@ import static com.zhazhapan.util.visual.WeToolApplication.stage;
 public class WeUtils {
 
     private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
+
+    public static void closeMysqlConnection() {
+        WaveController controller = ControllerModel.getWaveController();
+        if (Checker.isNotNull(controller)) {
+            try {
+                if (Checker.isNotNull(controller.statement)) {
+                    controller.statement.close();
+                }
+                if (Checker.isNotNull(controller.connection)) {
+                    controller.connection.close();
+                }
+            } catch (SQLException e) {
+                Alerts.showError(LocalValueConsts.MAIN_TITLE, e.getMessage());
+            }
+        }
+    }
 
     public static void deleteFiles(File file) {
         if (Checker.isNotNull(file)) {
@@ -276,6 +294,7 @@ public class WeUtils {
     }
 
     public static void exitSystem() {
+        closeMysqlConnection();
         System.exit(ValueConsts.ZERO_INT);
     }
 

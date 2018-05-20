@@ -58,9 +58,9 @@ public class WaveController {
     @FXML
     public DatePicker sqlDate;
 
-    Connection connection = null;
+    public Connection connection = null;
 
-    Statement statement = null;
+    public Statement statement = null;
 
     @FXML
     private void initialize() {

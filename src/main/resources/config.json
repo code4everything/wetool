@@ -28,11 +28,11 @@
     "clipboardSize": 20,
     "autoWrap": false,
     "mysql": {
-        "host": "127.0.0.1:3306",
+        "host": "192.168.1.233:3306",
         "database": "efo",
-        "condition": "useUnicode=true&characterEncoding=utf-8&useSSL=true",
-        "username": "zhazhapan",
-        "password": "zhazhapan"
+        "condition": "useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC",
+        "username": "root",
+        "password": "root"
     },
     "waveViewer": [
         {
@@ -40,6 +40,13 @@
             "tableName": "frequency",
             "dataField": "fre_data",
             "dateField": "fre_date",
+            "firstResultSize": 30
+        },
+        {
+            "title": "晚睡时间",
+            "tableName": "dismiss",
+            "dataField": "dis_data",
+            "dateField": "dis_date",
             "firstResultSize": 30
         }
     ]
