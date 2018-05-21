@@ -25,12 +25,14 @@
             <MenuItem mnemonicParsing="false" onAction="#openNetworkToolTab" text="网络工具"/>
             <MenuItem mnemonicParsing="false" onAction="#openQiniuToolTab" text="七牛云对象存储"/>
             <MenuItem mnemonicParsing="false" onAction="#openWaveViewerTab" text="波动图表"/>
+            <Menu mnemonicParsing="false" text="外部工具">
+                <MenuItem mnemonicParsing="false" onAction="#openColorPicker" text="取色器"/>
+                <MenuItem mnemonicParsing="false" onAction="#openWox" text="效率工具"/>
+            </Menu>
         </Menu>
         <Menu mnemonicParsing="false" text="帮助">
             <MenuItem mnemonicParsing="false" text="关于" onAction="#about"/>
         </Menu>
     </MenuBar>
-    <TabPane VBox.vgrow="ALWAYS" fx:id="tabPane">
-
-    </TabPane>
+    <TabPane VBox.vgrow="ALWAYS" fx:id="tabPane"/>
 </VBox>

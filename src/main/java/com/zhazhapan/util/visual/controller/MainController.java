@@ -262,4 +262,12 @@ public class MainController {
         tab.setOnCloseRequest(event -> WeUtils.closeMysqlConnection());
         addTab(tab, LocalValueConsts.WAVE_VIEW);
     }
+
+    public void openColorPicker() {
+        WeUtils.startColorPicker();
+    }
+
+    public void openWox() {
+        WeUtils.startWox();
+    }
 }

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.zhazhapan</groupId>
     <artifactId>wetool</artifactId>
-    <version>1.3.1</version>
+    <version>1.4</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -64,11 +64,6 @@
         </plugins>
     </build>
     <dependencies>
-        <dependency>
-            <groupId>com.zhazhapan</groupId>
-            <artifactId>util</artifactId>
-            <version>1.0.7</version>
-        </dependency>
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>

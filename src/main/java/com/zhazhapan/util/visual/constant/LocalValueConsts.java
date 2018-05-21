@@ -1,10 +1,16 @@
 package com.zhazhapan.util.visual.constant;
 
+import com.zhazhapan.util.Utils;
+
 /**
  * @author pantao
  * @since 2018/3/30
  */
 public class LocalValueConsts {
+
+    public static final String CAN_NOT_FOUND = "找不到可执行文件：";
+
+    public static final String NOT_SUPPORT = "抱歉，暂时不支持 " + Utils.getCurrentOS().toUpperCase() + " 平台";
 
     public static final String DELETE_FILE_ERROR = "删除文件失败";
 
@@ -34,6 +40,10 @@ public class LocalValueConsts {
 
     public static final String TRAY_ERROR = "设置系统托盘失败";
 
+    public static final String WOX = "wox";
+
+    public static final String COLOR_PICKER = "color picker";
+
     public static final String HIDE = "hide";
 
     public static final String SHOW = "show";
@@ -56,8 +66,10 @@ public class LocalValueConsts {
 
     public static final String LOAD_CONFIG_ERROR = "加载配置文件失败";
 
-    public static final String ABOUT_DETAIL = "当前版本：v1.3.1\r\n\r\n项目地址：https://github" + "" + "" + "" + "" +
-            ".com/zhazhapan/wetool\r\n\r\n外部依赖：\r\n\thttps://gitee.com/zhazhapan_admin/qiniu";
+    public static final String ABOUT_DETAIL = "当前版本：v1.4\r\n\r\n项目地址：https://github" +
+            ".com/zhazhapan/wetool\r\n\r\n外部依赖：\r\n\thttps://gitee.com/zhazhapan_admin/qiniu" +
+            "\r\n\r\n外部工具：\r\n\thttps://gitee.com/zhazhapan_admin/ColorPicker\r\n\thttps://github" +
+            ".com/Wox-launcher/Wox\r\n\r\n取色器说明：\r\n\t退出：Ctrl + Alt + q\r\n\t复制：Ctrl + Alt + c";
 
     public static final String ABOUT_APP = "关于应用";
 

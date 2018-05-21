@@ -75,9 +75,11 @@ public class WeToolApplication extends Application {
     private void enableTray() {
         Platform.setImplicitExit(false);
         PopupMenu popupMenu = new PopupMenu();
-        java.awt.MenuItem openItem = new java.awt.MenuItem(LocalValueConsts.SHOW);
-        java.awt.MenuItem hideItem = new java.awt.MenuItem(LocalValueConsts.HIDE);
-        java.awt.MenuItem quitItem = new java.awt.MenuItem(LocalValueConsts.EXIT);
+        MenuItem woxItem = new MenuItem((LocalValueConsts.WOX));
+        MenuItem pickerItem = new MenuItem(LocalValueConsts.COLOR_PICKER);
+        MenuItem openItem = new MenuItem(LocalValueConsts.SHOW);
+        MenuItem hideItem = new MenuItem(LocalValueConsts.HIDE);
+        MenuItem quitItem = new MenuItem(LocalValueConsts.EXIT);
         ActionListener actionListener = e -> {
             MenuItem item = (MenuItem) e.getSource();
             switch (item.getLabel()) {
@@ -90,6 +92,12 @@ public class WeToolApplication extends Application {
                     break;
                 case LocalValueConsts.HIDE:
                     Platform.runLater(stage::hide);
+                    break;
+                case LocalValueConsts.COLOR_PICKER:
+                    WeUtils.startColorPicker();
+                    break;
+                case LocalValueConsts.WOX:
+                    WeUtils.startWox();
                     break;
                 default:
                     break;
@@ -127,9 +135,13 @@ public class WeToolApplication extends Application {
                 }
             }
         };
+        woxItem.addActionListener(actionListener);
         openItem.addActionListener(actionListener);
         quitItem.addActionListener(actionListener);
         hideItem.addActionListener(actionListener);
+        pickerItem.addActionListener(actionListener);
+        popupMenu.add(woxItem);
+        popupMenu.add(pickerItem);
         popupMenu.add(openItem);
         popupMenu.add(hideItem);
         popupMenu.add(quitItem);

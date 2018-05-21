@@ -8,6 +8,7 @@ import com.zhazhapan.util.visual.controller.FileManagerController;
 import com.zhazhapan.util.visual.controller.WaveController;
 import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
@@ -18,6 +19,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +34,65 @@ import static com.zhazhapan.util.visual.WeToolApplication.stage;
 public class WeUtils {
 
     private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
+
+    private static final String CURRENT_DIR = Paths.get(ValueConsts.DOT_SIGN).toAbsolutePath().normalize().toString();
+
+    private static final String COLOR_PICKER = CURRENT_DIR + "/ColorPicker.exe";
+
+    private static final String WOX = CURRENT_DIR + "/Wox.exe";
+
+    private static final String WOX_URL = "https://github.com/Wox-launcher/Wox/releases/latest";
+
+    private static final String WOX_ERROR = LocalValueConsts.CAN_NOT_FOUND + WOX;
+
+    private static final String WOX_TIP = "请下载 Wox-x.x.x.exe 文件到 " + CURRENT_DIR + " 目录，并重命名为：Wox.exe";
+
+    private static final String COLOR_PICKER_ERROR = LocalValueConsts.CAN_NOT_FOUND + COLOR_PICKER;
+
+    private static final String COLOR_PICKER_URL = "http://oq3iwfipo.bkt.clouddn.com/tools/zhazhapan/ColorPicker.exe";
+
+    public static void startColorPicker() {
+        if (Checker.isWindows()) {
+            ThreadPool.executor.submit(() -> {
+                if (Checker.isNotExists(COLOR_PICKER)) {
+                    Downloader.download(CURRENT_DIR, COLOR_PICKER_URL);
+                }
+                if (Checker.isExists(COLOR_PICKER)) {
+                    run(COLOR_PICKER);
+                } else {
+                    Platform.runLater(() -> Alerts.showError(LocalValueConsts.MAIN_TITLE, COLOR_PICKER_ERROR));
+                }
+            });
+        } else {
+            Alerts.showWarning(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NOT_SUPPORT);
+        }
+    }
+
+    public static void startWox() {
+        if (Checker.isWindows()) {
+            if (Checker.isNotExists(WOX)) {
+                openLink(WOX_URL);
+                Alerts.showInformation(LocalValueConsts.MAIN_TITLE, WOX_TIP);
+            }
+            if (Checker.isExists(WOX)) {
+                run(WOX);
+            } else {
+                Alerts.showError(LocalValueConsts.MAIN_TITLE, WOX_ERROR);
+            }
+        } else {
+            Alerts.showWarning(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NOT_SUPPORT);
+        }
+    }
+
+    public static void run(String executableFile) {
+        Platform.runLater(() -> {
+            try {
+                Runtime.getRuntime().exec(executableFile);
+            } catch (IOException e) {
+                Alerts.showError(LocalValueConsts.MAIN_TITLE, e.getMessage());
+            }
+        });
+    }
 
     public static void closeMysqlConnection() {
         WaveController controller = ControllerModel.getWaveController();
