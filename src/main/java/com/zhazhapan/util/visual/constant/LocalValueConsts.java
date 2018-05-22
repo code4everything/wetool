@@ -69,7 +69,7 @@ public class LocalValueConsts {
     public static final String ABOUT_DETAIL = "当前版本：v1.4\r\n\r\n项目地址：https://github" +
             ".com/zhazhapan/wetool\r\n\r\n外部依赖：\r\n\thttps://gitee.com/zhazhapan_admin/qiniu" +
             "\r\n\r\n外部工具：\r\n\thttps://gitee.com/zhazhapan_admin/ColorPicker\r\n\thttps://github" +
-            ".com/Wox-launcher/Wox\r\n\r\n取色器说明：\r\n\t退出：Ctrl + Alt + q\r\n\t复制：Ctrl + Alt + c";
+            ".com/Wox-launcher/Wox\r\n\r\n取色器说明：\r\n\t退出：Ctrl + Alt + Q\r\n\t复制：Ctrl + Alt + C";
 
     public static final String ABOUT_APP = "关于应用";
 

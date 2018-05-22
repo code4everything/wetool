@@ -33,13 +33,11 @@ import static com.zhazhapan.util.visual.WeToolApplication.stage;
  */
 public class WeUtils {
 
-    private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
-
     private static final String CURRENT_DIR = Paths.get(ValueConsts.DOT_SIGN).toAbsolutePath().normalize().toString();
 
-    private static final String COLOR_PICKER = CURRENT_DIR + "/ColorPicker.exe";
+    private static final String COLOR_PICKER = CURRENT_DIR + File.separator + "ColorPicker.exe";
 
-    private static final String WOX = CURRENT_DIR + "/Wox.exe";
+    private static final String WOX = CURRENT_DIR + File.separator + "Wox.exe";
 
     private static final String WOX_URL = "https://github.com/Wox-launcher/Wox/releases/latest";
 
@@ -50,6 +48,8 @@ public class WeUtils {
     private static final String COLOR_PICKER_ERROR = LocalValueConsts.CAN_NOT_FOUND + COLOR_PICKER;
 
     private static final String COLOR_PICKER_URL = "http://oq3iwfipo.bkt.clouddn.com/tools/zhazhapan/ColorPicker.exe";
+
+    private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
 
     public static void startColorPicker() {
         if (Checker.isWindows()) {

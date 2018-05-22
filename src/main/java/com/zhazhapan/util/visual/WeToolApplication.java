@@ -20,6 +20,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author pantao
@@ -75,11 +77,12 @@ public class WeToolApplication extends Application {
     private void enableTray() {
         Platform.setImplicitExit(false);
         PopupMenu popupMenu = new PopupMenu();
-        MenuItem woxItem = new MenuItem((LocalValueConsts.WOX));
-        MenuItem pickerItem = new MenuItem(LocalValueConsts.COLOR_PICKER);
-        MenuItem openItem = new MenuItem(LocalValueConsts.SHOW);
-        MenuItem hideItem = new MenuItem(LocalValueConsts.HIDE);
-        MenuItem quitItem = new MenuItem(LocalValueConsts.EXIT);
+        List<MenuItem> items = new ArrayList<>(8);
+        items.add(new MenuItem((LocalValueConsts.WOX)));
+        items.add(new MenuItem(LocalValueConsts.COLOR_PICKER));
+        items.add(new MenuItem(LocalValueConsts.SHOW));
+        items.add(new MenuItem(LocalValueConsts.HIDE));
+        items.add(new MenuItem(LocalValueConsts.EXIT));
         ActionListener actionListener = e -> {
             MenuItem item = (MenuItem) e.getSource();
             switch (item.getLabel()) {
@@ -135,16 +138,10 @@ public class WeToolApplication extends Application {
                 }
             }
         };
-        woxItem.addActionListener(actionListener);
-        openItem.addActionListener(actionListener);
-        quitItem.addActionListener(actionListener);
-        hideItem.addActionListener(actionListener);
-        pickerItem.addActionListener(actionListener);
-        popupMenu.add(woxItem);
-        popupMenu.add(pickerItem);
-        popupMenu.add(openItem);
-        popupMenu.add(hideItem);
-        popupMenu.add(quitItem);
+        items.forEach(item -> {
+            item.addActionListener(actionListener);
+            popupMenu.add(item);
+        });
         try {
             SystemTray tray = SystemTray.getSystemTray();
             java.awt.Image image = ImageIO.read(getClass().getResourceAsStream(LocalValueConsts.ICON));
