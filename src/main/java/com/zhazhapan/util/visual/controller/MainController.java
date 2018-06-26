@@ -7,6 +7,7 @@ import com.zhazhapan.qiniu.view.MainWindow;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ReflectUtils;
 import com.zhazhapan.util.dialog.Alerts;
+import com.zhazhapan.util.visual.WeToolApplication;
 import com.zhazhapan.util.visual.WeUtils;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.model.ConfigModel;
@@ -14,6 +15,7 @@ import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
@@ -33,8 +35,12 @@ import java.util.TimerTask;
 public class MainController {
 
     private static Logger logger = Logger.getLogger(MainController.class);
+
     @FXML
     public TabPane tabPane;
+
+    @FXML
+    public ProgressBar jvm;
 
     @FXML
     private void initialize() {
@@ -63,6 +69,17 @@ public class MainController {
                         final String clip = clipboard;
                         Platform.runLater(() -> controller.insert(date, clip));
                     }
+                }
+                boolean isVisible = WeToolApplication.stage.isShowing() && !WeToolApplication.stage.isMaximized() &&
+                        !WeToolApplication.stage.isIconified();
+                // 监听JVM内存变化
+                if (isVisible) {
+                    System.gc();
+                    Platform.runLater(() -> {
+                        double total = Runtime.getRuntime().totalMemory();
+                        double used = total - Runtime.getRuntime().freeMemory();
+                        jvm.setProgress(used / total);
+                    });
                 }
             }
         };

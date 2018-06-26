@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class WeToolApplication extends Application {
 
-    static Stage stage = null;
+    public static Stage stage = null;
 
     private TrayIcon trayIcon;
 
