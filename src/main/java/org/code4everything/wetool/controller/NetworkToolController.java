@@ -1,5 +1,6 @@
 package org.code4everything.wetool.controller;
 
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.NetUtil;
 import com.zhazhapan.config.JsonParser;
 import com.zhazhapan.util.Checker;
@@ -12,7 +13,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.factor.BeanFactory;
+import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
 
 /**
@@ -55,7 +56,7 @@ public class NetworkToolController {
     private void initialize() {
         BeanFactory.register(this);
         //防止UI线程阻塞
-        ThreadPool.executor.submit(() -> {
+        ThreadUtil.execute(() -> {
             try {
                 JsonParser parser = NetUtils.getPublicIpAndLocation();
                 Platform.runLater(() -> {

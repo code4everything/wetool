@@ -34,7 +34,7 @@
         <padding>
             <Insets left="10.0" right="10.0" top="10.0" bottom="5.0"/>
         </padding>
-        <Label text="USED JVM MEMORY: " HBox.hgrow="NEVER"/>
+        <Label text="Java虚拟机内存使用: " HBox.hgrow="NEVER"/>
         <ProgressBar fx:id="jvm" maxWidth="1.7976931348623157E308" prefWidth="200.0" progress="0.0"
                      HBox.hgrow="ALWAYS"/>
     </HBox>

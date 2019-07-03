@@ -11,10 +11,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
+import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.factor.BeanFactory;
-import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
 
 import java.io.File;
@@ -26,6 +26,8 @@ import java.util.List;
  * @since 2018/3/31
  */
 public class FileManagerController {
+
+    private final WeConfig config = BeanFactory.get(WeConfig.class);
 
     @FXML
     public ListView<File> selectedFilesOfRenameTab;
@@ -98,6 +100,7 @@ public class FileManagerController {
 
     @FXML
     private void initialize() {
+        BeanFactory.register(this);
         //设置多选
         selectedFilesOfRenameTab.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedFilesOfCopyTab.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -110,8 +113,7 @@ public class FileManagerController {
         fileAddableCombo.getSelectionModel().selectLast();
         fileAddableCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> generateRenameDestFilesOfAddable());
 
-        fileContent.setWrapText(ConfigModel.isAutoWrap());
-        BeanFactory.register(this);
+        fileContent.setWrapText(config.getAutoWrap());
     }
 
     @SuppressWarnings("unchecked")

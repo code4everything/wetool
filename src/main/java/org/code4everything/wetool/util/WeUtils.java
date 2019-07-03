@@ -12,19 +12,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.experimental.UtilityClass;
+import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ValueConsts;
 import org.code4everything.wetool.controller.FileManagerController;
-import org.code4everything.wetool.factor.BeanFactory;
-import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.factory.BeanFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Objects;
 
 /**
  * @author pantao
@@ -33,10 +32,14 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class WeUtils {
 
-    private static final String CURRENT_DIR =
-            Paths.get(com.zhazhapan.modules.constant.ValueConsts.DOT_SIGN).toAbsolutePath().normalize().toString();
+    private static WeConfig config;
 
-    private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
+    private static WeConfig getConfig() {
+        if (Objects.isNull(config)) {
+            config = BeanFactory.get(WeConfig.class);
+        }
+        return config;
+    }
 
     public static boolean isWindows() {
         return SystemUtil.getOsInfo().getName().startsWith("Window");
@@ -225,14 +228,14 @@ public class WeUtils {
     @SuppressWarnings("unchecked")
     private static void putFilesInListView(File file, ObservableList items) {
         if (Checker.isNotNull(file)) {
-            if (FILE_FILTER.matcher(file.getName()).matches()) {
+            if (getConfig().getFileFilter().getFilterPattern().matcher(file.getName()).matches()) {
                 if (file.isDirectory()) {
                     putFilesInListView((List<File>) FileExecutor.listFiles(file, null,
                                                                            com.zhazhapan.modules.constant.ValueConsts.TRUE), items);
                 } else if (!items.contains(file)) {
                     items.add(file);
                 }
-            } else if (ConfigModel.isFileFilterTip()) {
+            } else if (getConfig().getFileFilter().getShowTip()) {
                 Alerts.showInformation(TitleConsts.APP_TITLE, TipConsts.FILE_NOT_MATCH_ERROR, file.getAbsolutePath());
             }
         }

@@ -8,9 +8,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
+import org.code4everything.wetool.Config.WeConfig;
+import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
-import org.code4everything.wetool.factor.BeanFactory;
-import org.code4everything.wetool.model.ConfigModel;
 
 /**
  * @author pantao
@@ -19,6 +19,8 @@ import org.code4everything.wetool.model.ConfigModel;
 public class CharsetConverterController {
 
     private static final String BASE64 = "BASE64";
+
+    private final WeConfig config = BeanFactory.get(WeConfig.class);
 
     @FXML
     public TextArea originalContent;
@@ -34,6 +36,7 @@ public class CharsetConverterController {
 
     @FXML
     private void initialize() {
+        BeanFactory.register(this);
         // 支持的编码
         String[] charset = {"UTF-8", "ISO-8859-1", "GBK", BASE64};
 
@@ -49,11 +52,8 @@ public class CharsetConverterController {
 
         // 设置文本框
         originalContent.textProperty().addListener((o, ov, nv) -> convert());
-        originalContent.setWrapText(ConfigModel.isAutoWrap());
-        convertedContent.setWrapText(ConfigModel.isAutoWrap());
-
-        // 注册
-        BeanFactory.register(this);
+        originalContent.setWrapText(config.getAutoWrap());
+        convertedContent.setWrapText(config.getAutoWrap());
     }
 
     private void convert() {

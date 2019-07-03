@@ -13,13 +13,13 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
-import org.code4everything.wetool.util.WeUtils;
+import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ValueConsts;
 import org.code4everything.wetool.constant.ViewConsts;
-import org.code4everything.wetool.factor.BeanFactory;
-import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.WeUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -38,6 +38,8 @@ public class MainController {
 
     private final Stage stage = BeanFactory.get(Stage.class);
 
+    private final WeConfig config = BeanFactory.get(WeConfig.class);
+
     @FXML
     public TabPane tabPane;
 
@@ -48,7 +50,7 @@ public class MainController {
     private void initialize() {
         BeanFactory.register(this);
         // 监听剪贴板
-        ConfigModel.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
+        config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
 
@@ -59,17 +61,19 @@ public class MainController {
                 try {
                     // 忽略系统休眠时抛出的异常
                     clipboard = ClipboardUtil.getStr();
-                    last = ConfigModel.getLastClipboardHistoryItem().getValue();
+                    last = config.getLastClipboardHistoryItem().getValue();
                 } catch (Exception e) {
                     logger.warn(e.getMessage());
                     clipboard = last = com.zhazhapan.modules.constant.ValueConsts.EMPTY_STRING;
 
                 }
                 if (Checker.isNotEmpty(clipboard) && !last.equals(clipboard)) {
+                    // 剪贴板发生变化
                     Date date = new Date();
-                    ConfigModel.appendClipboardHistory(date, clipboard);
+                    config.appendClipboardHistory(date, clipboard);
                     ClipboardHistoryController controller = BeanFactory.get(ClipboardHistoryController.class);
                     if (Checker.isNotNull(controller)) {
+                        // 显示到文本框
                         final String clip = clipboard;
                         Platform.runLater(() -> controller.insert(date, clip));
                     }
@@ -89,7 +93,7 @@ public class MainController {
     }
 
     public void loadTabs() {
-        for (Object tabName : ConfigModel.getTabs()) {
+        for (Object tabName : config.getInitialize().getTabs().getLoads()) {
             try {
                 ReflectUtils.invokeMethod(this, "open" + tabName + "Tab", null);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -268,7 +272,7 @@ public class MainController {
     }
 
     public void openAllTab() {
-        ConfigModel.setTabs(ConfigModel.getSupportTabs());
+        config.getInitialize().getTabs().setLoads(config.getInitialize().getTabs().getSupports());
         loadTabs();
     }
 }

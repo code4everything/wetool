@@ -11,8 +11,6 @@ public class ValueConsts {
 
     public static final int ONE_THOUSAND = 1000;
 
-    public static final String CONFIG_PATH = "/config.json";
-
     public static final String TIME_FORMAT = "HH.mm.ss";
 
     public static final String TIME_VARIABLE = "%(TIME|time)%";

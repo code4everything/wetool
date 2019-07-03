@@ -13,9 +13,23 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hutool.version>4.5.3</hutool.version>
     </properties>
 
     <dependencies>
+        <!--系统工具-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-system</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+        <!--扩展工具-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-extra</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+        <!--二维码-->
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
@@ -25,12 +39,28 @@
             <groupId>com.zhazhapan</groupId>
             <artifactId>util</artifactId>
             <version>1.0.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>fastjson</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cn.hutool</groupId>
+                    <artifactId>hutool-all</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        <!--基础工具-->
         <dependency>
             <groupId>org.code4everything</groupId>
             <artifactId>boot-surface</artifactId>
             <version>1.1.4</version>
         </dependency>
+        <!--快速开发工具-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -63,7 +93,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.code4everything.wetool.WeToolApplication</mainClass>
+                                    <mainClass>org.code4everything.wetool.WeApplication</mainClass>
                                 </transformer>
                             </transformers>
                             <artifactSet>

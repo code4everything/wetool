@@ -1,6 +1,8 @@
-package org.code4everything.wetool.factor;
+package org.code4everything.wetool.factory;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.experimental.UtilityClass;
+import org.code4everything.wetool.exception.BeanException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,5 +25,16 @@ public class BeanFactory {
     @SuppressWarnings("unchecked")
     public static <T> T get(Class<T> clazz) {
         return (T) BEANS.get(clazz);
+    }
+
+    public static boolean isRegistered(Class<?> clazz) {
+        return BEANS.containsKey(clazz);
+    }
+
+    public static <T> T safelyGet(Class<T> clazz) {
+        if (isRegistered(clazz)) {
+            return get(clazz);
+        }
+        throw new BeanException(StrUtil.format("bean '{}' not register", clazz.getName()));
     }
 }

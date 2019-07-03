@@ -4,10 +4,10 @@
         "height": 700,
         "fullscreen": false,
         "tabs": {
-            "load": [
+            "loads": [
                 "ClipboardHistory"
             ],
-            "support": [
+            "supports": [
                 "FileManager",
                 "JsonParser",
                 "RandomGenerator",

@@ -1,6 +1,7 @@
 package org.code4everything.wetool;
 
-import com.zhazhapan.util.ThreadPool;
+import cn.hutool.core.io.FileUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -9,13 +10,14 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
+import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.controller.MainController;
-import org.code4everything.wetool.factor.BeanFactory;
-import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
 
 import javax.imageio.ImageIO;
@@ -31,7 +33,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/3/30
  */
-public class WeToolApplication extends Application {
+public class WeApplication extends Application {
 
     private Stage stage;
 
@@ -40,7 +42,11 @@ public class WeToolApplication extends Application {
     private boolean isTraySuccess = false;
 
     public static void main(String[] args) {
-        ThreadPool.init();
+        // 解析配置文件
+        String path = FileUtils.currentWorkDir("we-config.json");
+        WeConfig config = JSONObject.parseObject(FileUtil.readUtf8String(path), WeConfig.class);
+        BeanFactory.register(config);
+        // 启动应用
         launch(args);
     }
 
@@ -67,18 +73,18 @@ public class WeToolApplication extends Application {
             }
             event.consume();
         });
-        ConfigParser.parserConfig();
         // 设置大小
-        stage.setWidth(ConfigModel.getWidth());
-        stage.setHeight(ConfigModel.getHeight());
-        stage.setFullScreen(ConfigModel.isFullscreen());
-        BeanFactory.get(MainController.class).loadTabs();
+        WeConfig config = BeanFactory.get(WeConfig.class);
+        stage.setWidth(config.getInitialize().getWidth());
+        stage.setHeight(config.getInitialize().getHeight());
+        stage.setFullScreen(config.getInitialize().getFullscreen());
 
         if (WeUtils.isWindows()) {
             // 开启系统托盘
             enableTray();
         }
         stage.show();
+        BeanFactory.get(MainController.class).loadTabs();
     }
 
     /**

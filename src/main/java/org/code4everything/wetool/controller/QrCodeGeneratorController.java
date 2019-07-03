@@ -8,10 +8,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
+import org.code4everything.boot.base.FileUtils;
+import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.factor.BeanFactory;
-import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
 
 import java.io.File;
@@ -24,6 +25,8 @@ import java.io.InputStream;
  */
 public class QrCodeGeneratorController {
 
+    private final WeConfig config = BeanFactory.get(WeConfig.class);
+
     @FXML
     public TextArea content;
 
@@ -32,14 +35,13 @@ public class QrCodeGeneratorController {
 
     @FXML
     private void initialize() {
-        content.setWrapText(ConfigModel.isAutoWrap());
         BeanFactory.register(this);
+        content.setWrapText(config.getAutoWrap());
     }
 
     public void generateQrCode() {
         int size = (int) Double.min(qrCode.getFitHeight(), qrCode.getFitWidth());
-        File image =
-                new File(com.zhazhapan.modules.constant.ValueConsts.USER_DESKTOP + com.zhazhapan.modules.constant.ValueConsts.SEPARATOR + "qrcode.jpg");
+        File image = new File(FileUtils.currentWorkDir("qrcode.jpg"));
         try {
             QrCodeUtil.generate(content.getText(), size, size, image);
             InputStream is = new FileInputStream(image);

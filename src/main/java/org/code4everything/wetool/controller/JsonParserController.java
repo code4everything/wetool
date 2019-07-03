@@ -15,11 +15,11 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
+import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ValueConsts;
-import org.code4everything.wetool.factor.BeanFactory;
-import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
 
 /**
@@ -27,6 +27,8 @@ import org.code4everything.wetool.util.WeUtils;
  * @since 2018/3/31
  */
 public class JsonParserController {
+
+    private final WeConfig config = BeanFactory.get(WeConfig.class);
 
     @FXML
     public TextArea jsonContent;
@@ -39,8 +41,8 @@ public class JsonParserController {
 
     @FXML
     private void initialize() {
-        jsonContent.setWrapText(ConfigModel.isAutoWrap());
-        parsedJsonContent.setWrapText(ConfigModel.isAutoWrap());
+        jsonContent.setWrapText(config.getAutoWrap());
+        parsedJsonContent.setWrapText(config.getAutoWrap());
         BeanFactory.register(this);
     }
 
