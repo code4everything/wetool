@@ -1,15 +1,15 @@
-package com.zhazhapan.util.visual.controller;
+package org.code4everything.wetool.controller;
 
 import cn.hutool.core.swing.ClipboardUtil;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ReflectUtils;
 import com.zhazhapan.util.dialog.Alerts;
-import com.zhazhapan.util.visual.WeToolApplication;
-import com.zhazhapan.util.visual.WeUtils;
-import com.zhazhapan.util.visual.constant.LocalValueConsts;
-import com.zhazhapan.util.visual.model.ConfigModel;
-import com.zhazhapan.util.visual.model.ControllerModel;
+import org.code4everything.wetool.WeToolApplication;
+import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.model.ControllerModel;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

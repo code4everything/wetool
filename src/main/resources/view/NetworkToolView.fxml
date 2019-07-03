@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zhazhapan.util.visual.controller.NetworkToolController">
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.code4everything.wetool.controller.NetworkToolController">
     <!--<Accordion fx:id="accordion" VBox.vgrow="ALWAYS">-->
     <!--<panes>-->
     <!--<TitledPane fx:id="firstTitledPane" animated="false" text="本机网络">-->

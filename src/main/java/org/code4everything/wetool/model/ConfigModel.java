@@ -1,4 +1,4 @@
-package com.zhazhapan.util.visual.model;
+package org.code4everything.wetool.model;
 
 import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.util.ObjectUtil;

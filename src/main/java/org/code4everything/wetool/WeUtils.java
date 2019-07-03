@@ -1,12 +1,12 @@
-package com.zhazhapan.util.visual;
+package org.code4everything.wetool;
 
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.*;
 import com.zhazhapan.util.dialog.Alerts;
-import com.zhazhapan.util.visual.constant.LocalValueConsts;
-import com.zhazhapan.util.visual.controller.FileManagerController;
-import com.zhazhapan.util.visual.model.ConfigModel;
-import com.zhazhapan.util.visual.model.ControllerModel;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.controller.FileManagerController;
+import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.model.ControllerModel;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.zhazhapan.util.visual.WeToolApplication.stage;
+import static org.code4everything.wetool.WeToolApplication.stage;
 
 /**
  * @author pantao

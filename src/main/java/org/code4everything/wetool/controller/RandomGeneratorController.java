@@ -1,11 +1,11 @@
-package com.zhazhapan.util.visual.controller;
+package org.code4everything.wetool.controller;
 
 import cn.hutool.core.util.RandomUtil;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.RandomUtils;
-import com.zhazhapan.util.visual.WeUtils;
+import org.code4everything.wetool.WeUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 

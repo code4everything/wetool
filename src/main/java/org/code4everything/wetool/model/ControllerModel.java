@@ -1,6 +1,7 @@
-package com.zhazhapan.util.visual.model;
+package org.code4everything.wetool.model;
 
 import com.zhazhapan.util.visual.controller.*;
+import org.code4everything.wetool.controller.*;
 
 /**
  * 保存打开的窗口controller对象

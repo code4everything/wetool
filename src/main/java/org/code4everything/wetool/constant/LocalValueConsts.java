@@ -1,4 +1,4 @@
-package com.zhazhapan.util.visual.constant;
+package org.code4everything.wetool.constant;
 
 import com.zhazhapan.util.Utils;
 

@@ -1,11 +1,11 @@
-package com.zhazhapan.util.visual.controller;
+package org.code4everything.wetool.controller;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
 import com.zhazhapan.util.Checker;
-import com.zhazhapan.util.visual.WeUtils;
-import com.zhazhapan.util.visual.model.ConfigModel;
-import com.zhazhapan.util.visual.model.ControllerModel;
+import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.model.ControllerModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;

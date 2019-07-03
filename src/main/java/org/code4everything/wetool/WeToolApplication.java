@@ -1,12 +1,12 @@
-package com.zhazhapan.util.visual;
+package org.code4everything.wetool;
 
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
-import com.zhazhapan.util.visual.constant.LocalValueConsts;
-import com.zhazhapan.util.visual.model.ConfigModel;
-import com.zhazhapan.util.visual.model.ControllerModel;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.model.ControllerModel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;

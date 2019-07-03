@@ -1,11 +1,11 @@
-package com.zhazhapan.util.visual;
+package org.code4everything.wetool;
 
 import com.zhazhapan.config.JsonParser;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.FileExecutor;
 import com.zhazhapan.util.dialog.Alerts;
-import com.zhazhapan.util.visual.constant.LocalValueConsts;
-import com.zhazhapan.util.visual.model.ConfigModel;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.model.ConfigModel;
 
 /**
  * @author pantao

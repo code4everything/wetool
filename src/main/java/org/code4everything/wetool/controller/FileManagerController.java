@@ -1,4 +1,4 @@
-package com.zhazhapan.util.visual.controller;
+package org.code4everything.wetool.controller;
 
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.ArrayUtils;
@@ -6,12 +6,11 @@ import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.FileExecutor;
 import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.dialog.Alerts;
-import com.zhazhapan.util.visual.WeUtils;
-import com.zhazhapan.util.visual.constant.LocalValueConsts;
-import com.zhazhapan.util.visual.model.ConfigModel;
-import com.zhazhapan.util.visual.model.ControllerModel;
+import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.model.ControllerModel;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
@@ -21,7 +20,6 @@ import javafx.scene.input.TransferMode;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author pantao
