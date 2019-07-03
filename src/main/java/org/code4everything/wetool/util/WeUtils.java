@@ -1,6 +1,6 @@
-package org.code4everything.wetool;
+package org.code4everything.wetool.util;
 
-import com.zhazhapan.modules.constant.ValueConsts;
+import cn.hutool.system.SystemUtil;
 import com.zhazhapan.util.*;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.collections.ObservableList;
@@ -11,7 +11,10 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.code4everything.wetool.constant.LocalValueConsts;
+import lombok.experimental.UtilityClass;
+import org.code4everything.wetool.constant.TipConsts;
+import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.constant.ValueConsts;
 import org.code4everything.wetool.controller.FileManagerController;
 import org.code4everything.wetool.factor.BeanFactory;
 import org.code4everything.wetool.model.ConfigModel;
@@ -27,11 +30,17 @@ import java.util.regex.Pattern;
  * @author pantao
  * @since 2018/3/31
  */
+@UtilityClass
 public class WeUtils {
 
-    private static final String CURRENT_DIR = Paths.get(ValueConsts.DOT_SIGN).toAbsolutePath().normalize().toString();
+    private static final String CURRENT_DIR =
+            Paths.get(com.zhazhapan.modules.constant.ValueConsts.DOT_SIGN).toAbsolutePath().normalize().toString();
 
     private static Pattern FILE_FILTER = Pattern.compile(ConfigModel.getFileFilterRegex());
+
+    public static boolean isWindows() {
+        return SystemUtil.getOsInfo().getName().startsWith("Window");
+    }
 
     public static void deleteFiles(File file) {
         if (Checker.isNotNull(file)) {
@@ -39,7 +48,7 @@ public class WeUtils {
                 try {
                     FileExecutor.deleteDirectory(file);
                 } catch (IOException e) {
-                    Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.DELETE_FILE_ERROR);
+                    Alerts.showError(TitleConsts.APP_TITLE, TipConsts.DELETE_FILE_ERROR);
                 }
             } else {
                 FileExecutor.deleteFile(file);
@@ -51,7 +60,7 @@ public class WeUtils {
         try {
             return NetUtils.whois(domain);
         } catch (Exception e) {
-            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_ERROR);
+            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.NETWORK_ERROR);
             return null;
         }
     }
@@ -60,7 +69,7 @@ public class WeUtils {
         try {
             return NetUtils.getLocationByIp(ip);
         } catch (Exception e) {
-            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_ERROR);
+            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.NETWORK_ERROR);
             return null;
         }
     }
@@ -87,7 +96,7 @@ public class WeUtils {
                 }
                 showSuccessInfo();
             } catch (IOException e) {
-                Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.MERGE_FILE_ERROR);
+                Alerts.showError(TitleConsts.APP_TITLE, TipConsts.MERGE_FILE_ERROR);
             }
         }
     }
@@ -107,7 +116,7 @@ public class WeUtils {
             }
             showSuccessInfo();
         } catch (IOException e) {
-            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.SPLIT_FILE_ERROR);
+            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.SPLIT_FILE_ERROR);
         }
     }
 
@@ -125,24 +134,25 @@ public class WeUtils {
                     if (deleteSrc) {
                         int i = 0;
                         for (File f : list) {
-                            list.set(i++, new File(folder + ValueConsts.SEPARATOR + f.getName()));
+                            list.set(i++,
+                                     new File(folder + com.zhazhapan.modules.constant.ValueConsts.SEPARATOR + f.getName()));
                             f.delete();
                         }
                     }
                     showSuccessInfo();
                 } catch (IOException e) {
-                    Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.COPY_FILE_ERROR);
+                    Alerts.showError(TitleConsts.APP_TITLE, TipConsts.COPY_FILE_ERROR);
                 }
             });
         }
     }
 
     public static void showSuccessInfo() {
-        Alerts.showInformation(LocalValueConsts.MAIN_TITLE, LocalValueConsts.OPERATION_SUCCESS);
+        Alerts.showInformation(TitleConsts.APP_TITLE, TipConsts.OPERATION_SUCCESS);
     }
 
     public static String replaceVariable(String s) {
-        return Checker.checkNull(s).replaceAll(LocalValueConsts.DATE_VARIABLE, Formatter.dateToString(new Date())).replaceAll(LocalValueConsts.TIME_VARIABLE, Formatter.datetimeToCustomString(new Date(), LocalValueConsts.TIME_FORMAT));
+        return Checker.checkNull(s).replaceAll(ValueConsts.DATE_VARIABLE, Formatter.dateToString(new Date())).replaceAll(ValueConsts.TIME_VARIABLE, Formatter.datetimeToCustomString(new Date(), ValueConsts.TIME_FORMAT));
     }
 
     public static int stringToInt(String integer) {
@@ -166,6 +176,7 @@ public class WeUtils {
                     break;
                 case 1:
                     putFilesInListView(files, fileManagerController.selectedFilesOfCopyTab);
+                    break;
                 case 2:
                     File file = null;
                     if (files instanceof File) {
@@ -216,13 +227,13 @@ public class WeUtils {
         if (Checker.isNotNull(file)) {
             if (FILE_FILTER.matcher(file.getName()).matches()) {
                 if (file.isDirectory()) {
-                    putFilesInListView((List<File>) FileExecutor.listFiles(file, null, ValueConsts.TRUE), items);
+                    putFilesInListView((List<File>) FileExecutor.listFiles(file, null,
+                                                                           com.zhazhapan.modules.constant.ValueConsts.TRUE), items);
                 } else if (!items.contains(file)) {
                     items.add(file);
                 }
             } else if (ConfigModel.isFileFilterTip()) {
-                Alerts.showInformation(LocalValueConsts.MAIN_TITLE, LocalValueConsts.FILE_NOT_MATCH,
-                                       file.getAbsolutePath());
+                Alerts.showInformation(TitleConsts.APP_TITLE, TipConsts.FILE_NOT_MATCH_ERROR, file.getAbsolutePath());
             }
         }
     }
@@ -232,7 +243,7 @@ public class WeUtils {
             try {
                 FileExecutor.saveFile(file, fileContent);
             } catch (IOException e) {
-                Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.SAVE_FILE_ERROR);
+                Alerts.showError(TitleConsts.APP_TITLE, TipConsts.SAVE_FILE_ERROR);
             }
         }
     }
@@ -243,7 +254,7 @@ public class WeUtils {
             result = FileExecutor.readFile(file);
         } catch (IOException e) {
             result = "";
-            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.READ_FILE_ERROR);
+            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.READ_FILE_ERROR);
         }
         return result;
     }
@@ -262,7 +273,7 @@ public class WeUtils {
 
     private static FileChooser getFileChooser() {
         FileChooser chooser = new FileChooser();
-        chooser.setTitle(LocalValueConsts.MAIN_TITLE);
+        chooser.setTitle(TitleConsts.APP_TITLE);
         chooser.setInitialDirectory(new File(System.getProperty("user.home")));
         return chooser;
     }
@@ -271,19 +282,19 @@ public class WeUtils {
         try {
             Utils.openLink(url);
         } catch (Exception e) {
-            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.OPEN_LINK_ERROR);
+            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.OPEN_LINK_ERROR);
         }
     }
 
     public static void exitSystem() {
-        System.exit(ValueConsts.ZERO_INT);
+        System.exit(com.zhazhapan.modules.constant.ValueConsts.ZERO_INT);
     }
 
     public static VBox loadFxml(String url) {
         try {
             return FXMLLoader.load(WeUtils.class.getResource(url));
         } catch (Exception e) {
-            Alerts.showException(ValueConsts.FATAL_ERROR, e);
+            Alerts.showException(com.zhazhapan.modules.constant.ValueConsts.FATAL_ERROR, e);
             return null;
         }
     }

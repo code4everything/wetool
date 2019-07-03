@@ -7,7 +7,7 @@ import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.RandomUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.util.WeUtils;
 import org.code4everything.wetool.factor.BeanFactory;
 
 import java.util.ArrayList;

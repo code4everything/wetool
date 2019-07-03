@@ -10,9 +10,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import org.code4everything.wetool.WeUtils;
-import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.constant.TipConsts;
+import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factor.BeanFactory;
+import org.code4everything.wetool.util.WeUtils;
 
 /**
  * @author pantao
@@ -65,11 +66,11 @@ public class NetworkToolController {
                         macAddress.setText(NetUtil.getLocalMacAddress());
                         systemInfo.setText(NetUtils.getSystemName() + " " + NetUtils.getSystemArch() + " " + NetUtils.getSystemVersion());
                     } catch (Exception e) {
-                        Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_ERROR);
+                        Alerts.showError(TitleConsts.APP_TITLE, TipConsts.NETWORK_ERROR);
                     }
                 });
             } catch (Exception e) {
-                Platform.runLater(() -> Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_ERROR));
+                Platform.runLater(() -> Alerts.showError(TitleConsts.APP_TITLE, TipConsts.NETWORK_ERROR));
             }
         });
     }

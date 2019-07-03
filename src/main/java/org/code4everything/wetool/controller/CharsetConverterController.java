@@ -8,7 +8,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
-import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.util.WeUtils;
 import org.code4everything.wetool.factor.BeanFactory;
 import org.code4everything.wetool.model.ConfigModel;
 

@@ -15,10 +15,12 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
-import org.code4everything.wetool.WeUtils;
-import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.constant.TipConsts;
+import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.constant.ValueConsts;
 import org.code4everything.wetool.factor.BeanFactory;
 import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.util.WeUtils;
 
 /**
  * @author pantao
@@ -57,14 +59,13 @@ public class JsonParserController {
                 }
                 Platform.runLater(() -> parsedJsonContent.setText(Formatter.formatJson(Checker.checkNull(parsedJson))));
             } catch (Exception e) {
-                Platform.runLater(() -> Alerts.showError(LocalValueConsts.MAIN_TITLE,
-                                                         LocalValueConsts.PARSE_JSON_ERROR));
+                Platform.runLater(() -> Alerts.showError(TitleConsts.APP_TITLE, TipConsts.JSON_PARSE_ERROR));
             }
         });
     }
 
     public void seeJsonPathGrammar() {
-        WeUtils.openLink(LocalValueConsts.JSON_PATH_GRAMMAR_URL);
+        WeUtils.openLink(ValueConsts.JSON_PATH_GRAMMAR_URL);
     }
 
     public void dragFileOver(DragEvent event) {

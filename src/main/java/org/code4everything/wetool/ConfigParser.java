@@ -1,10 +1,11 @@
 package org.code4everything.wetool;
 
 import com.zhazhapan.config.JsonParser;
-import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.FileExecutor;
 import com.zhazhapan.util.dialog.Alerts;
-import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.constant.TipConsts;
+import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.constant.ValueConsts;
 import org.code4everything.wetool.model.ConfigModel;
 
 /**
@@ -55,7 +56,7 @@ class ConfigParser {
     static void parserConfig() {
         try {
             JsonParser parser =
-                    new JsonParser(FileExecutor.read(WeToolApplication.class.getResourceAsStream(LocalValueConsts.CONFIG_PATH)), ValueConsts.TRUE);
+                    new JsonParser(FileExecutor.read(WeToolApplication.class.getResourceAsStream(ValueConsts.CONFIG_PATH)), com.zhazhapan.modules.constant.ValueConsts.TRUE);
             ConfigModel.setWidth(parser.getDoubleUseEval(WIDTH_PATH));
             ConfigModel.setHeight(parser.getDoubleUseEval(HEIGHT_PATH));
             ConfigModel.setTabs(parser.getArray(TAB_PATH));
@@ -65,7 +66,7 @@ class ConfigParser {
             ConfigModel.setFullscreen(parser.getBooleanUseEval(FULLSCREEN));
             ConfigModel.setAutoWrap(parser.getBooleanUseEval(AUTO_WRAP));
         } catch (Exception e) {
-            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.LOAD_CONFIG_ERROR);
+            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.CONFIG_ERROR);
         }
     }
 }

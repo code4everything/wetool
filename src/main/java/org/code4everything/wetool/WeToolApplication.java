@@ -1,7 +1,5 @@
 package org.code4everything.wetool;
 
-import com.zhazhapan.modules.constant.ValueConsts;
-import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.application.Application;
@@ -11,10 +9,14 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.boot.base.constant.IntegerConsts;
+import org.code4everything.wetool.constant.TipConsts;
+import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.controller.MainController;
 import org.code4everything.wetool.factor.BeanFactory;
 import org.code4everything.wetool.model.ConfigModel;
+import org.code4everything.wetool.util.WeUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,6 +25,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author pantao
@@ -45,14 +48,17 @@ public class WeToolApplication extends Application {
     public void start(Stage stage) {
         this.stage = stage;
         BeanFactory.register(stage);
-        VBox root = WeUtils.loadFxml(LocalValueConsts.MAIN_VIEW);
-        if (Checker.isNull(root)) {
-            Alerts.showError(ValueConsts.FATAL_ERROR, LocalValueConsts.INIT_ERROR);
+        // 加载主界面
+        VBox root = WeUtils.loadFxml(ViewConsts.MAIN);
+        if (Objects.isNull(root)) {
+            Alerts.showError(com.zhazhapan.modules.constant.ValueConsts.FATAL_ERROR, TipConsts.INIT_ERROR);
             WeUtils.exitSystem();
         }
+        // 设置标题
         stage.setScene(new Scene(root));
-        stage.getIcons().add(new Image(getClass().getResourceAsStream(LocalValueConsts.ICON)));
-        stage.setTitle(LocalValueConsts.MAIN_TITLE);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream(ViewConsts.ICON)));
+        stage.setTitle(TitleConsts.APP_TITLE);
+        // 监听关闭事件
         stage.setOnCloseRequest((WindowEvent event) -> {
             if (isTraySuccess) {
                 stage.hide();
@@ -62,11 +68,14 @@ public class WeToolApplication extends Application {
             event.consume();
         });
         ConfigParser.parserConfig();
+        // 设置大小
         stage.setWidth(ConfigModel.getWidth());
         stage.setHeight(ConfigModel.getHeight());
         stage.setFullScreen(ConfigModel.isFullscreen());
         BeanFactory.get(MainController.class).loadTabs();
-        if (Checker.isWindows()) {
+
+        if (WeUtils.isWindows()) {
+            // 开启系统托盘
             enableTray();
         }
         stage.show();
@@ -77,24 +86,24 @@ public class WeToolApplication extends Application {
      */
     private void enableTray() {
         Platform.setImplicitExit(false);
+        // 添加托盘邮件菜单
         PopupMenu popupMenu = new PopupMenu();
         List<MenuItem> items = new ArrayList<>(8);
-        items.add(new MenuItem((LocalValueConsts.WOX)));
-        items.add(new MenuItem(LocalValueConsts.COLOR_PICKER));
-        items.add(new MenuItem(LocalValueConsts.SHOW));
-        items.add(new MenuItem(LocalValueConsts.HIDE));
-        items.add(new MenuItem(LocalValueConsts.EXIT));
+        items.add(new MenuItem(TitleConsts.SHOW));
+        items.add(new MenuItem(TitleConsts.HIDE));
+        items.add(new MenuItem(TitleConsts.EXIT));
+        // 添加菜单对应操作
         ActionListener actionListener = e -> {
             MenuItem item = (MenuItem) e.getSource();
             switch (item.getLabel()) {
-                case LocalValueConsts.EXIT:
+                case TitleConsts.EXIT:
                     SystemTray.getSystemTray().remove(trayIcon);
                     WeUtils.exitSystem();
                     break;
-                case LocalValueConsts.SHOW:
+                case TitleConsts.SHOW:
                     Platform.runLater(stage::show);
                     break;
-                case LocalValueConsts.HIDE:
+                case TitleConsts.HIDE:
                     Platform.runLater(stage::hide);
                     break;
                 default:
@@ -105,25 +114,22 @@ public class WeToolApplication extends Application {
         MouseListener mouseListener = new MouseListener() {
 
             @Override
-            public void mouseReleased(MouseEvent e) {
-            }
+            public void mouseReleased(MouseEvent e) {}
 
             @Override
-            public void mousePressed(MouseEvent e) {
-            }
+            public void mousePressed(MouseEvent e) {}
 
             @Override
-            public void mouseExited(MouseEvent e) {
-            }
+            public void mouseExited(MouseEvent e) {}
 
             @Override
-            public void mouseEntered(MouseEvent e) {
-            }
+            public void mouseEntered(MouseEvent e) {}
 
             @Override
             public void mouseClicked(MouseEvent e) {
                 Platform.setImplicitExit(false);
-                if (e.getClickCount() == ValueConsts.TWO_INT) {
+                if (e.getClickCount() == IntegerConsts.TWO) {
+                    // 双击图标
                     Platform.runLater(() -> {
                         if (stage.isShowing()) {
                             stage.hide();
@@ -134,21 +140,23 @@ public class WeToolApplication extends Application {
                 }
             }
         };
+        // 添加监听事件
         items.forEach(item -> {
             item.addActionListener(actionListener);
             popupMenu.add(item);
         });
+        // 添加系统托盘图标
         try {
             SystemTray tray = SystemTray.getSystemTray();
-            java.awt.Image image = ImageIO.read(getClass().getResourceAsStream(LocalValueConsts.ICON));
-            trayIcon = new TrayIcon(image, LocalValueConsts.MAIN_TITLE, popupMenu);
+            java.awt.Image image = ImageIO.read(getClass().getResourceAsStream(ViewConsts.ICON));
+            trayIcon = new TrayIcon(image, TitleConsts.APP_TITLE, popupMenu);
             trayIcon.setImageAutoSize(true);
-            trayIcon.setToolTip(LocalValueConsts.MAIN_TITLE);
+            trayIcon.setToolTip(TitleConsts.APP_TITLE);
             trayIcon.addMouseListener(mouseListener);
             tray.add(trayIcon);
             isTraySuccess = true;
         } catch (Exception e) {
-            Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.TRAY_ERROR);
+            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.TRAY_ERROR);
         }
     }
 }

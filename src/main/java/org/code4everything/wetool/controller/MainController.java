@@ -1,7 +1,6 @@
 package org.code4everything.wetool.controller;
 
 import cn.hutool.core.swing.ClipboardUtil;
-import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ReflectUtils;
 import com.zhazhapan.util.dialog.Alerts;
@@ -14,8 +13,11 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
-import org.code4everything.wetool.WeUtils;
-import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.util.WeUtils;
+import org.code4everything.wetool.constant.TipConsts;
+import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.constant.ValueConsts;
+import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.factor.BeanFactory;
 import org.code4everything.wetool.model.ConfigModel;
 
@@ -44,6 +46,7 @@ public class MainController {
 
     @FXML
     private void initialize() {
+        BeanFactory.register(this);
         // 监听剪贴板
         ConfigModel.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
         Timer timer = new Timer();
@@ -59,7 +62,7 @@ public class MainController {
                     last = ConfigModel.getLastClipboardHistoryItem().getValue();
                 } catch (Exception e) {
                     logger.warn(e.getMessage());
-                    clipboard = last = ValueConsts.EMPTY_STRING;
+                    clipboard = last = com.zhazhapan.modules.constant.ValueConsts.EMPTY_STRING;
 
                 }
                 if (Checker.isNotEmpty(clipboard) && !last.equals(clipboard)) {
@@ -82,8 +85,7 @@ public class MainController {
                 }
             }
         };
-        timer.scheduleAtFixedRate(task, LocalValueConsts.ONE_THOUSAND, LocalValueConsts.ONE_THOUSAND);
-        BeanFactory.register(this);
+        timer.scheduleAtFixedRate(task, ValueConsts.ONE_THOUSAND, ValueConsts.ONE_THOUSAND);
     }
 
     public void loadTabs() {
@@ -91,7 +93,7 @@ public class MainController {
             try {
                 ReflectUtils.invokeMethod(this, "open" + tabName + "Tab", null);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.FXML_LOAD_ERROR);
+                Alerts.showError(TitleConsts.APP_TITLE, TipConsts.FXML_ERROR);
             }
         }
     }
@@ -101,41 +103,47 @@ public class MainController {
     }
 
     public void openNetworkToolTab() {
-        addTab(new Tab(LocalValueConsts.NETWORK_TOOL), LocalValueConsts.NETWORK_TOOL_VIEW);
+        openTab(TitleConsts.NETWORK_TOOL, ViewConsts.NETWORK_TOOL);
     }
 
     public void openCharsetConverterTab() {
-        addTab(new Tab(LocalValueConsts.CHARSET_CONVERTER), LocalValueConsts.CHARSET_CONVERTER_VIEW);
+        openTab(TitleConsts.CHARSET_CONVERTER, ViewConsts.CHARSET_CONVERTER);
     }
 
     public void openClipboardHistoryTab() {
-        addTab(new Tab(LocalValueConsts.CLIPBOARD_HISTORY), LocalValueConsts.CLIPBOARD_HISTORY_VIEW);
+        openTab(TitleConsts.CLIPBOARD_HISTORY, ViewConsts.CLIPBOARD_HISTORY);
     }
 
     public void openRandomGeneratorTab() {
-        addTab(new Tab(LocalValueConsts.RANDOM_GENERATOR), LocalValueConsts.RANDOM_GENERATOR_VIEW);
+        openTab(TitleConsts.RANDOM_GENERATOR, ViewConsts.RANDOM_GENERATOR);
     }
 
     public void openQrCodeGeneratorTab() {
-        addTab(new Tab(LocalValueConsts.QR_CODE_GENERATOR), LocalValueConsts.QR_CODE_GENERATOR_VIEW);
+        openTab(TitleConsts.QR_CODE_GENERATOR, ViewConsts.QR_CODE_GENERATOR);
     }
 
     public void openJsonParserTab() {
-        addTab(new Tab(LocalValueConsts.JSON_PARSER), LocalValueConsts.JSON_PARSER_VIEW);
+        openTab(TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER);
     }
 
-    private void addTab(Tab tab, String url) {
+    public void openFileManagerTab() {
+        openTab(TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
+    }
+
+    private void openTab(String tabName, String url) {
         ObservableList<Tab> tabs = tabPane.getTabs();
         for (Tab t : tabs) {
-            if (t.getText().equals(tab.getText())) {
+            if (t.getText().equals(tabName)) {
+                // 选项卡已打开，退出方法
                 tabPane.getSelectionModel().select(t);
                 return;
             }
         }
         VBox box = WeUtils.loadFxml(url);
         if (Checker.isNull(box)) {
-            Alerts.showError(ValueConsts.ERROR, LocalValueConsts.FXML_LOAD_ERROR);
+            Alerts.showError(com.zhazhapan.modules.constant.ValueConsts.ERROR, TipConsts.FXML_ERROR);
         } else {
+            Tab tab = new Tab(tabName);
             tab.setContent(box);
             tab.setClosable(true);
             tabs.add(tab);
@@ -151,23 +159,23 @@ public class MainController {
                 String tabText = Checker.checkNull(tab.getText());
                 String fileContent = WeUtils.readFile(file);
                 switch (tabText) {
-                    case LocalValueConsts.JSON_PARSER:
+                    case TitleConsts.JSON_PARSER:
                         JsonParserController controller = BeanFactory.get(JsonParserController.class);
                         if (Checker.isNotNull(controller)) {
                             controller.jsonContent.setText(fileContent);
                         }
                         break;
-                    case LocalValueConsts.FILE_MANAGER:
+                    case TitleConsts.FILE_MANAGER:
                         WeUtils.putFilesInListViewOfFileManagerTab(file);
                         break;
-                    case LocalValueConsts.QR_CODE_GENERATOR:
+                    case TitleConsts.QR_CODE_GENERATOR:
                         QrCodeGeneratorController qrCodeGeneratorController =
                                 BeanFactory.get(QrCodeGeneratorController.class);
                         if (Checker.isNotNull(qrCodeGeneratorController)) {
                             qrCodeGeneratorController.content.setText(fileContent);
                         }
                         break;
-                    case LocalValueConsts.CHARSET_CONVERTER:
+                    case TitleConsts.CHARSET_CONVERTER:
                         CharsetConverterController charsetConverterController =
                                 BeanFactory.get(CharsetConverterController.class);
                         if (Checker.isNotNull(charsetConverterController)) {
@@ -189,40 +197,41 @@ public class MainController {
                 String tabText = Checker.checkNull(tab.getText());
                 String fileContent = null;
                 switch (tabText) {
-                    case LocalValueConsts.JSON_PARSER:
+                    case TitleConsts.JSON_PARSER:
                         JsonParserController jsonParserController = BeanFactory.get(JsonParserController.class);
                         if (Checker.isNotNull(jsonParserController)) {
                             fileContent = jsonParserController.parsedJsonContent.getText();
                         }
                         break;
-                    case LocalValueConsts.FILE_MANAGER:
+                    case TitleConsts.FILE_MANAGER:
                         FileManagerController fileManagerController = BeanFactory.get(FileManagerController.class);
                         if (Checker.isNotNull(fileManagerController)) {
                             int idx = fileManagerController.fileManagerTab.getSelectionModel().getSelectedIndex();
-                            if (idx == ValueConsts.TWO_INT) {
+                            if (idx == com.zhazhapan.modules.constant.ValueConsts.TWO_INT) {
                                 fileContent = fileManagerController.fileContent.getText();
                             }
                         }
                         break;
-                    case LocalValueConsts.CLIPBOARD_HISTORY:
+                    case TitleConsts.CLIPBOARD_HISTORY:
                         ClipboardHistoryController clipboardHistoryController =
                                 BeanFactory.get(ClipboardHistoryController.class);
                         if (Checker.isNotNull(clipboardHistoryController)) {
                             fileContent = clipboardHistoryController.clipboardHistory.getText();
                         }
                         break;
-                    case LocalValueConsts.CHARSET_CONVERTER:
+                    case TitleConsts.CHARSET_CONVERTER:
                         CharsetConverterController charsetConverterController =
                                 BeanFactory.get(CharsetConverterController.class);
                         if (Checker.isNotNull(charsetConverterController)) {
                             fileContent = charsetConverterController.convertedContent.getText();
                         }
                         break;
-                    case LocalValueConsts.NETWORK_TOOL:
+                    case TitleConsts.NETWORK_TOOL:
                         NetworkToolController networkToolController = BeanFactory.get(NetworkToolController.class);
                         if (Checker.isNotNull(networkToolController)) {
                             fileContent = networkToolController.whoisResult.getText();
                         }
+                        break;
                     default:
                         break;
                 }
@@ -233,10 +242,6 @@ public class MainController {
         }
     }
 
-    public void openFileManagerTab() {
-        addTab(new Tab(LocalValueConsts.FILE_MANAGER), LocalValueConsts.FILE_MANAGER_VIEW);
-    }
-
     public void openMultiFile() {
         List<File> files = WeUtils.getChooseFiles();
         if (Checker.isNotEmpty(files)) {
@@ -244,7 +249,7 @@ public class MainController {
             if (Checker.isNotNull(tab)) {
                 String tabText = Checker.checkNull(tab.getText());
                 switch (tabText) {
-                    case LocalValueConsts.FILE_MANAGER:
+                    case TitleConsts.FILE_MANAGER:
                         WeUtils.putFilesInListViewOfFileManagerTab(files);
                         break;
                     default:
@@ -255,7 +260,7 @@ public class MainController {
     }
 
     public void about() {
-        Alerts.showInformation(LocalValueConsts.MAIN_TITLE, LocalValueConsts.ABOUT_APP, LocalValueConsts.ABOUT_DETAIL);
+        Alerts.showInformation(TitleConsts.APP_TITLE, TitleConsts.ABOUT_APP, TipConsts.ABOUT_APP);
     }
 
     public void closeAllTab() {
