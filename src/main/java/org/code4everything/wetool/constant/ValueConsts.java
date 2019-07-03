@@ -17,5 +17,5 @@ public class ValueConsts {
 
     public static final String DATE_VARIABLE = "%(DATE|date)%";
 
-    public static final String JSON_PATH_GRAMMAR_URL = "https://github.com/alibaba/fastjson/wiki/JSONPath";
+    public static final String JSON_HELPER_URL = "https://github.com/alibaba/fastjson/wiki/JSONPath";
 }

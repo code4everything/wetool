@@ -67,7 +67,7 @@ public class JsonParserController {
     }
 
     public void seeJsonPathGrammar() {
-        WeUtils.openLink(ValueConsts.JSON_PATH_GRAMMAR_URL);
+        WeUtils.openLink(ValueConsts.JSON_HELPER_URL);
     }
 
     public void dragFileOver(DragEvent event) {

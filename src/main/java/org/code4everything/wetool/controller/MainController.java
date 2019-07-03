@@ -1,8 +1,10 @@
 package org.code4everything.wetool.controller;
 
 import cn.hutool.core.swing.ClipboardUtil;
+import cn.hutool.core.thread.ThreadFactoryBuilder;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.zhazhapan.util.Checker;
-import com.zhazhapan.util.ReflectUtils;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -13,20 +15,20 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.constant.ValueConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author pantao
@@ -34,6 +36,10 @@ import java.util.TimerTask;
  */
 @Slf4j
 public class MainController {
+
+    private static final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).build();
+
+    private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(1, FACTORY);
 
     private final Stage stage = BeanFactory.get(Stage.class);
 
@@ -48,61 +54,55 @@ public class MainController {
     @FXML
     private void initialize() {
         BeanFactory.register(this);
-        // 监听剪贴板
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-
-            @Override
-            public void run() {
-                String clipboard;
-                String last;
-                try {
-                    // 忽略系统休眠时抛出的异常
-                    clipboard = ClipboardUtil.getStr();
-                    last = config.getLastClipboardHistoryItem().getValue();
-                } catch (Exception e) {
-                    log.warn(e.getMessage());
-                    clipboard = last = com.zhazhapan.modules.constant.ValueConsts.EMPTY_STRING;
-
-                }
-                if (Checker.isNotEmpty(clipboard) && !last.equals(clipboard)) {
-                    // 剪贴板发生变化
-                    Date date = new Date();
-                    config.appendClipboardHistory(date, clipboard);
-                    ClipboardHistoryController controller = BeanFactory.get(ClipboardHistoryController.class);
-                    if (Checker.isNotNull(controller)) {
-                        // 显示到文本框
-                        final String clip = clipboard;
-                        Platform.runLater(() -> controller.insert(date, clip));
-                    }
-                }
-                boolean isVisible = stage.isShowing() && !stage.isMaximized() && !stage.isIconified();
-                // 监听JVM内存变化
-                if (isVisible) {
-                    Platform.runLater(() -> {
-                        double total = Runtime.getRuntime().totalMemory();
-                        double used = total - Runtime.getRuntime().freeMemory();
-                        jvm.setProgress(used / total);
-                    });
-                }
-            }
-        };
-        timer.scheduleAtFixedRate(task, ValueConsts.ONE_THOUSAND, ValueConsts.ONE_THOUSAND);
+        // 监听剪贴板和JVM
+        EXECUTOR.scheduleWithFixedDelay(() -> {
+            watchClipboard();
+            watchJVM();
+        }, 0, IntegerConsts.ONE_THOUSAND_AND_TWENTY_FOUR, TimeUnit.MILLISECONDS);
     }
 
-    public void loadTabs() {
-        for (Object tabName : config.getInitialize().getTabs().getLoads()) {
-            try {
-                ReflectUtils.invokeMethod(this, "open" + tabName + "Tab", null);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                Alerts.showError(TitleConsts.APP_TITLE, TipConsts.FXML_ERROR);
+    private void watchClipboard() {
+        String clipboard;
+        String last;
+        try {
+            // 忽略系统休眠时抛出的异常
+            clipboard = ClipboardUtil.getStr();
+            last = config.getLastClipboardHistoryItem().getValue();
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            clipboard = last = com.zhazhapan.modules.constant.ValueConsts.EMPTY_STRING;
+
+        }
+        if (Checker.isNotEmpty(clipboard) && !last.equals(clipboard)) {
+            // 剪贴板发生变化
+            Date date = new Date();
+            config.appendClipboardHistory(date, clipboard);
+            ClipboardHistoryController controller = BeanFactory.get(ClipboardHistoryController.class);
+            if (ObjectUtil.isNotNull(controller)) {
+                // 显示到文本框
+                final String clip = clipboard;
+                Platform.runLater(() -> controller.insert(date, clip));
             }
         }
     }
 
-    public void quit() {
-        WeUtils.exitSystem();
+    private void watchJVM() {
+        boolean isVisible = stage.isShowing() && !stage.isMaximized() && !stage.isIconified();
+        // 监听JVM内存变化
+        if (isVisible) {
+            Platform.runLater(() -> {
+                double total = Runtime.getRuntime().totalMemory();
+                double used = total - Runtime.getRuntime().freeMemory();
+                jvm.setProgress(used / total);
+            });
+        }
+    }
+
+    public void loadTabs() {
+        for (Object tabName : config.getInitialize().getTabs().getLoads()) {
+            ReflectUtil.invoke(this, "open" + tabName + "Tab");
+        }
     }
 
     public void openNetworkToolTab() {
@@ -260,6 +260,10 @@ public class MainController {
                 }
             }
         }
+    }
+
+    public void quit() {
+        WeUtils.exitSystem();
     }
 
     public void about() {
