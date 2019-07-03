@@ -63,8 +63,7 @@ public class NetworkToolController {
                         publicAddress.setText(parser.getStringUseEval("address"));
                         privateIpv4.setText(NetUtils.getLocalIp());
                         macAddress.setText(NetUtil.getLocalMacAddress());
-                        systemInfo.setText(NetUtils.getSystemName() + " " + NetUtils.getSystemArch() + " " + NetUtils
-                                .getSystemVersion());
+                        systemInfo.setText(NetUtils.getSystemName() + " " + NetUtils.getSystemArch() + " " + NetUtils.getSystemVersion());
                     } catch (Exception e) {
                         Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts.NETWORK_ERROR);
                     }

@@ -1,9 +1,7 @@
 package com.zhazhapan.util.visual.controller;
 
-import cn.hutool.core.util.ClipboardUtil;
+import cn.hutool.core.swing.ClipboardUtil;
 import com.zhazhapan.modules.constant.ValueConsts;
-import com.zhazhapan.qiniu.QiniuApplication;
-import com.zhazhapan.qiniu.view.MainWindow;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ReflectUtils;
 import com.zhazhapan.util.dialog.Alerts;
@@ -48,6 +46,7 @@ public class MainController {
         ConfigModel.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
+
             @Override
             public void run() {
                 String clipboard;
@@ -70,11 +69,10 @@ public class MainController {
                         Platform.runLater(() -> controller.insert(date, clip));
                     }
                 }
-                boolean isVisible = WeToolApplication.stage.isShowing() && !WeToolApplication.stage.isMaximized() &&
-                        !WeToolApplication.stage.isIconified();
+                boolean isVisible =
+                        WeToolApplication.stage.isShowing() && !WeToolApplication.stage.isMaximized() && !WeToolApplication.stage.isIconified();
                 // 监听JVM内存变化
                 if (isVisible) {
-                    System.gc();
                     Platform.runLater(() -> {
                         double total = Runtime.getRuntime().totalMemory();
                         double used = total - Runtime.getRuntime().freeMemory();
@@ -162,14 +160,14 @@ public class MainController {
                         WeUtils.putFilesInListViewOfFileManagerTab(file);
                         break;
                     case LocalValueConsts.QR_CODE_GENERATOR:
-                        QrCodeGeneratorController qrCodeGeneratorController = ControllerModel
-                                .getQrCodeGeneratorController();
+                        QrCodeGeneratorController qrCodeGeneratorController =
+                                ControllerModel.getQrCodeGeneratorController();
                         if (Checker.isNotNull(qrCodeGeneratorController)) {
                             qrCodeGeneratorController.content.setText(fileContent);
                         }
                     case LocalValueConsts.CHARSET_CONVERTER:
-                        CharsetConverterController charsetConverterController = ControllerModel
-                                .getCharsetConverterController();
+                        CharsetConverterController charsetConverterController =
+                                ControllerModel.getCharsetConverterController();
                         if (Checker.isNotNull(charsetConverterController)) {
                             charsetConverterController.originalContent.setText(fileContent);
                         }
@@ -205,15 +203,15 @@ public class MainController {
                         }
                         break;
                     case LocalValueConsts.CLIPBOARD_HISTORY:
-                        ClipboardHistoryController clipboardHistoryController = ControllerModel
-                                .getClipboardHistoryController();
+                        ClipboardHistoryController clipboardHistoryController =
+                                ControllerModel.getClipboardHistoryController();
                         if (Checker.isNotNull(clipboardHistoryController)) {
                             fileContent = clipboardHistoryController.clipboardHistory.getText();
                         }
                         break;
                     case LocalValueConsts.CHARSET_CONVERTER:
-                        CharsetConverterController charsetConverterController = ControllerModel
-                                .getCharsetConverterController();
+                        CharsetConverterController charsetConverterController =
+                                ControllerModel.getCharsetConverterController();
                         if (Checker.isNotNull(charsetConverterController)) {
                             fileContent = charsetConverterController.convertedContent.getText();
                         }
@@ -265,13 +263,6 @@ public class MainController {
     public void openAllTab() {
         ConfigModel.setTabs(ConfigModel.getSupportTabs());
         loadTabs();
-    }
-
-    public void openQiniuToolTab() {
-        QiniuApplication.initLoad(ValueConsts.TRUE);
-        Tab tab = new Tab(LocalValueConsts.QINIU_TOOL);
-        tab.setOnCloseRequest((event) -> MainWindow.setOnClosed(event, ValueConsts.TRUE));
-        addTab(tab, LocalValueConsts.QINIU_TOOL_VIEW);
     }
 
     public void openWaveViewerTab() {

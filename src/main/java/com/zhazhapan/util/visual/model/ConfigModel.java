@@ -1,6 +1,6 @@
 package com.zhazhapan.util.visual.model;
 
-import cn.hutool.core.util.ClipboardUtil;
+import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.zhazhapan.modules.constant.ValueConsts;

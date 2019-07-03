@@ -108,6 +108,7 @@ public class WeToolApplication extends Application {
         };
         //双击事件方法
         MouseListener mouseListener = new MouseListener() {
+
             @Override
             public void mouseReleased(MouseEvent e) {
             }
