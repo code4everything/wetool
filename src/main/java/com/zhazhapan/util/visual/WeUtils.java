@@ -5,7 +5,6 @@ import com.zhazhapan.util.*;
 import com.zhazhapan.util.dialog.Alerts;
 import com.zhazhapan.util.visual.constant.LocalValueConsts;
 import com.zhazhapan.util.visual.controller.FileManagerController;
-import com.zhazhapan.util.visual.controller.WaveController;
 import com.zhazhapan.util.visual.model.ConfigModel;
 import com.zhazhapan.util.visual.model.ControllerModel;
 import javafx.application.Platform;
@@ -20,7 +19,6 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -92,22 +90,6 @@ public class WeUtils {
                 Alerts.showError(LocalValueConsts.MAIN_TITLE, e.getMessage());
             }
         });
-    }
-
-    public static void closeMysqlConnection() {
-        WaveController controller = ControllerModel.getWaveController();
-        if (Checker.isNotNull(controller)) {
-            try {
-                if (Checker.isNotNull(controller.statement)) {
-                    controller.statement.close();
-                }
-                if (Checker.isNotNull(controller.connection)) {
-                    controller.connection.close();
-                }
-            } catch (SQLException e) {
-                Alerts.showError(LocalValueConsts.MAIN_TITLE, e.getMessage());
-            }
-        }
     }
 
     public static void deleteFiles(File file) {
@@ -219,9 +201,7 @@ public class WeUtils {
     }
 
     public static String replaceVariable(String s) {
-        return Checker.checkNull(s).replaceAll(LocalValueConsts.DATE_VARIABLE, Formatter.dateToString(new Date()))
-                .replaceAll(LocalValueConsts.TIME_VARIABLE, Formatter.datetimeToCustomString(new Date(),
-                        LocalValueConsts.TIME_FORMAT));
+        return Checker.checkNull(s).replaceAll(LocalValueConsts.DATE_VARIABLE, Formatter.dateToString(new Date())).replaceAll(LocalValueConsts.TIME_VARIABLE, Formatter.datetimeToCustomString(new Date(), LocalValueConsts.TIME_FORMAT));
     }
 
     public static int stringToInt(String integer) {
@@ -300,8 +280,8 @@ public class WeUtils {
                     items.add(file);
                 }
             } else if (ConfigModel.isFileFilterTip()) {
-                Alerts.showInformation(LocalValueConsts.MAIN_TITLE, LocalValueConsts.FILE_NOT_MATCH, file
-                        .getAbsolutePath());
+                Alerts.showInformation(LocalValueConsts.MAIN_TITLE, LocalValueConsts.FILE_NOT_MATCH,
+                                       file.getAbsolutePath());
             }
         }
     }
@@ -355,7 +335,6 @@ public class WeUtils {
     }
 
     public static void exitSystem() {
-        closeMysqlConnection();
         System.exit(ValueConsts.ZERO_INT);
     }
 

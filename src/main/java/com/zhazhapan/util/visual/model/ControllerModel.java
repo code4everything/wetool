@@ -24,16 +24,6 @@ public class ControllerModel {
 
     private static CharsetConverterController charsetConverterController = null;
 
-    private static WaveController waveController = null;
-
-    public static WaveController getWaveController() {
-        return waveController;
-    }
-
-    public static void setWaveController(WaveController waveController) {
-        ControllerModel.waveController = waveController;
-    }
-
     public static NetworkToolController getNetworkToolController() {
         return networkToolController;
     }

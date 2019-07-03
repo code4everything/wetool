@@ -18,7 +18,7 @@ import javafx.scene.input.TransferMode;
  */
 public class CharsetConverterController {
 
-    private final String BASE64 = "BASE64";
+    private static final String BASE64 = "BASE64";
 
     @FXML
     public TextArea originalContent;

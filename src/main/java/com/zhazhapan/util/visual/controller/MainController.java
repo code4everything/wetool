@@ -265,12 +265,6 @@ public class MainController {
         loadTabs();
     }
 
-    public void openWaveViewerTab() {
-        Tab tab = new Tab(LocalValueConsts.WAVE_VIEWER);
-        tab.setOnCloseRequest(event -> WeUtils.closeMysqlConnection());
-        addTab(tab, LocalValueConsts.WAVE_VIEW);
-    }
-
     public void openColorPicker() {
         WeUtils.startColorPicker();
     }

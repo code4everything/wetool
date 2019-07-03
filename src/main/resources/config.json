@@ -14,9 +14,7 @@
                 "ClipboardHistory",
                 "QrCodeGenerator",
                 "CharsetConverter",
-                "NetworkTool",
-                "QiniuTool",
-                "WaveViewer"
+                "NetworkTool"
             ]
         }
     },
@@ -26,28 +24,5 @@
         "description": "只获取匹配的文件，当文件不匹配时根据 `showTip` 设置是否显示提示"
     },
     "clipboardSize": 20,
-    "autoWrap": false,
-    "mysql": {
-        "host": "192.168.1.233:3306",
-        "database": "efo",
-        "condition": "useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC",
-        "username": "root",
-        "password": "root"
-    },
-    "waveViewer": [
-        {
-            "title": "频率计算器",
-            "tableName": "frequency",
-            "dataField": "fre_data",
-            "dateField": "fre_date",
-            "firstResultSize": 30
-        },
-        {
-            "title": "晚睡时间",
-            "tableName": "dismiss",
-            "dataField": "dis_data",
-            "dateField": "dis_date",
-            "firstResultSize": 30
-        }
-    ]
+    "autoWrap": false
 }
