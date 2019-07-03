@@ -96,12 +96,6 @@ public class WeToolApplication extends Application {
                 case LocalValueConsts.HIDE:
                     Platform.runLater(stage::hide);
                     break;
-                case LocalValueConsts.COLOR_PICKER:
-                    WeUtils.startColorPicker();
-                    break;
-                case LocalValueConsts.WOX:
-                    WeUtils.startWox();
-                    break;
                 default:
                     break;
             }

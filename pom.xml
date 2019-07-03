@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.zhazhapan</groupId>
     <artifactId>wetool</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
 
     <properties>
         <java.veresion>1.8</java.veresion>

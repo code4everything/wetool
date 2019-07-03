@@ -264,12 +264,4 @@ public class MainController {
         ConfigModel.setTabs(ConfigModel.getSupportTabs());
         loadTabs();
     }
-
-    public void openColorPicker() {
-        WeUtils.startColorPicker();
-    }
-
-    public void openWox() {
-        WeUtils.startWox();
-    }
 }
