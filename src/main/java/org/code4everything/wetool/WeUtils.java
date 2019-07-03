@@ -3,10 +3,6 @@ package org.code4everything.wetool;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.*;
 import com.zhazhapan.util.dialog.Alerts;
-import org.code4everything.wetool.constant.LocalValueConsts;
-import org.code4everything.wetool.controller.FileManagerController;
-import org.code4everything.wetool.model.ConfigModel;
-import org.code4everything.wetool.model.ControllerModel;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
@@ -14,6 +10,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.DragEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.controller.FileManagerController;
+import org.code4everything.wetool.factor.BeanFactory;
+import org.code4everything.wetool.model.ConfigModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +22,6 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static org.code4everything.wetool.WeToolApplication.stage;
 
 /**
  * @author pantao
@@ -158,7 +157,7 @@ public class WeUtils {
 
     @SuppressWarnings("unchecked")
     public static void putFilesInListViewOfFileManagerTab(Object files) {
-        FileManagerController fileManagerController = ControllerModel.getFileManagerController();
+        FileManagerController fileManagerController = BeanFactory.get(FileManagerController.class);
         if (Checker.isNotNull(fileManagerController)) {
             int idx = fileManagerController.fileManagerTab.getSelectionModel().getSelectedIndex();
             switch (idx) {
@@ -250,15 +249,15 @@ public class WeUtils {
     }
 
     public static File getSaveFile() {
-        return getFileChooser().showSaveDialog(stage);
+        return getFileChooser().showSaveDialog(BeanFactory.get(Stage.class));
     }
 
     public static List<File> getChooseFiles() {
-        return getFileChooser().showOpenMultipleDialog(stage);
+        return getFileChooser().showOpenMultipleDialog(BeanFactory.get(Stage.class));
     }
 
     public static File getChooseFile() {
-        return getFileChooser().showOpenDialog(stage);
+        return getFileChooser().showOpenDialog(BeanFactory.get(Stage.class));
     }
 
     private static FileChooser getFileChooser() {

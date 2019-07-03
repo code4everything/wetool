@@ -1,12 +1,13 @@
 package org.code4everything.wetool.controller;
 
 import cn.hutool.core.date.DateUtil;
-import com.zhazhapan.util.Checker;
-import org.code4everything.wetool.model.ConfigModel;
-import org.code4everything.wetool.model.ControllerModel;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.util.Pair;
+import org.code4everything.wetool.factor.BeanFactory;
+import org.code4everything.wetool.model.ConfigModel;
 
 import java.util.Date;
 
@@ -21,18 +22,20 @@ public class ClipboardHistoryController {
 
     @FXML
     private void initialize() {
+        // 注册
+        BeanFactory.register(this);
+
         clipboardHistory.setWrapText(ConfigModel.isAutoWrap());
-        ControllerModel.setClipboardHistoryController(this);
         for (int i = ConfigModel.getClipboardHistorySize() - 1; i >= 0; i--) {
             Pair<Date, String> pair = ConfigModel.getClipboardHistoryItem(i);
-            if (Checker.isNotNull(pair)) {
+            if (ObjectUtil.isNotNull(pair)) {
                 insert(pair.getKey(), pair.getValue());
             }
         }
     }
 
-    public void insert(Date date, String content) {
-        if (Checker.isNotEmpty(content)) {
+    void insert(Date date, String content) {
+        if (StrUtil.isNotEmpty(content)) {
             String contentVariable = "%content%";
             String dateVariable = "%datetime%";
             String template = "---------------------------------------\r\n" + dateVariable + "\r\n" +

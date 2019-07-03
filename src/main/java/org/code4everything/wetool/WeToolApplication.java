@@ -4,9 +4,6 @@ import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
-import org.code4everything.wetool.constant.LocalValueConsts;
-import org.code4everything.wetool.model.ConfigModel;
-import org.code4everything.wetool.model.ControllerModel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -14,6 +11,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.controller.MainController;
+import org.code4everything.wetool.factor.BeanFactory;
+import org.code4everything.wetool.model.ConfigModel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -29,7 +30,7 @@ import java.util.List;
  */
 public class WeToolApplication extends Application {
 
-    public static Stage stage = null;
+    private Stage stage;
 
     private TrayIcon trayIcon;
 
@@ -42,12 +43,13 @@ public class WeToolApplication extends Application {
 
     @Override
     public void start(Stage stage) {
+        this.stage = stage;
+        BeanFactory.register(stage);
         VBox root = WeUtils.loadFxml(LocalValueConsts.MAIN_VIEW);
         if (Checker.isNull(root)) {
             Alerts.showError(ValueConsts.FATAL_ERROR, LocalValueConsts.INIT_ERROR);
             WeUtils.exitSystem();
         }
-        assert root != null;
         stage.setScene(new Scene(root));
         stage.getIcons().add(new Image(getClass().getResourceAsStream(LocalValueConsts.ICON)));
         stage.setTitle(LocalValueConsts.MAIN_TITLE);
@@ -63,8 +65,7 @@ public class WeToolApplication extends Application {
         stage.setWidth(ConfigModel.getWidth());
         stage.setHeight(ConfigModel.getHeight());
         stage.setFullScreen(ConfigModel.isFullscreen());
-        ControllerModel.getMainController().loadTabs();
-        WeToolApplication.stage = stage;
+        BeanFactory.get(MainController.class).loadTabs();
         if (Checker.isWindows()) {
             enableTray();
         }

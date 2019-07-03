@@ -5,9 +5,10 @@ import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.RandomUtils;
-import org.code4everything.wetool.WeUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.factor.BeanFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,11 @@ public class RandomGeneratorController {
 
     @FXML
     public TextField textResult;
+
+    @FXML
+    public void initialize() {
+        BeanFactory.register(this);
+    }
 
     public void generateUUID() {
         uuidResult.setText(RandomUtil.randomUUID());

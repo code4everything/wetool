@@ -3,16 +3,16 @@ package org.code4everything.wetool.controller;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.dialog.Alerts;
-import org.code4everything.wetool.WeUtils;
-import org.code4everything.wetool.constant.LocalValueConsts;
-import org.code4everything.wetool.model.ConfigModel;
-import org.code4everything.wetool.model.ControllerModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
+import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.factor.BeanFactory;
+import org.code4everything.wetool.model.ConfigModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,7 +33,7 @@ public class QrCodeGeneratorController {
     @FXML
     private void initialize() {
         content.setWrapText(ConfigModel.isAutoWrap());
-        ControllerModel.setQrCodeGeneratorController(this);
+        BeanFactory.register(this);
     }
 
     public void generateQrCode() {

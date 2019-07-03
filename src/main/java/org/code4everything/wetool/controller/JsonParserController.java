@@ -7,10 +7,6 @@ import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
-import org.code4everything.wetool.WeUtils;
-import org.code4everything.wetool.constant.LocalValueConsts;
-import org.code4everything.wetool.model.ConfigModel;
-import org.code4everything.wetool.model.ControllerModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -19,6 +15,10 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
+import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.factor.BeanFactory;
+import org.code4everything.wetool.model.ConfigModel;
 
 /**
  * @author pantao
@@ -39,7 +39,7 @@ public class JsonParserController {
     private void initialize() {
         jsonContent.setWrapText(ConfigModel.isAutoWrap());
         parsedJsonContent.setWrapText(ConfigModel.isAutoWrap());
-        ControllerModel.setJsonParserController(this);
+        BeanFactory.register(this);
     }
 
     public void parseJson() {
@@ -57,8 +57,8 @@ public class JsonParserController {
                 }
                 Platform.runLater(() -> parsedJsonContent.setText(Formatter.formatJson(Checker.checkNull(parsedJson))));
             } catch (Exception e) {
-                Platform.runLater(() -> Alerts.showError(LocalValueConsts.MAIN_TITLE, LocalValueConsts
-                        .PARSE_JSON_ERROR));
+                Platform.runLater(() -> Alerts.showError(LocalValueConsts.MAIN_TITLE,
+                                                         LocalValueConsts.PARSE_JSON_ERROR));
             }
         });
     }

@@ -6,16 +6,16 @@ import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.FileExecutor;
 import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.dialog.Alerts;
-import org.code4everything.wetool.WeUtils;
-import org.code4everything.wetool.constant.LocalValueConsts;
-import org.code4everything.wetool.model.ConfigModel;
-import org.code4everything.wetool.model.ControllerModel;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
+import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.factor.BeanFactory;
+import org.code4everything.wetool.model.ConfigModel;
 
 import java.io.File;
 import java.util.Arrays;
@@ -108,11 +108,10 @@ public class FileManagerController {
 
         fileAddableCombo.getItems().addAll(LocalValueConsts.BEFORE_FILENAME, LocalValueConsts.AFTER_FILENAME);
         fileAddableCombo.getSelectionModel().selectLast();
-        fileAddableCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-                generateRenameDestFilesOfAddable());
+        fileAddableCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> generateRenameDestFilesOfAddable());
 
         fileContent.setWrapText(ConfigModel.isAutoWrap());
-        ControllerModel.setFileManagerController(this);
+        BeanFactory.register(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -143,8 +142,9 @@ public class FileManagerController {
                     postfix = FileExecutor.getFileSuffix(file);
                 }
                 String prefix = WeUtils.replaceVariable(filePrefixOfRenameTab.getText());
-                String fileName = prefix + Formatter.numberFormat(i++, numLen) + (postfix.startsWith(ValueConsts
-                        .DOT_SIGN) ? postfix : ValueConsts.DOT_SIGN + postfix);
+                String fileName =
+                        prefix + Formatter.numberFormat(i++, numLen) + (postfix.startsWith(ValueConsts.DOT_SIGN) ?
+                                postfix : ValueConsts.DOT_SIGN + postfix);
                 destFiles.add(file.getParent() + ValueConsts.SEPARATOR + fileName);
             }
         }
@@ -220,8 +220,8 @@ public class FileManagerController {
     }
 
     public void copyFiles() {
-        WeUtils.copyFiles(selectedFilesOfCopyTab.getItems(), destFolderOfCopyTab.getText(), isDeleteSrcOfCopyTab
-                .isSelected());
+        WeUtils.copyFiles(selectedFilesOfCopyTab.getItems(), destFolderOfCopyTab.getText(),
+                          isDeleteSrcOfCopyTab.isSelected());
     }
 
     public void browseSrcFolder() {
@@ -310,8 +310,8 @@ public class FileManagerController {
     }
 
     public void mergeFiles() {
-        WeUtils.mergeFiles(selectedFilesOfMergeTab.getItems(), contentFilter.getText(), deleteSrcOfMergeTab
-                .isSelected());
+        WeUtils.mergeFiles(selectedFilesOfMergeTab.getItems(), contentFilter.getText(),
+                           deleteSrcOfMergeTab.isSelected());
     }
 
     public void removeFilesOfCopyTab() {

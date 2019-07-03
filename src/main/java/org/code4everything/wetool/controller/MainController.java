@@ -5,11 +5,6 @@ import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.ReflectUtils;
 import com.zhazhapan.util.dialog.Alerts;
-import org.code4everything.wetool.WeToolApplication;
-import org.code4everything.wetool.WeUtils;
-import org.code4everything.wetool.constant.LocalValueConsts;
-import org.code4everything.wetool.model.ConfigModel;
-import org.code4everything.wetool.model.ControllerModel;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +12,12 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.apache.log4j.Logger;
+import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.factor.BeanFactory;
+import org.code4everything.wetool.model.ConfigModel;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -33,6 +33,8 @@ import java.util.TimerTask;
 public class MainController {
 
     private static Logger logger = Logger.getLogger(MainController.class);
+
+    private final Stage stage = BeanFactory.get(Stage.class);
 
     @FXML
     public TabPane tabPane;
@@ -63,14 +65,13 @@ public class MainController {
                 if (Checker.isNotEmpty(clipboard) && !last.equals(clipboard)) {
                     Date date = new Date();
                     ConfigModel.appendClipboardHistory(date, clipboard);
-                    ClipboardHistoryController controller = ControllerModel.getClipboardHistoryController();
+                    ClipboardHistoryController controller = BeanFactory.get(ClipboardHistoryController.class);
                     if (Checker.isNotNull(controller)) {
                         final String clip = clipboard;
                         Platform.runLater(() -> controller.insert(date, clip));
                     }
                 }
-                boolean isVisible =
-                        WeToolApplication.stage.isShowing() && !WeToolApplication.stage.isMaximized() && !WeToolApplication.stage.isIconified();
+                boolean isVisible = stage.isShowing() && !stage.isMaximized() && !stage.isIconified();
                 // 监听JVM内存变化
                 if (isVisible) {
                     Platform.runLater(() -> {
@@ -82,7 +83,7 @@ public class MainController {
             }
         };
         timer.scheduleAtFixedRate(task, LocalValueConsts.ONE_THOUSAND, LocalValueConsts.ONE_THOUSAND);
-        ControllerModel.setMainController(this);
+        BeanFactory.register(this);
     }
 
     public void loadTabs() {
@@ -151,7 +152,7 @@ public class MainController {
                 String fileContent = WeUtils.readFile(file);
                 switch (tabText) {
                     case LocalValueConsts.JSON_PARSER:
-                        JsonParserController controller = ControllerModel.getJsonParserController();
+                        JsonParserController controller = BeanFactory.get(JsonParserController.class);
                         if (Checker.isNotNull(controller)) {
                             controller.jsonContent.setText(fileContent);
                         }
@@ -161,13 +162,14 @@ public class MainController {
                         break;
                     case LocalValueConsts.QR_CODE_GENERATOR:
                         QrCodeGeneratorController qrCodeGeneratorController =
-                                ControllerModel.getQrCodeGeneratorController();
+                                BeanFactory.get(QrCodeGeneratorController.class);
                         if (Checker.isNotNull(qrCodeGeneratorController)) {
                             qrCodeGeneratorController.content.setText(fileContent);
                         }
+                        break;
                     case LocalValueConsts.CHARSET_CONVERTER:
                         CharsetConverterController charsetConverterController =
-                                ControllerModel.getCharsetConverterController();
+                                BeanFactory.get(CharsetConverterController.class);
                         if (Checker.isNotNull(charsetConverterController)) {
                             charsetConverterController.originalContent.setText(fileContent);
                         }
@@ -188,13 +190,13 @@ public class MainController {
                 String fileContent = null;
                 switch (tabText) {
                     case LocalValueConsts.JSON_PARSER:
-                        JsonParserController jsonParserController = ControllerModel.getJsonParserController();
+                        JsonParserController jsonParserController = BeanFactory.get(JsonParserController.class);
                         if (Checker.isNotNull(jsonParserController)) {
                             fileContent = jsonParserController.parsedJsonContent.getText();
                         }
                         break;
                     case LocalValueConsts.FILE_MANAGER:
-                        FileManagerController fileManagerController = ControllerModel.getFileManagerController();
+                        FileManagerController fileManagerController = BeanFactory.get(FileManagerController.class);
                         if (Checker.isNotNull(fileManagerController)) {
                             int idx = fileManagerController.fileManagerTab.getSelectionModel().getSelectedIndex();
                             if (idx == ValueConsts.TWO_INT) {
@@ -204,20 +206,20 @@ public class MainController {
                         break;
                     case LocalValueConsts.CLIPBOARD_HISTORY:
                         ClipboardHistoryController clipboardHistoryController =
-                                ControllerModel.getClipboardHistoryController();
+                                BeanFactory.get(ClipboardHistoryController.class);
                         if (Checker.isNotNull(clipboardHistoryController)) {
                             fileContent = clipboardHistoryController.clipboardHistory.getText();
                         }
                         break;
                     case LocalValueConsts.CHARSET_CONVERTER:
                         CharsetConverterController charsetConverterController =
-                                ControllerModel.getCharsetConverterController();
+                                BeanFactory.get(CharsetConverterController.class);
                         if (Checker.isNotNull(charsetConverterController)) {
                             fileContent = charsetConverterController.convertedContent.getText();
                         }
                         break;
                     case LocalValueConsts.NETWORK_TOOL:
-                        NetworkToolController networkToolController = ControllerModel.getNetworkToolController();
+                        NetworkToolController networkToolController = BeanFactory.get(NetworkToolController.class);
                         if (Checker.isNotNull(networkToolController)) {
                             fileContent = networkToolController.whoisResult.getText();
                         }

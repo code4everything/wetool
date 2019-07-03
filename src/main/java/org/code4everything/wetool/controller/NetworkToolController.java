@@ -6,13 +6,13 @@ import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.NetUtils;
 import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
-import org.code4everything.wetool.WeUtils;
-import org.code4everything.wetool.constant.LocalValueConsts;
-import org.code4everything.wetool.model.ControllerModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import org.code4everything.wetool.WeUtils;
+import org.code4everything.wetool.constant.LocalValueConsts;
+import org.code4everything.wetool.factor.BeanFactory;
 
 /**
  * @author pantao
@@ -52,7 +52,7 @@ public class NetworkToolController {
 
     @FXML
     private void initialize() {
-        ControllerModel.setNetworkToolController(this);
+        BeanFactory.register(this);
         //防止UI线程阻塞
         ThreadPool.executor.submit(() -> {
             try {
