@@ -12,7 +12,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
@@ -32,9 +32,8 @@ import java.util.TimerTask;
  * @author pantao
  * @since 2018/3/30
  */
+@Slf4j
 public class MainController {
-
-    private static Logger logger = Logger.getLogger(MainController.class);
 
     private final Stage stage = BeanFactory.get(Stage.class);
 
@@ -63,7 +62,7 @@ public class MainController {
                     clipboard = ClipboardUtil.getStr();
                     last = config.getLastClipboardHistoryItem().getValue();
                 } catch (Exception e) {
-                    logger.warn(e.getMessage());
+                    log.warn(e.getMessage());
                     clipboard = last = com.zhazhapan.modules.constant.ValueConsts.EMPTY_STRING;
 
                 }

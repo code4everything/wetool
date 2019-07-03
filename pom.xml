@@ -17,6 +17,17 @@
     </properties>
 
     <dependencies>
+        <!--日志打印-->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.3.0-alpha4</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.3.0-alpha4</version>
+        </dependency>
         <!--系统工具-->
         <dependency>
             <groupId>cn.hutool</groupId>

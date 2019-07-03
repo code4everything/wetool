@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.Config.WeConfig;
@@ -33,6 +34,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/3/30
  */
+@Slf4j
 public class WeApplication extends Application {
 
     private Stage stage;
@@ -42,6 +44,7 @@ public class WeApplication extends Application {
     private boolean isTraySuccess = false;
 
     public static void main(String[] args) {
+        log.info("run application...");
         // 解析配置文件
         String path = FileUtils.currentWorkDir("we-config.json");
         WeConfig config = JSONObject.parseObject(FileUtil.readUtf8String(path), WeConfig.class);
