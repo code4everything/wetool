@@ -286,14 +286,6 @@ public class WeUtils {
         return chooser;
     }
 
-    public static void openLink(String url) {
-        try {
-            Utils.openLink(url);
-        } catch (Exception e) {
-            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.OPEN_LINK_ERROR);
-        }
-    }
-
     public static void exitSystem() {
         log.info("quit application......");
         System.exit(IntegerConsts.ZERO);

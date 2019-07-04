@@ -1,11 +1,9 @@
 package org.code4everything.wetool.controller;
 
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONPath;
-import com.zhazhapan.util.Checker;
-import com.zhazhapan.util.Formatter;
-import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -17,16 +15,16 @@ import javafx.scene.input.KeyEvent;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.constant.ValueConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.FxUtils;
-import org.code4everything.wetool.util.WeUtils;
 
 /**
  * @author pantao
  * @since 2018/3/31
  */
 public class JsonParserController implements BaseViewController {
+
+    private static final String JSON_HELPER_URL = "https://github.com/alibaba/fastjson/wiki/JSONPath";
 
     private final WeConfig config = BeanFactory.get(WeConfig.class);
 
@@ -49,17 +47,14 @@ public class JsonParserController implements BaseViewController {
     public void parseJson() {
         String json = jsonContent.getText();
         String path = jsonPath.getText();
-        ThreadPool.executor.submit(() -> {
+        if (StrUtil.isEmpty(path)) {
+            parsedJsonContent.setText(json);
+            return;
+        }
+        ThreadUtil.execute(() -> {
             try {
-                JSONArray jsonArray = JSON.parseArray("[" + json + "]");
-                Object object = JSONPath.eval(jsonArray, "[0]");
-                String parsedJson;
-                if (Checker.isEmpty(path)) {
-                    parsedJson = object.toString();
-                } else {
-                    parsedJson = JSONPath.eval(object, (object instanceof JSONArray ? "" : ".") + path).toString();
-                }
-                Platform.runLater(() -> parsedJsonContent.setText(Formatter.formatJson(Checker.checkNull(parsedJson))));
+                String parsedJson = JSON.toJSONString(JSONPath.extract(json, path), true);
+                Platform.runLater(() -> parsedJsonContent.setText(parsedJson));
             } catch (Exception e) {
                 Platform.runLater(() -> Alerts.showError(TitleConsts.APP_TITLE, TipConsts.JSON_PARSE_ERROR));
             }
@@ -67,7 +62,13 @@ public class JsonParserController implements BaseViewController {
     }
 
     public void seeJsonPathGrammar() {
-        WeUtils.openLink(ValueConsts.JSON_HELPER_URL);
+        FxUtils.openLink(JSON_HELPER_URL);
+    }
+
+    public void keyReleased(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+            parseJson();
+        }
     }
 
     @Override
@@ -78,12 +79,6 @@ public class JsonParserController implements BaseViewController {
     @Override
     public void dragFileOver(DragEvent event) {
         FxUtils.acceptCopyMode(event);
-    }
-
-    public void jsonPathEnter(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.ENTER) {
-            parseJson();
-        }
     }
 
     @Override
