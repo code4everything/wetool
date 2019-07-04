@@ -99,7 +99,7 @@ public class NetworkToolController implements BaseViewController {
     }
 
     @Override
-    public String saveContent() {
+    public String getSavingContent() {
         return whoisResult.getText();
     }
 }

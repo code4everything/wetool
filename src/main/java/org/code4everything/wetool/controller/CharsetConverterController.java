@@ -7,16 +7,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.TransferMode;
+import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
-import org.code4everything.wetool.util.WeUtils;
+import org.code4everything.wetool.util.FxUtils;
 
 /**
  * @author pantao
  * @since 2018/4/4
  */
+@Slf4j
 public class CharsetConverterController implements BaseViewController {
 
     private static final String BASE64 = "BASE64";
@@ -59,42 +60,40 @@ public class CharsetConverterController implements BaseViewController {
 
     private void convert() {
         String originalText = originalContent.getText();
-        if (StrUtil.isNotEmpty(originalText)) {
-            String srcCharset = originalCharset.getSelectionModel().getSelectedItem();
-            String destCharset = convertCharset.getSelectionModel().getSelectedItem();
-
-            String result;
-            boolean baseDecode = BASE64.equals(srcCharset);
-            boolean baseEncode = BASE64.equals(destCharset);
-            if (baseDecode && baseEncode) {
-                result = originalText;
-            } else if (baseDecode) {
-                result = Base64.decodeStr(originalText);
-            } else if (baseEncode) {
-                result = Base64.encode(originalText);
-            } else {
-                // 非BASE64编码
-                result = CharsetUtil.convert(originalText, srcCharset, destCharset);
-            }
-            convertedContent.setText(result);
+        if (StrUtil.isEmpty(originalText)) {
+            return;
         }
-    }
+        String srcCharset = originalCharset.getSelectionModel().getSelectedItem();
+        String destCharset = convertCharset.getSelectionModel().getSelectedItem();
 
-    public void dragFileDropped(DragEvent event) {
-        WeUtils.putDragFileInTextArea(originalContent, event);
-    }
-
-    public void dragFileOver(DragEvent event) {
-        event.acceptTransferModes(TransferMode.COPY);
+        String result;
+        boolean baseDecode = BASE64.equals(srcCharset);
+        boolean baseEncode = BASE64.equals(destCharset);
+        if (baseDecode && baseEncode) {
+            result = originalText;
+        } else if (baseDecode) {
+            result = Base64.decodeStr(originalText);
+        } else if (baseEncode) {
+            result = Base64.encode(originalText);
+        } else {
+            // 非BASE64编码
+            result = CharsetUtil.convert(originalText, srcCharset, destCharset);
+        }
+        convertedContent.setText(result);
     }
 
     @Override
-    public String saveContent() {
+    public void dragFileDropped(DragEvent event) {
+        FxUtils.putDragContent(originalContent, event);
+    }
+
+    @Override
+    public String getSavingContent() {
         return convertedContent.getText();
     }
 
     @Override
-    public void openFile(String content) {
+    public void setFileContent(String content) {
         originalContent.setText(content);
     }
 }

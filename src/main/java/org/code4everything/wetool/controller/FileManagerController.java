@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.TransferMode;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.Config.WeConfig;
@@ -125,10 +124,6 @@ public class FileManagerController implements BaseViewController {
         if (target instanceof ListView) {
             WeUtils.putFilesInListView(event.getDragboard().getFiles(), ((ListView<File>) target).getItems());
         }
-    }
-
-    public void dragFileOver(DragEvent event) {
-        event.acceptTransferModes(TransferMode.COPY);
     }
 
     public void generateRenameDestFilesOfFormat() {
@@ -419,7 +414,7 @@ public class FileManagerController implements BaseViewController {
     }
 
     @Override
-    public String saveContent() {
+    public String getSavingContent() {
         if (fileManagerTab.getSelectionModel().getSelectedIndex() == IntegerConsts.TWO) {
             return fileContent.getText();
         }

@@ -42,7 +42,7 @@ public class ClipboardHistoryController implements BaseViewController {
     }
 
     @Override
-    public String saveContent() {
+    public String getSavingContent() {
         return clipboardHistory.getText();
     }
 }

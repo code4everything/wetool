@@ -14,7 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.TransferMode;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
@@ -70,10 +69,6 @@ public class JsonParserController implements BaseViewController {
         WeUtils.openLink(ValueConsts.JSON_HELPER_URL);
     }
 
-    public void dragFileOver(DragEvent event) {
-        event.acceptTransferModes(TransferMode.COPY);
-    }
-
     public void dragFileDropped(DragEvent event) {
         WeUtils.putDragFileInTextArea(jsonContent, event);
     }
@@ -85,12 +80,12 @@ public class JsonParserController implements BaseViewController {
     }
 
     @Override
-    public String saveContent() {
+    public String getSavingContent() {
         return parsedJsonContent.getText();
     }
 
     @Override
-    public void openFile(String content) {
+    public void setFileContent(String content) {
         jsonContent.setText(content);
     }
 }

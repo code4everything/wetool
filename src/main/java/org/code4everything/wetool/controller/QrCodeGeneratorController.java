@@ -8,7 +8,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.TransferMode;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
@@ -61,10 +60,6 @@ public class QrCodeGeneratorController implements BaseViewController {
         WeUtils.putDragFileInTextArea(content, event);
     }
 
-    public void dragFileOver(DragEvent event) {
-        event.acceptTransferModes(TransferMode.COPY);
-    }
-
     @Override
     public void saveFile(File file) {
         if (Objects.isNull(is)) {
@@ -74,7 +69,7 @@ public class QrCodeGeneratorController implements BaseViewController {
     }
 
     @Override
-    public void openFile(String content) {
+    public void setFileContent(String content) {
         this.content.setText(content);
     }
 }
