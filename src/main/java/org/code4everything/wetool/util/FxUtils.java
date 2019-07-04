@@ -29,6 +29,10 @@ import java.util.List;
 @UtilityClass
 public class FxUtils {
 
+    public static void showSuccess() {
+        Alerts.showInformation(TitleConsts.APP_TITLE, TipConsts.OPERATION_SUCCESS);
+    }
+
     public static void openLink(String url) {
         try {
             Desktop.getDesktop().browse(new URI(url));

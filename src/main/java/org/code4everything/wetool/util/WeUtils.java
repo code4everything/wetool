@@ -100,7 +100,7 @@ public class WeUtils {
                     }
                     fileObservableList.clear();
                 }
-                showSuccessInfo();
+                FxUtils.showSuccess();
             } catch (IOException e) {
                 Alerts.showError(TitleConsts.APP_TITLE, TipConsts.MERGE_FILE_ERROR);
             }
@@ -120,7 +120,7 @@ public class WeUtils {
             if (deleteSrc) {
                 file.delete();
             }
-            showSuccessInfo();
+            FxUtils.showSuccess();
         } catch (IOException e) {
             Alerts.showError(TitleConsts.APP_TITLE, TipConsts.SPLIT_FILE_ERROR);
         }
@@ -145,7 +145,7 @@ public class WeUtils {
                             f.delete();
                         }
                     }
-                    showSuccessInfo();
+                    FxUtils.showSuccess();
                 } catch (IOException e) {
                     Alerts.showError(TitleConsts.APP_TITLE, TipConsts.COPY_FILE_ERROR);
                 }
@@ -153,18 +153,14 @@ public class WeUtils {
         }
     }
 
-    public static void showSuccessInfo() {
-        Alerts.showInformation(TitleConsts.APP_TITLE, TipConsts.OPERATION_SUCCESS);
-    }
-
-    public static String replaceVariable(String s) {
-        s = StrUtil.nullToEmpty(s);
-        if (StrUtil.isNotEmpty(s)) {
+    public static String replaceVariable(String str) {
+        str = StrUtil.nullToEmpty(str);
+        if (StrUtil.isNotEmpty(str)) {
             Date date = new Date();
-            s = s.replaceAll(DATE_VARIABLE, DateUtil.formatDate(date));
-            s = s.replaceAll(TIME_VARIABLE, DateUtil.formatTime(date));
+            str = str.replaceAll(DATE_VARIABLE, DateUtil.formatDate(date));
+            str = str.replaceAll(TIME_VARIABLE, DateUtil.formatTime(date));
         }
-        return s;
+        return str;
     }
 
     public static int parseInt(String num, int minVal) {

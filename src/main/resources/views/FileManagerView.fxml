@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.code4everything.wetool.controller.FileManagerController">
     <TabPane fx:id="fileManagerTab" prefHeight="272.0" prefWidth="600.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE"
@@ -47,7 +45,7 @@
                                     <Insets top="10.0"/>
                                 </padding>
                                 <TextField fx:id="filePrefixOfRenameTab"
-                                           onKeyReleased="#generateRenameDestFilesOfFormat"
+                                           onKeyReleased="#generateNewNameForFormatRename"
                                            promptText="文件前缀" VBox.vgrow="NEVER">
                                     <tooltip>
                                         <Tooltip autoHide="true"
@@ -59,7 +57,7 @@
                                         <Insets top="10.0"/>
                                     </VBox.margin>
                                     <TextField fx:id="filePostfixOfRenameTab"
-                                               onKeyReleased="#generateRenameDestFilesOfFormat"
+                                               onKeyReleased="#generateNewNameForFormatRename"
                                                prefHeight="27.0" prefWidth="193.0"
                                                promptText="文件后缀" HBox.hgrow="ALWAYS">
                                         <tooltip>
@@ -68,7 +66,7 @@
                                         </tooltip>
                                     </TextField>
                                     <TextField fx:id="startNumberOfRenameTab"
-                                               onKeyReleased="#generateRenameDestFilesOfFormat"
+                                               onKeyReleased="#generateNewNameForFormatRename"
                                                prefHeight="27.0" prefWidth="107.0"
                                                promptText="开始数字" text="1"
                                                HBox.hgrow="ALWAYS">
@@ -89,10 +87,10 @@
                                     <Insets top="10.0"/>
                                 </padding>
                                 <TextField fx:id="fileQueryStringOfRenameTab"
-                                           onKeyReleased="#generateRenameDestFilesOfReplace"
-                                           promptText="查找" VBox.vgrow="NEVER"/>
+                                           onKeyReleased="#generateNewNameForReplaceRename"
+                                           promptText="查找（支持正则匹配）" VBox.vgrow="NEVER"/>
                                 <TextField fx:id="fileReplaceStringOfRenameTab"
-                                           onKeyReleased="#generateRenameDestFilesOfReplace"
+                                           onKeyReleased="#generateNewNameForReplaceRename"
                                            promptText="替换成" VBox.vgrow="NEVER">
                                     <VBox.margin>
                                         <Insets top="10.0"/>
@@ -110,7 +108,7 @@
                                     <Insets top="10.0"/>
                                 </padding>
                                 <TextField fx:id="fileAddableText"
-                                           onKeyReleased="#generateRenameDestFilesOfAddable"
+                                           onKeyReleased="#generateNewNameForAddRename"
                                            promptText="文本内容" VBox.vgrow="NEVER">
                                     <tooltip>
                                         <Tooltip autoHide="true"

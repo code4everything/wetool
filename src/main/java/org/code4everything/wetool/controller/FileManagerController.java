@@ -1,8 +1,10 @@
 package org.code4everything.wetool.controller;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import com.zhazhapan.util.ArrayUtils;
 import com.zhazhapan.util.Checker;
-import com.zhazhapan.util.FileExecutor;
 import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.collections.ObservableList;
@@ -12,6 +14,7 @@ import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.IntegerConsts;
+import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
@@ -114,31 +117,32 @@ public class FileManagerController implements BaseViewController {
 
         fileAddableCombo.getItems().addAll(TitleConsts.FILENAME_BEFORE, TitleConsts.FILENAME_AFTER);
         fileAddableCombo.getSelectionModel().selectLast();
-        fileAddableCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> generateRenameDestFilesOfAddable());
+        fileAddableCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> generateNewNameForAddRename());
 
         fileContent.setWrapText(config.getAutoWrap());
     }
 
-    public void generateRenameDestFilesOfFormat() {
+    public void generateNewNameForFormatRename() {
         ObservableList<File> list = selectedFilesOfRenameTab.getItems();
         if (Checker.isNotEmpty(list)) {
-            String startNumber = Checker.checkNull(startNumberOfRenameTab.getText());
-            int len = startNumber.length();
-            startNumber = startNumber.replaceAll(com.zhazhapan.modules.constant.ValueConsts.SHARP,
-                                                 com.zhazhapan.modules.constant.ValueConsts.EMPTY_STRING);
-            int i = parseInt(startNumber);
-            int numLen = len - startNumber.length() + String.valueOf(i).length();
+            // 开始索引
+            int start = WeUtils.parseInt(startNumberOfRenameTab.getText(), 0);
+            // 文件前缀
+            String prefix = WeUtils.replaceVariable(filePrefixOfRenameTab.getText());
+            // 文件后缀
+            String postfix = WeUtils.replaceVariable(filePostfixOfRenameTab.getText());
+            if (StrUtil.isNotEmpty(postfix) && !postfix.startsWith(StringConsts.Sign.DOT)) {
+                postfix = "." + postfix;
+            }
+            // 目标文件
             ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
             destFiles.clear();
             for (File file : list) {
-                String postfix = WeUtils.replaceVariable(filePostfixOfRenameTab.getText());
-                if (Checker.isEmpty(postfix) || com.zhazhapan.modules.constant.ValueConsts.DOT_SIGN.equals(postfix)) {
-                    postfix = FileExecutor.getFileSuffix(file);
+                if (Checker.isEmpty(postfix) || postfix.equals(StringConsts.Sign.DOT)) {
+                    postfix = "." + FileUtil.extName(file);
                 }
-                String prefix = WeUtils.replaceVariable(filePrefixOfRenameTab.getText());
-                String fileName =
-                        prefix + Formatter.numberFormat(i++, numLen) + (postfix.startsWith(com.zhazhapan.modules.constant.ValueConsts.DOT_SIGN) ? postfix : com.zhazhapan.modules.constant.ValueConsts.DOT_SIGN + postfix);
-                destFiles.add(file.getParent() + com.zhazhapan.modules.constant.ValueConsts.SEPARATOR + fileName);
+                String fileName = prefix + (start++) + postfix;
+                destFiles.add(file.getParent() + File.separator + fileName);
             }
         }
     }
@@ -150,65 +154,57 @@ public class FileManagerController implements BaseViewController {
         if (Checker.isNotEmpty(srcFiles) && len == destFiles.size()) {
             for (int i = 0; i < len; i++) {
                 File srcFile = srcFiles.get(0);
-                File destFile = new File(destFiles.get(i));
-                FileExecutor.renameTo(srcFile, destFile);
+                FileUtil.rename(srcFile, destFiles.get(i), false, true);
                 srcFiles.remove(srcFile);
-                srcFiles.add(destFile);
+                srcFiles.add(new File(destFiles.get(i)));
             }
-            WeUtils.showSuccessInfo();
+            FxUtils.showSuccess();
         }
     }
 
     public void removeFilesFromRenameTab() {
         ObservableList<File> files = selectedFilesOfRenameTab.getSelectionModel().getSelectedItems();
-        if (Checker.isNotEmpty(files)) {
-            ObservableList<File> fileList = selectedFilesOfRenameTab.getItems();
-            ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
-            if (Checker.isNotEmpty(destFiles)) {
-                int i = 0;
-                for (File file : files) {
-                    destFiles.remove(fileList.indexOf(file) - (i++));
-                }
-            }
-            fileList.removeAll(files);
+        if (CollUtil.isEmpty(files)) {
+            return;
+        }
+        ObservableList<File> fileList = selectedFilesOfRenameTab.getItems();
+        fileList.removeAll(files);
+    }
+
+    public void generateNewNameForReplaceRename() {
+        ObservableList<File> list = selectedFilesOfRenameTab.getItems();
+        if (CollUtil.isEmpty(list)) {
+            return;
+        }
+        ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
+        destFiles.clear();
+        for (File file : list) {
+            String filename = file.getName();
+            String query = StrUtil.nullToEmpty(fileQueryStringOfRenameTab.getText());
+            String replace = WeUtils.replaceVariable(fileReplaceStringOfRenameTab.getText());
+            destFiles.add(file.getParent() + File.separator + filename.replaceAll(query, replace));
         }
     }
 
-    public void generateRenameDestFilesOfReplace() {
+    public void generateNewNameForAddRename() {
         ObservableList<File> list = selectedFilesOfRenameTab.getItems();
-        if (Checker.isNotEmpty(list)) {
-            ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
-            destFiles.clear();
-            final String dateVariable = "%date%";
-            final String timeVariable = "%time%";
-            for (File file : list) {
-                String fn = file.getName();
-                String queryStr = Checker.checkNull(fileQueryStringOfRenameTab.getText());
-                if (queryStr.toLowerCase().contains(dateVariable)) {
-                    fn = fn.replaceAll("\\d{4}-\\d{2}-\\d{2}", dateVariable);
-                }
-                if (queryStr.toLowerCase().contains(timeVariable)) {
-                    fn = fn.replaceAll("\\d{2}\\.\\d{2}\\.\\d{2}", timeVariable);
-                }
-                fn = fn.replaceAll(queryStr, Checker.checkNull(fileReplaceStringOfRenameTab.getText()));
-                destFiles.add(file.getParent() + com.zhazhapan.modules.constant.ValueConsts.SEPARATOR + WeUtils.replaceVariable(fn));
-            }
+        if (CollUtil.isEmpty(list)) {
+            return;
         }
-    }
-
-    public void generateRenameDestFilesOfAddable() {
-        ObservableList<File> list = selectedFilesOfRenameTab.getItems();
-        if (Checker.isNotEmpty(list)) {
-            ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
-            destFiles.clear();
-            for (File file : list) {
-                String text = WeUtils.replaceVariable(fileAddableText.getText());
-                String fn = file.getName();
-                int idx = fn.lastIndexOf(com.zhazhapan.modules.constant.ValueConsts.DOT_SIGN);
-                fn = TitleConsts.FILENAME_BEFORE.equals(fileAddableCombo.getSelectionModel().getSelectedItem()) ?
-                        text + fn : fn.substring(0, idx) + text + fn.substring(idx);
-                destFiles.add(file.getParent() + com.zhazhapan.modules.constant.ValueConsts.SEPARATOR + fn);
+        ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
+        destFiles.clear();
+        for (File file : list) {
+            String text = WeUtils.replaceVariable(fileAddableText.getText());
+            String filename = file.getName();
+            if (TitleConsts.FILENAME_BEFORE.equals(fileAddableCombo.getSelectionModel().getSelectedItem())) {
+                // 文件名之前添加
+                filename = text + filename;
+            } else {
+                // 文件名之后添加
+                int idx = filename.lastIndexOf(StringConsts.Sign.DOT);
+                filename = filename.substring(0, idx) + text + filename.substring(idx);
             }
+            destFiles.add(file.getParent() + File.separator + filename);
         }
     }
 
@@ -431,9 +427,5 @@ public class FileManagerController implements BaseViewController {
     @Override
     public void openFile(File file) {
         WeUtils.putFilesInListViewOfFileManagerTab(file);
-    }
-
-    private int parseInt(String num) {
-        return WeUtils.parseInt(num, 0);
     }
 }
