@@ -1,6 +1,7 @@
 package org.code4everything.wetool.controller;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.StrUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -16,7 +17,7 @@ import java.util.Date;
  */
 public class ClipboardHistoryController implements BaseViewController {
 
-    private static final String SEP = StrUtil.repeat("=", 50);
+    private static final String SEP = StrUtil.repeat("=", 100);
 
     private static final String TEMPLATE = SEP + "\r\n{}\r\n" + SEP + "\r\n\r\n{}\r\n\r\n";
 
@@ -29,7 +30,7 @@ public class ClipboardHistoryController implements BaseViewController {
     private void initialize() {
         BeanFactory.registerView(TitleConsts.CLIPBOARD_HISTORY, this);
         clipboardHistory.setWrapText(config.getAutoWrap());
-        for (cn.hutool.core.lang.Pair<Date, String> pair : config.getClipboardHistory()) {
+        for (Pair<Date, String> pair : config.getClipboardHistory()) {
             insert(pair.getKey(), pair.getValue());
         }
     }
@@ -37,7 +38,7 @@ public class ClipboardHistoryController implements BaseViewController {
     void insert(Date date, String content) {
         if (StrUtil.isNotEmpty(content)) {
             content = StrUtil.format(TEMPLATE, DateUtil.formatDateTime(date), content);
-            clipboardHistory.setText(content + clipboardHistory.getText());
+            clipboardHistory.insertText(0, content);
         }
     }
 

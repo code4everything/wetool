@@ -17,7 +17,6 @@ import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
-import org.code4everything.wetool.controller.MainController;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
 
@@ -59,7 +58,7 @@ public class WeApplication extends Application {
             WeUtils.exitSystem();
         }
         // 设置标题
-        stage.setScene(new Scene(root));
+        stage.setScene(new Scene(Objects.requireNonNull(root)));
         stage.getIcons().add(new Image(getClass().getResourceAsStream(ViewConsts.ICON)));
         stage.setTitle(TitleConsts.APP_TITLE);
         // 监听关闭事件
@@ -82,7 +81,6 @@ public class WeApplication extends Application {
             enableTray();
         }
         stage.show();
-        BeanFactory.get(MainController.class).loadTabs();
     }
 
     /**

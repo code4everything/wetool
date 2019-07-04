@@ -16,6 +16,7 @@ import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
 import java.io.File;
@@ -116,14 +117,6 @@ public class FileManagerController implements BaseViewController {
         fileAddableCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> generateRenameDestFilesOfAddable());
 
         fileContent.setWrapText(config.getAutoWrap());
-    }
-
-    @SuppressWarnings("unchecked")
-    public void dragFileDropped(DragEvent event) {
-        Object target = event.getGestureTarget();
-        if (target instanceof ListView) {
-            WeUtils.putFilesInListView(event.getDragboard().getFiles(), ((ListView<File>) target).getItems());
-        }
     }
 
     public void generateRenameDestFilesOfFormat() {
@@ -406,6 +399,20 @@ public class FileManagerController implements BaseViewController {
                 filenameOfDeleteTab.appendText((endsWith ? "" : ", ") + file.getName());
             }
         }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void dragFileDropped(DragEvent event) {
+        Object target = event.getGestureTarget();
+        if (target instanceof ListView) {
+            WeUtils.putFilesInListView(event.getDragboard().getFiles(), ((ListView<File>) target).getItems());
+        }
+    }
+
+    @Override
+    public void dragFileOver(DragEvent event) {
+        FxUtils.acceptCopyMode(event);
     }
 
     @Override

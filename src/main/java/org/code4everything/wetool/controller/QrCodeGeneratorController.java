@@ -13,7 +13,7 @@ import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
-import org.code4everything.wetool.util.WeUtils;
+import org.code4everything.wetool.util.FxUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +25,8 @@ import java.util.Objects;
  * @since 2018/4/4
  */
 public class QrCodeGeneratorController implements BaseViewController {
+
+    private static final File TEMP_FILE = new File(FileUtils.currentWorkDir("qrcode.jpg"));
 
     private final WeConfig config = BeanFactory.get(WeConfig.class);
 
@@ -44,20 +46,25 @@ public class QrCodeGeneratorController implements BaseViewController {
 
     public void generateQrCode() {
         int size = (int) Double.min(qrCode.getFitHeight(), qrCode.getFitWidth());
-        File image = new File(FileUtils.currentWorkDir("qrcode.jpg"));
         try {
-            QrCodeUtil.generate(content.getText(), size, size, image);
-            is = new FileInputStream(image);
+            QrCodeUtil.generate(content.getText(), size, size, TEMP_FILE);
+            is = new FileInputStream(TEMP_FILE);
             qrCode.setImage(new Image(is));
             is.close();
-            image.delete();
+            FileUtil.del(TEMP_FILE);
         } catch (Exception e) {
             Alerts.showError(TitleConsts.APP_TITLE, TipConsts.QR_CODE_ERROR);
         }
     }
 
+    @Override
     public void dragFileDropped(DragEvent event) {
-        WeUtils.putDragFileInTextArea(content, event);
+        FxUtils.putDraggedFileContent(content, event);
+    }
+
+    @Override
+    public void dragFileOver(DragEvent event) {
+        FxUtils.acceptCopyMode(event);
     }
 
     @Override

@@ -19,6 +19,7 @@ import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ValueConsts;
 import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
 /**
@@ -69,8 +70,14 @@ public class JsonParserController implements BaseViewController {
         WeUtils.openLink(ValueConsts.JSON_HELPER_URL);
     }
 
+    @Override
     public void dragFileDropped(DragEvent event) {
-        WeUtils.putDragFileInTextArea(jsonContent, event);
+        FxUtils.putDraggedFileContent(jsonContent, event);
+    }
+
+    @Override
+    public void dragFileOver(DragEvent event) {
+        FxUtils.acceptCopyMode(event);
     }
 
     public void jsonPathEnter(KeyEvent keyEvent) {

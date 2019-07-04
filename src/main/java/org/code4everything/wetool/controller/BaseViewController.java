@@ -3,7 +3,6 @@ package org.code4everything.wetool.controller;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.TransferMode;
 
 import java.io.File;
 import java.util.List;
@@ -31,9 +30,7 @@ public interface BaseViewController {
 
     default String getSavingContent() {return "";}
 
-    default void dragFileOver(DragEvent event) {
-        event.acceptTransferModes(TransferMode.COPY);
-    }
+    default void dragFileOver(DragEvent event) {}
 
     default void dragFileDropped(DragEvent event) {}
 }

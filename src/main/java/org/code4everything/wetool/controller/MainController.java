@@ -53,15 +53,19 @@ public class MainController {
     @FXML
     public ProgressBar jvm;
 
+    /**
+     * 此对象暂时不注册到工厂
+     */
     @FXML
     private void initialize() {
-        BeanFactory.register(this);
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
         // 监听剪贴板和JVM
         EXECUTOR.scheduleWithFixedDelay(() -> {
             watchClipboard();
             watchJVM();
         }, 0, IntegerConsts.ONE_THOUSAND_AND_TWENTY_FOUR, TimeUnit.MILLISECONDS);
+        // 加载默认选项卡
+        loadTabs();
     }
 
     private void watchClipboard() {
@@ -101,7 +105,7 @@ public class MainController {
         }
     }
 
-    public void loadTabs() {
+    private void loadTabs() {
         for (Object tabName : config.getInitialize().getTabs().getLoads()) {
             ReflectUtil.invoke(this, "open" + tabName + "Tab");
         }

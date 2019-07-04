@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import com.zhazhapan.util.Checker;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.TransferMode;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
@@ -16,10 +17,14 @@ import java.util.List;
 @UtilityClass
 public class FxUtils {
 
-    public static void putDragContent(TextInputControl control, DragEvent event) {
+    public static void putDraggedFileContent(TextInputControl control, DragEvent event) {
         List<File> files = event.getDragboard().getFiles();
         if (Checker.isNotEmpty(files)) {
             control.setText(FileUtil.readUtf8String(files.get(0)));
         }
+    }
+
+    public static void acceptCopyMode(DragEvent event) {
+        event.acceptTransferModes(TransferMode.COPY);
     }
 }
