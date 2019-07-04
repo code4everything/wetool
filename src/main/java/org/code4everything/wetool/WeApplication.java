@@ -23,11 +23,8 @@ import org.code4everything.wetool.util.WeUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -39,12 +36,10 @@ public class WeApplication extends Application {
 
     private Stage stage;
 
-    private TrayIcon trayIcon;
-
     private boolean isTraySuccess = false;
 
     public static void main(String[] args) {
-        log.info("run application...");
+        log.info("run application......");
         // 解析配置文件
         String path = FileUtils.currentWorkDir("we-config.json");
         WeConfig config = JSONObject.parseObject(FileUtil.readUtf8String(path), WeConfig.class);
@@ -97,75 +92,59 @@ public class WeApplication extends Application {
         Platform.setImplicitExit(false);
         // 添加托盘邮件菜单
         PopupMenu popupMenu = new PopupMenu();
-        List<MenuItem> items = new ArrayList<>(8);
-        items.add(new MenuItem(TitleConsts.SHOW));
-        items.add(new MenuItem(TitleConsts.HIDE));
-        items.add(new MenuItem(TitleConsts.EXIT));
-        // 添加菜单对应操作
-        ActionListener actionListener = e -> {
-            MenuItem item = (MenuItem) e.getSource();
-            switch (item.getLabel()) {
-                case TitleConsts.EXIT:
-                    SystemTray.getSystemTray().remove(trayIcon);
-                    WeUtils.exitSystem();
-                    break;
-                case TitleConsts.SHOW:
-                    Platform.runLater(stage::show);
-                    break;
-                case TitleConsts.HIDE:
-                    Platform.runLater(stage::hide);
-                    break;
-                default:
-                    break;
-            }
-        };
-        //双击事件方法
-        MouseListener mouseListener = new MouseListener() {
-
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-
-            @Override
-            public void mousePressed(MouseEvent e) {}
-
-            @Override
-            public void mouseExited(MouseEvent e) {}
-
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Platform.setImplicitExit(false);
-                if (e.getClickCount() == IntegerConsts.TWO) {
-                    // 双击图标
-                    Platform.runLater(() -> {
-                        if (stage.isShowing()) {
-                            stage.hide();
-                        } else {
-                            stage.show();
-                        }
-                    });
-                }
-            }
-        };
-        // 添加监听事件
-        items.forEach(item -> {
-            item.addActionListener(actionListener);
-            popupMenu.add(item);
-        });
+        // 显示
+        MenuItem item = new MenuItem(TitleConsts.SHOW);
+        item.addActionListener(e -> Platform.runLater(() -> stage.show()));
+        popupMenu.add(item);
+        // 隐藏
+        item = new MenuItem(TitleConsts.HIDE);
+        item.addActionListener(e -> Platform.runLater(() -> stage.hide()));
+        popupMenu.add(item);
+        // 退出
+        item = new MenuItem(TitleConsts.EXIT);
+        item.addActionListener(e -> WeUtils.exitSystem());
+        popupMenu.add(item);
         // 添加系统托盘图标
         try {
             SystemTray tray = SystemTray.getSystemTray();
             java.awt.Image image = ImageIO.read(getClass().getResourceAsStream(ViewConsts.ICON));
-            trayIcon = new TrayIcon(image, TitleConsts.APP_TITLE, popupMenu);
+            TrayIcon trayIcon = new TrayIcon(image, TitleConsts.APP_TITLE, popupMenu);
             trayIcon.setImageAutoSize(true);
             trayIcon.setToolTip(TitleConsts.APP_TITLE);
-            trayIcon.addMouseListener(mouseListener);
+            trayIcon.addMouseListener(new TrayMouseListener());
             tray.add(trayIcon);
             isTraySuccess = true;
         } catch (Exception e) {
             Alerts.showError(TitleConsts.APP_TITLE, TipConsts.TRAY_ERROR);
         }
+    }
+
+    private class TrayMouseListener implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() == IntegerConsts.TWO) {
+                // 双击图标
+                Platform.runLater(() -> {
+                    if (stage.isShowing()) {
+                        stage.hide();
+                    } else {
+                        stage.show();
+                    }
+                });
+            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {}
+
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+
+        @Override
+        public void mouseExited(MouseEvent e) {}
     }
 }

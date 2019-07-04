@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
@@ -31,6 +32,7 @@ import java.util.Objects;
  * @author pantao
  * @since 2018/3/31
  */
+@Slf4j
 @UtilityClass
 public class WeUtils {
 
@@ -302,6 +304,7 @@ public class WeUtils {
     }
 
     public static void exitSystem() {
+        log.info("quit application......");
         System.exit(IntegerConsts.ZERO);
     }
 
