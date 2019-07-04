@@ -1,5 +1,6 @@
 package org.code4everything.wetool.controller;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.fxml.FXML;
@@ -18,12 +19,13 @@ import org.code4everything.wetool.util.WeUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Objects;
 
 /**
  * @author pantao
  * @since 2018/4/4
  */
-public class QrCodeGeneratorController {
+public class QrCodeGeneratorController implements BaseViewController {
 
     private final WeConfig config = BeanFactory.get(WeConfig.class);
 
@@ -33,9 +35,11 @@ public class QrCodeGeneratorController {
     @FXML
     public ImageView qrCode;
 
+    private InputStream is;
+
     @FXML
     private void initialize() {
-        BeanFactory.register(this);
+        BeanFactory.registerView(TitleConsts.QR_CODE_GENERATOR, this);
         content.setWrapText(config.getAutoWrap());
     }
 
@@ -44,7 +48,7 @@ public class QrCodeGeneratorController {
         File image = new File(FileUtils.currentWorkDir("qrcode.jpg"));
         try {
             QrCodeUtil.generate(content.getText(), size, size, image);
-            InputStream is = new FileInputStream(image);
+            is = new FileInputStream(image);
             qrCode.setImage(new Image(is));
             is.close();
             image.delete();
@@ -59,5 +63,18 @@ public class QrCodeGeneratorController {
 
     public void dragFileOver(DragEvent event) {
         event.acceptTransferModes(TransferMode.COPY);
+    }
+
+    @Override
+    public void saveFile(File file) {
+        if (Objects.isNull(is)) {
+            return;
+        }
+        FileUtil.writeFromStream(is, file);
+    }
+
+    @Override
+    public void openFile(String content) {
+        this.content.setText(content);
     }
 }

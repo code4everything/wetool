@@ -26,7 +26,7 @@ import org.code4everything.wetool.util.WeUtils;
  * @author pantao
  * @since 2018/3/31
  */
-public class JsonParserController {
+public class JsonParserController implements BaseViewController {
 
     private final WeConfig config = BeanFactory.get(WeConfig.class);
 
@@ -41,9 +41,9 @@ public class JsonParserController {
 
     @FXML
     private void initialize() {
+        BeanFactory.registerView(TitleConsts.JSON_PARSER, this);
         jsonContent.setWrapText(config.getAutoWrap());
         parsedJsonContent.setWrapText(config.getAutoWrap());
-        BeanFactory.register(this);
     }
 
     public void parseJson() {
@@ -82,5 +82,15 @@ public class JsonParserController {
         if (keyEvent.getCode() == KeyCode.ENTER) {
             parseJson();
         }
+    }
+
+    @Override
+    public String saveContent() {
+        return parsedJsonContent.getText();
+    }
+
+    @Override
+    public void openFile(String content) {
+        jsonContent.setText(content);
     }
 }

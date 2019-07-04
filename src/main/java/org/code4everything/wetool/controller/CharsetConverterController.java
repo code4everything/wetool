@@ -9,6 +9,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
 import org.code4everything.wetool.Config.WeConfig;
+import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
 
@@ -16,7 +17,7 @@ import org.code4everything.wetool.util.WeUtils;
  * @author pantao
  * @since 2018/4/4
  */
-public class CharsetConverterController {
+public class CharsetConverterController implements BaseViewController {
 
     private static final String BASE64 = "BASE64";
 
@@ -36,7 +37,7 @@ public class CharsetConverterController {
 
     @FXML
     private void initialize() {
-        BeanFactory.register(this);
+        BeanFactory.registerView(TitleConsts.CHARSET_CONVERTER, this);
         // 支持的编码
         String[] charset = {"UTF-8", "ISO-8859-1", "GBK", BASE64};
 
@@ -85,5 +86,15 @@ public class CharsetConverterController {
 
     public void dragFileOver(DragEvent event) {
         event.acceptTransferModes(TransferMode.COPY);
+    }
+
+    @Override
+    public String saveContent() {
+        return convertedContent.getText();
+    }
+
+    @Override
+    public void openFile(String content) {
+        originalContent.setText(content);
     }
 }

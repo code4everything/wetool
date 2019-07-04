@@ -1,5 +1,7 @@
 package org.code4everything.wetool.util;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
 import com.zhazhapan.util.*;
 import com.zhazhapan.util.dialog.Alerts;
@@ -12,10 +14,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.experimental.UtilityClass;
+import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.constant.ValueConsts;
 import org.code4everything.wetool.controller.FileManagerController;
 import org.code4everything.wetool.factory.BeanFactory;
 
@@ -31,6 +33,10 @@ import java.util.Objects;
  */
 @UtilityClass
 public class WeUtils {
+
+    public static final String TIME_VARIABLE = "%(TIME|time)%";
+
+    public static final String DATE_VARIABLE = "%(DATE|date)%";
 
     private static WeConfig config;
 
@@ -155,7 +161,13 @@ public class WeUtils {
     }
 
     public static String replaceVariable(String s) {
-        return Checker.checkNull(s).replaceAll(ValueConsts.DATE_VARIABLE, Formatter.dateToString(new Date())).replaceAll(ValueConsts.TIME_VARIABLE, Formatter.datetimeToCustomString(new Date(), ValueConsts.TIME_FORMAT));
+        s = StrUtil.nullToEmpty(s);
+        if (StrUtil.isNotEmpty(s)) {
+            Date date = new Date();
+            s = s.replaceAll(DATE_VARIABLE, DateUtil.formatDate(date));
+            s = s.replaceAll(TIME_VARIABLE, DateUtil.formatTime(date));
+        }
+        return s;
     }
 
     public static int stringToInt(String integer) {
@@ -290,7 +302,7 @@ public class WeUtils {
     }
 
     public static void exitSystem() {
-        System.exit(com.zhazhapan.modules.constant.ValueConsts.ZERO_INT);
+        System.exit(IntegerConsts.ZERO);
     }
 
     public static VBox loadFxml(String url) {

@@ -11,6 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
+import lombok.extern.slf4j.Slf4j;
+import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
@@ -25,7 +27,8 @@ import java.util.List;
  * @author pantao
  * @since 2018/3/31
  */
-public class FileManagerController {
+@Slf4j
+public class FileManagerController implements BaseViewController {
 
     private final WeConfig config = BeanFactory.get(WeConfig.class);
 
@@ -100,7 +103,7 @@ public class FileManagerController {
 
     @FXML
     private void initialize() {
-        BeanFactory.register(this);
+        BeanFactory.registerView(TitleConsts.FILE_MANAGER, this);
         //设置多选
         selectedFilesOfRenameTab.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedFilesOfCopyTab.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -408,5 +411,23 @@ public class FileManagerController {
                 filenameOfDeleteTab.appendText((endsWith ? "" : ", ") + file.getName());
             }
         }
+    }
+
+    @Override
+    public void openMultiFiles(List<File> files) {
+        WeUtils.putFilesInListViewOfFileManagerTab(files);
+    }
+
+    @Override
+    public String saveContent() {
+        if (fileManagerTab.getSelectionModel().getSelectedIndex() == IntegerConsts.TWO) {
+            return fileContent.getText();
+        }
+        return "";
+    }
+
+    @Override
+    public void openFile(File file) {
+        WeUtils.putFilesInListViewOfFileManagerTab(file);
     }
 }

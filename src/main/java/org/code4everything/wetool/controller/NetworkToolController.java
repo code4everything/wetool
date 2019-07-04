@@ -20,7 +20,7 @@ import org.code4everything.wetool.util.WeUtils;
  * @author pantao
  * @since 2018/4/13
  */
-public class NetworkToolController {
+public class NetworkToolController implements BaseViewController {
 
     @FXML
     public TextField privateIpv4;
@@ -54,7 +54,7 @@ public class NetworkToolController {
 
     @FXML
     private void initialize() {
-        BeanFactory.register(this);
+        BeanFactory.registerView(TitleConsts.NETWORK_TOOL, this);
         //防止UI线程阻塞
         ThreadUtil.execute(() -> {
             try {
@@ -96,5 +96,10 @@ public class NetworkToolController {
                 whoisResult.setText(result);
             }
         }
+    }
+
+    @Override
+    public String saveContent() {
+        return whoisResult.getText();
     }
 }

@@ -1,14 +1,15 @@
 package org.code4everything.wetool.controller;
 
-import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.IdUtil;
 import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.Formatter;
 import com.zhazhapan.util.RandomUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import org.code4everything.wetool.util.WeUtils;
+import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.WeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  * @author pantao
  * @since 2018/4/2
  */
-public class RandomGeneratorController {
+public class RandomGeneratorController implements BaseViewController {
 
     @FXML
     public TextField uuidResult;
@@ -72,11 +73,11 @@ public class RandomGeneratorController {
 
     @FXML
     public void initialize() {
-        BeanFactory.register(this);
+        BeanFactory.registerView(TitleConsts.RANDOM_GENERATOR, this);
     }
 
     public void generateUUID() {
-        uuidResult.setText(RandomUtil.randomUUID());
+        uuidResult.setText(IdUtil.simpleUUID());
     }
 
     public void generateNumber() {

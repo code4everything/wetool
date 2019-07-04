@@ -1,5 +1,6 @@
 package org.code4everything.wetool.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.ObjectUtil;
@@ -26,6 +27,7 @@ import org.code4everything.wetool.util.WeUtils;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -145,121 +147,55 @@ public class MainController {
         VBox box = WeUtils.loadFxml(url);
         if (Checker.isNull(box)) {
             Alerts.showError(com.zhazhapan.modules.constant.ValueConsts.ERROR, TipConsts.FXML_ERROR);
-        } else {
-            Tab tab = new Tab(tabName);
-            tab.setContent(box);
-            tab.setClosable(true);
-            tabs.add(tab);
-            tabPane.getSelectionModel().select(tab);
+            return;
         }
+        // 打开选项卡
+        Tab tab = new Tab(tabName);
+        tab.setContent(box);
+        tab.setClosable(true);
+        tabs.add(tab);
+        tabPane.getSelectionModel().select(tab);
     }
 
     public void openFile() {
         File file = WeUtils.getChooseFile();
-        if (Checker.isNotNull(file)) {
-            Tab tab = tabPane.getSelectionModel().getSelectedItem();
-            if (Checker.isNotNull(tab)) {
-                String tabText = Checker.checkNull(tab.getText());
-                String fileContent = WeUtils.readFile(file);
-                switch (tabText) {
-                    case TitleConsts.JSON_PARSER:
-                        JsonParserController controller = BeanFactory.get(JsonParserController.class);
-                        if (Checker.isNotNull(controller)) {
-                            controller.jsonContent.setText(fileContent);
-                        }
-                        break;
-                    case TitleConsts.FILE_MANAGER:
-                        WeUtils.putFilesInListViewOfFileManagerTab(file);
-                        break;
-                    case TitleConsts.QR_CODE_GENERATOR:
-                        QrCodeGeneratorController qrCodeGeneratorController =
-                                BeanFactory.get(QrCodeGeneratorController.class);
-                        if (Checker.isNotNull(qrCodeGeneratorController)) {
-                            qrCodeGeneratorController.content.setText(fileContent);
-                        }
-                        break;
-                    case TitleConsts.CHARSET_CONVERTER:
-                        CharsetConverterController charsetConverterController =
-                                BeanFactory.get(CharsetConverterController.class);
-                        if (Checker.isNotNull(charsetConverterController)) {
-                            charsetConverterController.originalContent.setText(fileContent);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+        if (Objects.isNull(file)) {
+            return;
         }
+        BaseViewController controller = getCurrentTabController();
+        if (Objects.isNull(controller)) {
+            return;
+        }
+        controller.openFile(file);
     }
 
     public void saveFile() {
         File file = WeUtils.getSaveFile();
-        if (Checker.isNotNull(file)) {
-            Tab tab = tabPane.getSelectionModel().getSelectedItem();
-            if (Checker.isNotNull(tab)) {
-                String tabText = Checker.checkNull(tab.getText());
-                String fileContent = null;
-                switch (tabText) {
-                    case TitleConsts.JSON_PARSER:
-                        JsonParserController jsonParserController = BeanFactory.get(JsonParserController.class);
-                        if (Checker.isNotNull(jsonParserController)) {
-                            fileContent = jsonParserController.parsedJsonContent.getText();
-                        }
-                        break;
-                    case TitleConsts.FILE_MANAGER:
-                        FileManagerController fileManagerController = BeanFactory.get(FileManagerController.class);
-                        if (Checker.isNotNull(fileManagerController)) {
-                            int idx = fileManagerController.fileManagerTab.getSelectionModel().getSelectedIndex();
-                            if (idx == com.zhazhapan.modules.constant.ValueConsts.TWO_INT) {
-                                fileContent = fileManagerController.fileContent.getText();
-                            }
-                        }
-                        break;
-                    case TitleConsts.CLIPBOARD_HISTORY:
-                        ClipboardHistoryController clipboardHistoryController =
-                                BeanFactory.get(ClipboardHistoryController.class);
-                        if (Checker.isNotNull(clipboardHistoryController)) {
-                            fileContent = clipboardHistoryController.clipboardHistory.getText();
-                        }
-                        break;
-                    case TitleConsts.CHARSET_CONVERTER:
-                        CharsetConverterController charsetConverterController =
-                                BeanFactory.get(CharsetConverterController.class);
-                        if (Checker.isNotNull(charsetConverterController)) {
-                            fileContent = charsetConverterController.convertedContent.getText();
-                        }
-                        break;
-                    case TitleConsts.NETWORK_TOOL:
-                        NetworkToolController networkToolController = BeanFactory.get(NetworkToolController.class);
-                        if (Checker.isNotNull(networkToolController)) {
-                            fileContent = networkToolController.whoisResult.getText();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                if (Checker.isNotEmpty(fileContent)) {
-                    WeUtils.saveFile(file, fileContent);
-                }
-            }
+        if (Objects.isNull(file)) {
+            return;
         }
+        BaseViewController controller = getCurrentTabController();
+        if (Objects.isNull(controller)) {
+            return;
+        }
+        controller.saveFile(file);
     }
 
     public void openMultiFile() {
         List<File> files = WeUtils.getChooseFiles();
-        if (Checker.isNotEmpty(files)) {
-            Tab tab = tabPane.getSelectionModel().getSelectedItem();
-            if (Checker.isNotNull(tab)) {
-                String tabText = Checker.checkNull(tab.getText());
-                switch (tabText) {
-                    case TitleConsts.FILE_MANAGER:
-                        WeUtils.putFilesInListViewOfFileManagerTab(files);
-                        break;
-                    default:
-                        break;
-                }
-            }
+        if (CollUtil.isEmpty(files)) {
+            return;
         }
+        BaseViewController controller = getCurrentTabController();
+        if (Objects.isNull(controller)) {
+            return;
+        }
+        controller.openMultiFiles(files);
+    }
+
+    private BaseViewController getCurrentTabController() {
+        Tab tab = tabPane.getSelectionModel().getSelectedItem();
+        return Objects.isNull(tab) ? null : BeanFactory.getView(tab.getText());
     }
 
     public void quit() {
