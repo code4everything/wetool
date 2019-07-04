@@ -1,9 +1,13 @@
 package org.code4everything.wetool.util;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
-import com.zhazhapan.util.*;
+import com.zhazhapan.util.Checker;
+import com.zhazhapan.util.FileExecutor;
+import com.zhazhapan.util.NetUtils;
+import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -163,14 +167,12 @@ public class WeUtils {
         return s;
     }
 
-    public static int stringToInt(String integer) {
-        int result = Formatter.stringToInt(integer);
-        return result > -1 ? result : 0;
-    }
-
-    public static double stringToDouble(String digit) {
-        double result = Formatter.stringToDouble(digit);
-        return result < 0 ? 0 : result;
+    public static int parseInt(String num, int minVal) {
+        int n = 0;
+        if (NumberUtil.isNumber(num)) {
+            n = NumberUtil.parseInt(num);
+        }
+        return Math.max(n, minVal);
     }
 
     @SuppressWarnings("unchecked")

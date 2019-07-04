@@ -126,7 +126,7 @@ public class FileManagerController implements BaseViewController {
             int len = startNumber.length();
             startNumber = startNumber.replaceAll(com.zhazhapan.modules.constant.ValueConsts.SHARP,
                                                  com.zhazhapan.modules.constant.ValueConsts.EMPTY_STRING);
-            int i = WeUtils.stringToInt(startNumber);
+            int i = parseInt(startNumber);
             int numLen = len - startNumber.length() + String.valueOf(i).length();
             ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
             destFiles.clear();
@@ -431,5 +431,9 @@ public class FileManagerController implements BaseViewController {
     @Override
     public void openFile(File file) {
         WeUtils.putFilesInListViewOfFileManagerTab(file);
+    }
+
+    private int parseInt(String num) {
+        return WeUtils.parseInt(num, 0);
     }
 }

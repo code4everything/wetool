@@ -45,7 +45,7 @@ public class QrCodeGeneratorController implements BaseViewController {
     }
 
     public void generateQrCode() {
-        int size = (int) Double.min(qrCode.getFitHeight(), qrCode.getFitWidth());
+        int size = (int) Math.min(qrCode.getFitHeight(), qrCode.getFitWidth());
         try {
             QrCodeUtil.generate(content.getText(), size, size, TEMP_FILE);
             is = new FileInputStream(TEMP_FILE);

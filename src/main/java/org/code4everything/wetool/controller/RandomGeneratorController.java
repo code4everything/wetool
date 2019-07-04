@@ -1,24 +1,32 @@
 package org.code4everything.wetool.controller;
 
 import cn.hutool.core.util.IdUtil;
-import com.zhazhapan.modules.constant.ValueConsts;
-import com.zhazhapan.util.Checker;
-import com.zhazhapan.util.Formatter;
-import com.zhazhapan.util.RandomUtils;
+import cn.hutool.core.util.RandomUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author pantao
  * @since 2018/4/2
  */
 public class RandomGeneratorController implements BaseViewController {
+
+    private static final String BASE_NUMBER = "0123456789";
+
+    private static final String BASE_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    private static final String BASE_LOWER = "abcdefghijklmnopqrstuvwxyz";
+
+    private static final String BASE_LETTER = BASE_LOWER + BASE_UPPER;
+
+    private static final String BASE_STRING = BASE_NUMBER + BASE_LETTER;
+
+    private static final String BASE_CHAR = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+
+    private static final String BASE_TEXT = BASE_CHAR + BASE_STRING;
 
     @FXML
     public TextField uuidResult;
@@ -30,16 +38,10 @@ public class RandomGeneratorController implements BaseViewController {
     public TextField ceil;
 
     @FXML
-    public TextField ignoreRange;
-
-    @FXML
     public TextField precision;
 
     @FXML
     public TextField numberResult;
-
-    @FXML
-    public TextField emailResult;
 
     @FXML
     public TextField lowerCaseLength;
@@ -81,57 +83,43 @@ public class RandomGeneratorController implements BaseViewController {
     }
 
     public void generateNumber() {
-        String flo = floor.getText();
-        String cei = ceil.getText();
-        int p = WeUtils.stringToInt(precision.getText());
-        if (p == 0) {
-            String[] ranges = Checker.checkNull(ignoreRange.getText()).split(ValueConsts.COMMA_SIGN);
-            List<int[]> rl = new ArrayList<>(ranges.length);
-            for (String range : ranges) {
-                String[] rs = range.trim().split("-");
-                if (rs.length > 1 && Checker.isDecimal(rs[0].trim()) && Checker.isDecimal(rs[1].trim())) {
-                    int[] ri = new int[]{Formatter.stringToInt(rs[0]), Formatter.stringToInt(rs[1])};
-                    rl.add(ri);
-                }
+        int low = WeUtils.parseInt(floor.getText(), Integer.MIN_VALUE);
+        int high = WeUtils.parseInt(ceil.getText(), low + 1);
+        int scale = WeUtils.parseInt(precision.getText(), 0);
+        String num = String.valueOf(RandomUtil.randomInt(low, high));
+        if (scale > 0) {
+            low = 0;
+            high = 10;
+            if (scale > 1) {
+                low = (int) Math.pow(10, scale - 1);
+                high = low * 10;
             }
-            int[][] r = new int[rl.size()][2];
-            rl.toArray(r);
-            int f = WeUtils.stringToInt(flo);
-            int c = Checker.isDecimal(cei) ? Formatter.stringToInt(cei) : Integer.MAX_VALUE;
-            numberResult.setText(String.valueOf(RandomUtils.getRandomIntegerIgnoreRange(f, c, r)));
-        } else {
-            double f = WeUtils.stringToDouble(flo);
-            double c = Checker.isDecimal(cei) ? Formatter.stringToDouble(cei) : Double.MAX_VALUE;
-            numberResult.setText(String.valueOf(RandomUtils.getRandomDouble(f, c, p)));
+            num += "." + RandomUtil.randomInt(low + 1, high);
         }
-    }
-
-    public void generateEmail() {
-        emailResult.setText(RandomUtils.getRandomEmail());
+        numberResult.setText(num);
     }
 
     public void generateLowerCase() {
-        lowerCaseResult.setText(RandomUtils.getRandomStringOnlyLowerCase(getLength(lowerCaseLength.getText())));
+        lowerCaseResult.setText(RandomUtil.randomString(BASE_LOWER, parseInt(lowerCaseLength.getText())));
     }
 
     public void generateUpperCase() {
-        upperCaseResult.setText(RandomUtils.getRandomStringOnlyUpperCase(getLength(upperCaseLength.getText())));
+        upperCaseResult.setText(RandomUtil.randomString(BASE_UPPER, parseInt(upperCaseLength.getText())));
     }
 
     public void generateLetter() {
-        letterResult.setText(RandomUtils.getRandomStringOnlyLetter(getLength(letterLength.getText())));
+        letterResult.setText(RandomUtil.randomString(BASE_LETTER, parseInt(letterLength.getText())));
     }
 
     public void generateString() {
-        stringResult.setText(RandomUtils.getRandomStringWithoutSymbol(getLength(stringLength.getText())));
+        stringResult.setText(RandomUtil.randomString(BASE_STRING, parseInt(stringLength.getText())));
     }
 
     public void generateText() {
-        textResult.setText(RandomUtils.getRandomString(getLength(textLength.getText())));
+        textResult.setText(RandomUtil.randomString(BASE_TEXT, parseInt(textLength.getText())));
     }
 
-    private int getLength(String len) {
-        int length = WeUtils.stringToInt(len);
-        return length < 1 ? RandomUtils.getRandomInteger(ValueConsts.NINE_INT, ValueConsts.SIXTEEN_INT) : length;
+    private int parseInt(String len) {
+        return WeUtils.parseInt(len, 1);
     }
 }
