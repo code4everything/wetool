@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
@@ -66,9 +65,7 @@ public class JsonParserController implements BaseViewController {
     }
 
     public void keyReleased(KeyEvent keyEvent) {
-        if (keyEvent.getCode() == KeyCode.ENTER) {
-            parseJson();
-        }
+        FxUtils.enterDo(keyEvent, this::parseJson);
     }
 
     @Override

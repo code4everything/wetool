@@ -5,9 +5,12 @@ import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.code4everything.boot.base.function.VoidFunction;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 
@@ -43,5 +46,11 @@ public class FxUtils {
 
     public static void acceptCopyMode(DragEvent event) {
         event.acceptTransferModes(TransferMode.COPY);
+    }
+
+    public static void enterDo(KeyEvent event, VoidFunction function) {
+        if (event.getCode() == KeyCode.ENTER) {
+            function.call();
+        }
     }
 }
