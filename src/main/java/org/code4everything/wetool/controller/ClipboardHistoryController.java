@@ -5,7 +5,8 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.StrUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-import org.code4everything.wetool.Config.WeConfig;
+import lombok.extern.slf4j.Slf4j;
+import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 
@@ -15,6 +16,7 @@ import java.util.Date;
  * @author pantao
  * @since 2018/4/3
  */
+@Slf4j
 public class ClipboardHistoryController implements BaseViewController {
 
     private static final String SEP = StrUtil.repeat("=", 100);
@@ -28,6 +30,7 @@ public class ClipboardHistoryController implements BaseViewController {
 
     @FXML
     private void initialize() {
+        log.info("load tab clipboard history");
         BeanFactory.registerView(TitleConsts.CLIPBOARD_HISTORY, this);
         clipboardHistory.setWrapText(config.getAutoWrap());
         for (Pair<Date, String> pair : config.getClipboardHistory()) {

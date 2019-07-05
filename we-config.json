@@ -18,11 +18,7 @@
             ]
         }
     },
-    "fileFilter": {
-        "regex": "^[^.].*$",
-        "showTip": true,
-        "description": "只获取匹配的文件，当文件不匹配时根据 `showTip` 设置是否显示提示"
-    },
+    "fileFilter": "^[^.].*$",
     "clipboardSize": 20,
     "autoWrap": false,
     "fileChooserInitDir": ""

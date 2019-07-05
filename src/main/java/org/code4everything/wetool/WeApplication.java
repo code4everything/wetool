@@ -12,7 +12,7 @@ import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
-import org.code4everything.wetool.Config.WeConfig;
+import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
@@ -39,12 +39,18 @@ public class WeApplication extends Application {
     private boolean isTraySuccess = false;
 
     public static void main(String[] args) {
-        log.info("run application......");
+        log.info("starting wetool");
         // 解析配置文件
+        log.info("loading config");
         String path = FileUtils.currentWorkDir("we-config.json");
+        if (!FileUtil.exist(path)) {
+            log.error("config not found");
+            WeUtils.exitSystem();
+        }
         WeConfig config = JSONObject.parseObject(FileUtil.readUtf8String(path), WeConfig.class);
         BeanFactory.register(config);
         // 启动应用
+        log.info("loading app gui");
         launch(args);
     }
 
@@ -79,6 +85,7 @@ public class WeApplication extends Application {
 
         if (WeUtils.isWindows()) {
             // 开启系统托盘
+            log.info("system tray enabled");
             enableTray();
         }
         stage.show();

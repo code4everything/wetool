@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.FxUtils;
@@ -16,6 +17,7 @@ import org.code4everything.wetool.util.FxUtils;
  * @author pantao
  * @since 2018/4/13
  */
+@Slf4j
 public class NetworkToolController implements BaseViewController {
 
     @FXML
@@ -35,6 +37,7 @@ public class NetworkToolController implements BaseViewController {
 
     @FXML
     private void initialize() {
+        log.info("load tab network tool");
         BeanFactory.registerView(TitleConsts.NETWORK_TOOL, this);
         Platform.runLater(() -> {
             privateIpv4.setText(NetUtil.getLocalhostStr());
@@ -52,6 +55,8 @@ public class NetworkToolController implements BaseViewController {
         if (StrUtil.isEmpty(domain.getText())) {
             return;
         }
-        domainIp.setText(NetUtil.getIpByHost(domain.getText()));
+        String ip = NetUtil.getIpByHost(domain.getText());
+        log.info("parse ip for domain {}: {}", domain.getText(), ip);
+        domainIp.setText(ip);
     }
 }

@@ -1,4 +1,4 @@
-package org.code4everything.wetool.Config;
+package org.code4everything.wetool.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.code4everything.boot.base.bean.BaseBean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author pantao
@@ -16,15 +17,11 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class WeInitialize implements BaseBean, Serializable {
+public class WeTabs implements BaseBean, Serializable {
 
-    private static final long serialVersionUID = -3706972162680878384L;
+    private static final long serialVersionUID = -7095575648923571810L;
 
-    private Integer width;
+    private List<String> loads;
 
-    private Integer height;
-
-    private Boolean fullscreen;
-
-    private WeTabs tabs;
+    private List<String> supports;
 }

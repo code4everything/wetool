@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.IntegerConsts;
-import org.code4everything.wetool.Config.WeConfig;
+import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
@@ -56,6 +56,7 @@ public class MainController {
      */
     @FXML
     private void initialize() {
+        log.info("wetool started");
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
         // 监听剪贴板和JVM
         EXECUTOR.scheduleWithFixedDelay(() -> {
@@ -75,13 +76,15 @@ public class MainController {
             last = config.getLastClipboardHistoryItem().getValue();
         } catch (Exception e) {
             log.warn(e.getMessage());
-            clipboard = last = com.zhazhapan.modules.constant.ValueConsts.EMPTY_STRING;
+            clipboard = last = "";
 
         }
         if (StrUtil.isEmpty(clipboard) || last.equals(clipboard)) {
             return;
         }
         // 剪贴板发生变化
+        String compress = WeUtils.compressString(clipboard);
+        log.info("clipboard changed: {}", compress);
         Date date = new Date();
         config.appendClipboardHistory(date, clipboard);
         ClipboardHistoryController controller = BeanFactory.get(ClipboardHistoryController.class);
@@ -149,7 +152,6 @@ public class MainController {
         }
         VBox box = FxUtils.loadFxml(url);
         if (Objects.isNull(box)) {
-            FxDialogs.showError(TipConsts.FXML_ERROR);
             return;
         }
         // 打开选项卡

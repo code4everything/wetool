@@ -8,10 +8,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.code4everything.wetool.Config.WeConfig;
+import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.FxUtils;
+import org.code4everything.wetool.util.WeUtils;
 
 /**
  * @author pantao
@@ -38,6 +39,7 @@ public class CharsetConverterController implements BaseViewController {
 
     @FXML
     private void initialize() {
+        log.info("load tab charset converter");
         BeanFactory.registerView(TitleConsts.CHARSET_CONVERTER, this);
         // 支持的编码
         String[] charset = {"UTF-8", "ISO-8859-1", "GBK", BASE64};
@@ -80,6 +82,8 @@ public class CharsetConverterController implements BaseViewController {
             result = CharsetUtil.convert(originalText, srcCharset, destCharset);
         }
         convertedContent.setText(result);
+        String compress = WeUtils.compressString(originalText);
+        log.info("convert charset {} to {} for content: {}", srcCharset, destCharset, compress);
     }
 
     @Override

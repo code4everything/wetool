@@ -8,6 +8,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 
@@ -18,6 +19,7 @@ import java.io.StringWriter;
  * @author pantao
  * @since 2019/7/5
  **/
+@Slf4j
 @UtilityClass
 public class FxDialogs {
 
@@ -42,6 +44,7 @@ public class FxDialogs {
             PrintWriter printWriter = new PrintWriter(stringWriter);
             e.printStackTrace(printWriter);
             String exception = stringWriter.toString();
+            log.error(exception);
 
             // 异常信息容易
             TextArea textArea = new TextArea(exception);

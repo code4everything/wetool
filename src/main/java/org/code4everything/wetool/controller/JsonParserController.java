@@ -10,7 +10,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
-import org.code4everything.wetool.Config.WeConfig;
+import lombok.extern.slf4j.Slf4j;
+import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
@@ -21,6 +22,7 @@ import org.code4everything.wetool.util.FxUtils;
  * @author pantao
  * @since 2018/3/31
  */
+@Slf4j
 public class JsonParserController implements BaseViewController {
 
     private static final String JSON_HELPER_URL = "https://github.com/alibaba/fastjson/wiki/JSONPath";
@@ -38,6 +40,7 @@ public class JsonParserController implements BaseViewController {
 
     @FXML
     private void initialize() {
+        log.info("load tab json parser");
         BeanFactory.registerView(TitleConsts.JSON_PARSER, this);
         jsonContent.setWrapText(config.getAutoWrap());
         parsedJsonContent.setWrapText(config.getAutoWrap());
@@ -52,7 +55,7 @@ public class JsonParserController implements BaseViewController {
         }
         ThreadUtil.execute(() -> {
             try {
-
+                log.info("parse json use path: {}", path);
                 String parsedJson = JSON.toJSONString(JSONPath.extract(json, path), true);
                 Platform.runLater(() -> parsedJsonContent.setText(parsedJson));
             } catch (Exception e) {

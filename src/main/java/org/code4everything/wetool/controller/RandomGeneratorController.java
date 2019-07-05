@@ -4,6 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
@@ -12,6 +13,7 @@ import org.code4everything.wetool.util.WeUtils;
  * @author pantao
  * @since 2018/4/2
  */
+@Slf4j
 public class RandomGeneratorController implements BaseViewController {
 
     private static final String BASE_NUMBER = "0123456789";
@@ -75,11 +77,13 @@ public class RandomGeneratorController implements BaseViewController {
 
     @FXML
     public void initialize() {
+        log.info("load tab random generator");
         BeanFactory.registerView(TitleConsts.RANDOM_GENERATOR, this);
     }
 
     public void generateUUID() {
         uuidResult.setText(IdUtil.simpleUUID());
+        log.info("generate random uuid: {}", uuidResult.getText());
     }
 
     public void generateNumber() {
@@ -97,26 +101,32 @@ public class RandomGeneratorController implements BaseViewController {
             num += "." + RandomUtil.randomInt(low + 1, high);
         }
         numberResult.setText(num);
+        log.info("generate random number: {}", numberResult.getText());
     }
 
     public void generateLowerCase() {
         lowerCaseResult.setText(RandomUtil.randomString(BASE_LOWER, parseInt(lowerCaseLength.getText())));
+        log.info("generate random lower case: {}", lowerCaseResult.getText());
     }
 
     public void generateUpperCase() {
         upperCaseResult.setText(RandomUtil.randomString(BASE_UPPER, parseInt(upperCaseLength.getText())));
+        log.info("generate random upper case: {}", upperCaseResult.getText());
     }
 
     public void generateLetter() {
         letterResult.setText(RandomUtil.randomString(BASE_LETTER, parseInt(letterLength.getText())));
+        log.info("generate random letter: {}", letterResult.getText());
     }
 
     public void generateString() {
         stringResult.setText(RandomUtil.randomString(BASE_STRING, parseInt(stringLength.getText())));
+        log.info("generate random string: {}", stringResult.getText());
     }
 
     public void generateText() {
         textResult.setText(RandomUtil.randomString(BASE_TEXT, parseInt(textLength.getText())));
+        log.info("generate random text: {}", textResult.getText());
     }
 
     private int parseInt(String len) {

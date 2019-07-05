@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.function.VoidFunction;
-import org.code4everything.wetool.Config.WeConfig;
+import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
@@ -82,6 +82,7 @@ public class FxUtils {
     }
 
     public static VBox loadFxml(String url) {
+        log.info("load fxml {}", url);
         try {
             return FXMLLoader.load(WeUtils.class.getResource(url));
         } catch (Exception e) {
@@ -101,6 +102,7 @@ public class FxUtils {
         if (CollUtil.isEmpty(files) || Objects.isNull(callable)) {
             return;
         }
+        BeanFactory.get(WeConfig.class).setFileChooserInitDir(files.get(0).getParent());
         callable.call(files);
     }
 
@@ -108,6 +110,7 @@ public class FxUtils {
         if (Objects.isNull(file) || Objects.isNull(callable)) {
             return;
         }
+        BeanFactory.get(WeConfig.class).setFileChooserInitDir(file.getParent());
         callable.call(file);
     }
 }

@@ -1,4 +1,4 @@
-package org.code4everything.wetool.Config;
+package org.code4everything.wetool.config;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
@@ -11,6 +11,8 @@ import org.code4everything.boot.base.bean.BaseBean;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * @author pantao
@@ -30,11 +32,30 @@ public class WeConfig implements BaseBean, Serializable {
 
     private Boolean autoWrap;
 
-    private WeFileFilter fileFilter;
+    private String fileFilter;
 
     private String fileChooserInitDir;
 
     private transient LinkedList<Pair<Date, String>> clipboardHistory = new LinkedList<>();
+
+    private transient Pattern filterPattern;
+
+    @Generated
+    public Pattern getFilterPattern() {
+        if (Objects.isNull(filterPattern)) {
+            filterPattern = Pattern.compile(fileFilter);
+        }
+        return filterPattern;
+    }
+
+    /**
+     * 禁止外部设置
+     */
+    @Generated
+    private void setFilterPattern(Pattern filterPattern) {
+        this.filterPattern = filterPattern;
+    }
+
 
     @Generated
     public String getFileChooserInitDir() {

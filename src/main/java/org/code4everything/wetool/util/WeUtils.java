@@ -8,7 +8,7 @@ import cn.hutool.system.SystemUtil;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.IntegerConsts;
-import org.code4everything.wetool.Config.WeConfig;
+import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.factory.BeanFactory;
 
 import java.io.File;
@@ -27,8 +27,18 @@ public class WeUtils {
 
     private static final String DATE_VARIABLE = "%(DATE|date)%";
 
+    private static final int MAX_COMPRESS_LEN = 64;
+
     public static boolean isWindows() {
         return SystemUtil.getOsInfo().getName().startsWith("Window");
+    }
+
+    public static String compressString(String string) {
+        string = string.trim();
+        if (string.length() > MAX_COMPRESS_LEN) {
+            string = string.substring(0, MAX_COMPRESS_LEN);
+        }
+        return string.replaceAll("(\\s{2,}|\r\n|\r|\n)", " ");
     }
 
     public static void addFiles(List<File> src, List<File> adds) {
@@ -37,8 +47,9 @@ public class WeUtils {
         }
         WeConfig config = BeanFactory.get(WeConfig.class);
         for (File file : adds) {
-            if (!config.getFileFilter().getFilterPattern().matcher(file.getName()).matches()) {
+            if (!config.getFilterPattern().matcher(file.getName()).matches()) {
                 // 文件不匹配
+                log.info("file {} not match", file.getAbsolutePath());
                 continue;
             }
             if (file.isFile() && !src.contains(file)) {
@@ -72,7 +83,7 @@ public class WeUtils {
     }
 
     public static void exitSystem() {
-        log.info("quit application......");
+        log.info("exit wetool");
         System.exit(IntegerConsts.ZERO);
     }
 }
