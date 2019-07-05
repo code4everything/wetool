@@ -2,13 +2,15 @@ package org.code4everything.wetool.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.dialog.Alerts;
-import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.experimental.UtilityClass;
@@ -75,24 +77,6 @@ public class FxUtils {
         handleFileListCallable(event.getDragboard().getFiles(), callable);
     }
 
-    public static void addFiles(ObservableList<File> view, List<File> list) {
-        if (CollUtil.isEmpty(list)) {
-            return;
-        }
-        WeConfig config = BeanFactory.get(WeConfig.class);
-        for (File file : list) {
-            if (!config.getFileFilter().getFilterPattern().matcher(file.getName()).matches()) {
-                // 文件不匹配
-                continue;
-            }
-            if (file.isFile() && !view.contains(file)) {
-                view.add(file);
-            } else if (file.isDirectory()) {
-                addFiles(view, CollUtil.newArrayList(file.listFiles()));
-            }
-        }
-    }
-
     public static void acceptCopyMode(DragEvent event) {
         event.acceptTransferModes(TransferMode.COPY);
     }
@@ -100,6 +84,15 @@ public class FxUtils {
     public static void enterDo(KeyEvent event, VoidFunction function) {
         if (event.getCode() == KeyCode.ENTER) {
             function.call();
+        }
+    }
+
+    public static VBox loadFxml(String url) {
+        try {
+            return FXMLLoader.load(WeUtils.class.getResource(url));
+        } catch (Exception e) {
+            Alerts.showException(ValueConsts.FATAL_ERROR, e);
+            return null;
         }
     }
 

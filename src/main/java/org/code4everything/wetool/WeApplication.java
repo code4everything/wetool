@@ -2,6 +2,7 @@ package org.code4everything.wetool;
 
 import cn.hutool.core.io.FileUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -18,6 +19,7 @@ import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
 import javax.imageio.ImageIO;
@@ -52,9 +54,9 @@ public class WeApplication extends Application {
         this.stage = stage;
         BeanFactory.register(stage);
         // 加载主界面
-        VBox root = WeUtils.loadFxml(ViewConsts.MAIN);
+        VBox root = FxUtils.loadFxml(ViewConsts.MAIN);
         if (Objects.isNull(root)) {
-            Alerts.showError(com.zhazhapan.modules.constant.ValueConsts.FATAL_ERROR, TipConsts.INIT_ERROR);
+            Alerts.showError(ValueConsts.FATAL_ERROR, TipConsts.INIT_ERROR);
             WeUtils.exitSystem();
         }
         // 设置标题

@@ -4,10 +4,10 @@ import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import com.zhazhapan.modules.constant.ValueConsts;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
@@ -25,6 +25,7 @@ import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
@@ -138,7 +139,7 @@ public class MainController {
     }
 
     private void openTab(String tabName, String url) {
-        ObservableList<Tab> tabs = tabPane.getTabs();
+        List<Tab> tabs = tabPane.getTabs();
         for (Tab t : tabs) {
             if (t.getText().equals(tabName)) {
                 // 选项卡已打开，退出方法
@@ -146,9 +147,9 @@ public class MainController {
                 return;
             }
         }
-        VBox box = WeUtils.loadFxml(url);
-        if (Checker.isNull(box)) {
-            Alerts.showError(com.zhazhapan.modules.constant.ValueConsts.ERROR, TipConsts.FXML_ERROR);
+        VBox box = FxUtils.loadFxml(url);
+        if (Objects.isNull(box)) {
+            Alerts.showError(ValueConsts.ERROR, TipConsts.FXML_ERROR);
             return;
         }
         // 打开选项卡

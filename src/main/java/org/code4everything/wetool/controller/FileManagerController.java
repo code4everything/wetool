@@ -3,8 +3,8 @@ package org.code4everything.wetool.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.common.collect.Lists;
 import com.zhazhapan.util.Checker;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
@@ -79,6 +79,8 @@ public class FileManagerController implements BaseViewController {
     @FXML
     public CheckBox deleteOfTabMerge;
 
+    private List<ListView<File>> listViews;
+
     @FXML
     private void initialize() {
         BeanFactory.registerView(TitleConsts.FILE_MANAGER, this);
@@ -98,15 +100,18 @@ public class FileManagerController implements BaseViewController {
         modeOfTabRename.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> generateNewNameForAdding());
 
         // 添加拖曳文件的处理方法
-        dropCallableMap.put(srcFilesOfTabRename, files -> FxUtils.addFiles(srcFilesOfTabRename.getItems(), files));
-        dropCallableMap.put(srcFilesOfTabMerge, files -> FxUtils.addFiles(srcFilesOfTabMerge.getItems(), files));
-        dropCallableMap.put(srcFilesOfTabCopy, files -> FxUtils.addFiles(srcFilesOfTabCopy.getItems(), files));
+        dropCallableMap.put(srcFilesOfTabRename, files -> WeUtils.addFiles(srcFilesOfTabRename.getItems(), files));
+        dropCallableMap.put(srcFilesOfTabCopy, files -> WeUtils.addFiles(srcFilesOfTabCopy.getItems(), files));
+        dropCallableMap.put(srcFilesOfTabMerge, files -> WeUtils.addFiles(srcFilesOfTabMerge.getItems(), files));
         Callable<List<File>> callable = files -> destFolderOfTabCopy.setText(WeUtils.parseFolder(files.get(0)));
         dropCallableMap.put(destFolderOfTabCopy, callable);
+
+        // 按选项卡顺序添加文件视图
+        listViews = Lists.newArrayList(srcFilesOfTabRename, srcFilesOfTabCopy, srcFilesOfTabMerge);
     }
 
     public void generateNewNameForFormatting() {
-        ObservableList<File> list = srcFilesOfTabRename.getItems();
+        List<File> list = srcFilesOfTabRename.getItems();
         if (CollUtil.isEmpty(list)) {
             return;
         }
@@ -120,7 +125,7 @@ public class FileManagerController implements BaseViewController {
             postfix = "." + postfix;
         }
         // 目标文件
-        ObservableList<String> destFiles = destFilesOfTabRename.getItems();
+        List<String> destFiles = destFilesOfTabRename.getItems();
         destFiles.clear();
         for (File file : list) {
             if (Checker.isEmpty(postfix) || postfix.equals(StringConsts.Sign.DOT)) {
@@ -132,8 +137,8 @@ public class FileManagerController implements BaseViewController {
     }
 
     public void renameFiles() {
-        ObservableList<File> srcFiles = srcFilesOfTabRename.getItems();
-        ObservableList<String> destFiles = destFilesOfTabRename.getItems();
+        List<File> srcFiles = srcFilesOfTabRename.getItems();
+        List<String> destFiles = destFilesOfTabRename.getItems();
         int len = srcFiles.size();
         if (CollUtil.isEmpty(srcFiles) || len != destFiles.size()) {
             return;
@@ -152,11 +157,11 @@ public class FileManagerController implements BaseViewController {
     }
 
     public void generateNewNameForReplacing() {
-        ObservableList<File> list = srcFilesOfTabRename.getItems();
+        List<File> list = srcFilesOfTabRename.getItems();
         if (CollUtil.isEmpty(list)) {
             return;
         }
-        ObservableList<String> destFiles = destFilesOfTabRename.getItems();
+        List<String> destFiles = destFilesOfTabRename.getItems();
         destFiles.clear();
         for (File file : list) {
             String filename = file.getName();
@@ -167,11 +172,11 @@ public class FileManagerController implements BaseViewController {
     }
 
     public void generateNewNameForAdding() {
-        ObservableList<File> list = srcFilesOfTabRename.getItems();
+        List<File> list = srcFilesOfTabRename.getItems();
         if (CollUtil.isEmpty(list)) {
             return;
         }
-        ObservableList<String> destFiles = destFilesOfTabRename.getItems();
+        List<String> destFiles = destFilesOfTabRename.getItems();
         destFiles.clear();
         for (File file : list) {
             String text = WeUtils.replaceVariable(addOfTabRename.getText());
@@ -189,7 +194,7 @@ public class FileManagerController implements BaseViewController {
     }
 
     public void copyFiles() {
-        ObservableList<File> files = srcFilesOfTabCopy.getItems();
+        List<File> files = srcFilesOfTabCopy.getItems();
         if (CollUtil.isEmpty(files) || StrUtil.isEmpty(destFolderOfTabCopy.getText())) {
             return;
         }
@@ -212,46 +217,80 @@ public class FileManagerController implements BaseViewController {
     }
 
     public void mergeFiles() {
-        WeUtils.mergeFiles(srcFilesOfTabMerge.getItems(), filterOfTabMerge.getText(), deleteOfTabMerge.isSelected());
+        boolean delete = deleteOfTabMerge.isSelected();
+        String filter = filterOfTabMerge.getText();
+        FxUtils.saveFile(file -> {
+            // 创建新文件
+            FileUtil.del(file);
+            FileUtil.touch(file);
+            // 合并
+            List<File> files = srcFilesOfTabMerge.getItems();
+            for (File f : files) {
+                String str = FileUtil.readUtf8String(f);
+                if (StrUtil.isNotEmpty(filter)) {
+                    // 过滤内容
+                    str = str.replaceAll(filter, "");
+                }
+                // 合并
+                FileUtil.appendUtf8String(str, file);
+                if (delete) {
+                    FileUtil.del(f);
+                }
+            }
+            if (delete) {
+                // 清空源文件
+                files.clear();
+            }
+        });
     }
 
     public void removeFilesFromTabCopy() {
         removeSelectedFiles(srcFilesOfTabCopy);
     }
 
+    /**
+     * 上移文件
+     */
     public void goForward() {
-        ObservableList<File> files = srcFilesOfTabMerge.getSelectionModel().getSelectedItems();
-        if (Checker.isNotEmpty(files)) {
-            ObservableList<File> list = srcFilesOfTabMerge.getItems();
-            int len = files.size();
-            if (len < list.size()) {
-                for (int i = 0; i < len; i++) {
-                    int idx = list.indexOf(files.get(i));
-                    if (idx > i) {
-                        File temp = list.get(idx - 1);
-                        list.set(idx - 1, files.get(i));
-                        list.set(idx, temp);
-                    }
-                }
+        List<File> files = srcFilesOfTabMerge.getSelectionModel().getSelectedItems();
+        if (CollUtil.isEmpty(files)) {
+            return;
+        }
+        List<File> list = srcFilesOfTabMerge.getItems();
+        int len = files.size();
+        if (len == list.size()) {
+            return;
+        }
+        for (int i = 0; i < len; i++) {
+            int idx = list.indexOf(files.get(i));
+            if (idx > i) {
+                File temp = list.get(idx - 1);
+                list.set(idx - 1, files.get(i));
+                list.set(idx, temp);
             }
         }
     }
 
+    /**
+     * 下移文件
+     */
     public void goBack() {
-        ObservableList<File> files = srcFilesOfTabMerge.getSelectionModel().getSelectedItems();
-        if (Checker.isNotEmpty(files)) {
-            ObservableList<File> list = srcFilesOfTabMerge.getItems();
-            int size = list.size();
-            int len = files.size();
-            if (files.size() < size) {
-                for (int i = len - 1, j = 0; i >= 0; i--) {
-                    int idx = list.indexOf(files.get(i));
-                    if (idx < (size - (++j))) {
-                        File temp = list.get(idx + 1);
-                        list.set(idx + 1, files.get(i));
-                        list.set(idx, temp);
-                    }
-                }
+        List<File> files = srcFilesOfTabMerge.getSelectionModel().getSelectedItems();
+        if (CollUtil.isEmpty(files)) {
+            return;
+        }
+        List<File> list = srcFilesOfTabMerge.getItems();
+        int size = list.size();
+        int len = files.size();
+        if (len == size) {
+            return;
+        }
+        for (int i = len - 1, j = 1; i >= 0; i--, j++) {
+            int idx = list.indexOf(files.get(i));
+            if (idx < (size - j)) {
+                File temp = list.get(idx + 1);
+                list.set(idx + 1, files.get(i));
+                list.set(idx, temp);
             }
         }
     }
@@ -261,7 +300,7 @@ public class FileManagerController implements BaseViewController {
     }
 
     private void removeSelectedFiles(ListView<File> fileListView) {
-        ObservableList<File> removes = fileListView.getSelectionModel().getSelectedItems();
+        List<File> removes = fileListView.getSelectionModel().getSelectedItems();
         if (CollUtil.isEmpty(removes)) {
             return;
         }
@@ -280,11 +319,12 @@ public class FileManagerController implements BaseViewController {
 
     @Override
     public void openMultiFiles(List<File> files) {
-        WeUtils.putFilesInListViewOfFileManagerTab(files);
+        ListView<File> view = listViews.get(fileManagerTab.getSelectionModel().getSelectedIndex());
+        WeUtils.addFiles(view.getItems(), files);
     }
 
     @Override
     public void openFile(File file) {
-        WeUtils.putFilesInListViewOfFileManagerTab(file);
+        openMultiFiles(Lists.newArrayList(file));
     }
 }
