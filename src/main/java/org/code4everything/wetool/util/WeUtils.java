@@ -53,21 +53,21 @@ public class WeUtils {
 
     public static void mergeFiles(ObservableList<File> fileObservableList, String filter, boolean isDelete) {
         if (Checker.isNotEmpty(fileObservableList)) {
-            File file = FxUtils.fileSaving();
-            File[] files = new File[fileObservableList.size()];
-            files = fileObservableList.toArray(files);
-            try {
-                FileExecutor.mergeFiles(files, file, Checker.checkNull(filter));
-                if (isDelete) {
-                    for (File f : fileObservableList) {
-                        f.delete();
-                    }
-                    fileObservableList.clear();
-                }
-                FxUtils.showSuccess();
-            } catch (IOException e) {
-                Alerts.showError(TitleConsts.APP_TITLE, TipConsts.MERGE_FILE_ERROR);
-            }
+            //            File file = FxUtils.saveFile();
+            //            File[] files = new File[fileObservableList.size()];
+            //            files = fileObservableList.toArray(files);
+            //            try {
+            //                FileExecutor.mergeFiles(files, file, Checker.checkNull(filter));
+            //                if (isDelete) {
+            //                    for (File f : fileObservableList) {
+            //                        f.delete();
+            //                    }
+            //                    fileObservableList.clear();
+            //                }
+            //                FxUtils.showSuccess();
+            //            } catch (IOException e) {
+            //                Alerts.showError(TitleConsts.APP_TITLE, TipConsts.MERGE_FILE_ERROR);
+            //            }
         }
     }
 

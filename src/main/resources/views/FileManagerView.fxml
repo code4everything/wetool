@@ -148,7 +148,7 @@
                     <Insets left="10.0" right="10.0" top="10.0"/>
                 </padding>
                 <HBox VBox.vgrow="NEVER">
-                    <TextField fx:id="destFolderOfTabCopy" onDragDropped="#dragFileDroppedOfCopyTab"
+                    <TextField fx:id="destFolderOfTabCopy" onDragDropped="#dragFileDropped"
                                onDragOver="#dragFileOver" promptText="目标文件夹" HBox.hgrow="ALWAYS">
                         <tooltip>
                             <Tooltip autoHide="true" text="拖曳文件至此"/>
@@ -161,7 +161,7 @@
                         </HBox.margin>
                     </Button>
                 </HBox>
-                <ListView fx:id="srcFilesOfTabCopy" onDragDropped="#dragFileDroppedOfCopyTab"
+                <ListView fx:id="srcFilesOfTabCopy" onDragDropped="#dragFileDropped"
                           onDragOver="#dragFileOver" prefHeight="200.0" prefWidth="200.0"
                           VBox.vgrow="ALWAYS">
                     <tooltip>

@@ -13,11 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.Callable;
 import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pantao
@@ -25,6 +28,8 @@ import java.util.List;
  */
 @Slf4j
 public class FileManagerController implements BaseViewController {
+
+    private final Map<Object, Callable<List<File>>> dropCallableMap = new HashMap<>(16, 1);
 
     @FXML
     public ListView<File> srcFilesOfTabRename;
@@ -77,17 +82,27 @@ public class FileManagerController implements BaseViewController {
     @FXML
     private void initialize() {
         BeanFactory.registerView(TitleConsts.FILE_MANAGER, this);
+
         //设置多选
         srcFilesOfTabRename.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         srcFilesOfTabCopy.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         srcFilesOfTabMerge.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         //设置可编辑
         destFilesOfTabRename.setCellFactory(TextFieldListCell.forListView());
         destFilesOfTabRename.setEditable(true);
 
+        // 设置文件名追加方式
         modeOfTabRename.getItems().addAll(TitleConsts.FILENAME_BEFORE, TitleConsts.FILENAME_AFTER);
         modeOfTabRename.getSelectionModel().selectLast();
         modeOfTabRename.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> generateNewNameForAdding());
+
+        // 添加拖曳文件的处理方法
+        dropCallableMap.put(srcFilesOfTabRename, files -> FxUtils.addFiles(srcFilesOfTabRename.getItems(), files));
+        dropCallableMap.put(srcFilesOfTabMerge, files -> FxUtils.addFiles(srcFilesOfTabMerge.getItems(), files));
+        dropCallableMap.put(srcFilesOfTabCopy, files -> FxUtils.addFiles(srcFilesOfTabCopy.getItems(), files));
+        Callable<List<File>> callable = files -> destFolderOfTabCopy.setText(WeUtils.parseFolder(files.get(0)));
+        dropCallableMap.put(destFolderOfTabCopy, callable);
     }
 
     public void generateNewNameForFormatting() {
@@ -196,18 +211,6 @@ public class FileManagerController implements BaseViewController {
         FxUtils.chooseFile(file -> destFolderOfTabCopy.setText(file.getParent()));
     }
 
-    public void dragFileDroppedOfCopyTab(DragEvent event) {
-        List<File> files = event.getDragboard().getFiles();
-        if (Checker.isNotEmpty(files)) {
-            Object target = event.getGestureTarget();
-            if (target instanceof ListView) {
-                WeUtils.putFilesInListView(event.getDragboard().getFiles(), srcFilesOfTabCopy.getItems());
-            } else if (target instanceof TextField) {
-                destFolderOfTabCopy.setText(WeUtils.parseFolder(files.get(0)));
-            }
-        }
-    }
-
     public void mergeFiles() {
         WeUtils.mergeFiles(srcFilesOfTabMerge.getItems(), filterOfTabMerge.getText(), deleteOfTabMerge.isSelected());
     }
@@ -266,12 +269,8 @@ public class FileManagerController implements BaseViewController {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void dragFileDropped(DragEvent event) {
-        Object target = event.getGestureTarget();
-        if (target instanceof ListView) {
-            WeUtils.putFilesInListView(event.getDragboard().getFiles(), ((ListView<File>) target).getItems());
-        }
+        FxUtils.dropFiles(event, dropCallableMap);
     }
 
     @Override

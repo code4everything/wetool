@@ -70,7 +70,7 @@ public class JsonParserController implements BaseViewController {
 
     @Override
     public void dragFileDropped(DragEvent event) {
-        FxUtils.putDraggedFileContent(jsonContent, event);
+        FxUtils.dropFileContent(jsonContent, event);
     }
 
     @Override

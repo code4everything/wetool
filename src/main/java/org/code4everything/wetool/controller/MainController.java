@@ -1,6 +1,5 @@
 package org.code4everything.wetool.controller;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.ObjectUtil;
@@ -22,11 +21,10 @@ import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
-import java.io.File;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
@@ -162,39 +160,30 @@ public class MainController {
     }
 
     public void openFile() {
-        File file = WeUtils.getChooseFile();
-        if (Objects.isNull(file)) {
-            return;
-        }
-        BaseViewController controller = getCurrentTabController();
-        if (Objects.isNull(controller)) {
-            return;
-        }
-        controller.openFile(file);
+        FxUtils.chooseFile(file -> {
+            BaseViewController controller = getCurrentTabController();
+            if (ObjectUtil.isNotNull(controller)) {
+                controller.openFile(file);
+            }
+        });
     }
 
     public void saveFile() {
-        File file = WeUtils.getSaveFile();
-        if (Objects.isNull(file)) {
-            return;
-        }
-        BaseViewController controller = getCurrentTabController();
-        if (Objects.isNull(controller)) {
-            return;
-        }
-        controller.saveFile(file);
+        FxUtils.saveFile(file -> {
+            BaseViewController controller = getCurrentTabController();
+            if (ObjectUtil.isNotNull(controller)) {
+                controller.saveFile(file);
+            }
+        });
     }
 
     public void openMultiFile() {
-        List<File> files = WeUtils.getChooseFiles();
-        if (CollUtil.isEmpty(files)) {
-            return;
-        }
-        BaseViewController controller = getCurrentTabController();
-        if (Objects.isNull(controller)) {
-            return;
-        }
-        controller.openMultiFiles(files);
+        FxUtils.chooseFiles(files -> {
+            BaseViewController controller = getCurrentTabController();
+            if (ObjectUtil.isNotNull(controller)) {
+                controller.openMultiFiles(files);
+            }
+        });
     }
 
     private BaseViewController getCurrentTabController() {

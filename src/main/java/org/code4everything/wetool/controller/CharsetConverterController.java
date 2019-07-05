@@ -84,7 +84,7 @@ public class CharsetConverterController implements BaseViewController {
 
     @Override
     public void dragFileDropped(DragEvent event) {
-        FxUtils.putDraggedFileContent(originalContent, event);
+        FxUtils.dropFileContent(originalContent, event);
     }
 
     @Override

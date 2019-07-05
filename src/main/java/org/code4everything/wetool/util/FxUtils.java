@@ -2,8 +2,8 @@ package org.code4everything.wetool.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.dialog.Alerts;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -35,24 +36,19 @@ import java.util.Objects;
 @UtilityClass
 public class FxUtils {
 
-    public static File fileSaving() {
-        return getFileChooser().showSaveDialog(BeanFactory.get(Stage.class));
+    public static void saveFile(Callable<File> callable) {
+        File file = getFileChooser().showSaveDialog(BeanFactory.get(Stage.class));
+        handleFileCallable(file, callable);
     }
 
-    public static void chooseFiles(ChooserCallable<List<File>> callable) {
+    public static void chooseFiles(Callable<List<File>> callable) {
         List<File> files = getFileChooser().showOpenMultipleDialog(BeanFactory.get(Stage.class));
-        if (CollUtil.isEmpty(files) || Objects.isNull(callable)) {
-            return;
-        }
-        callable.call(files);
+        handleFileListCallable(files, callable);
     }
 
-    public static void chooseFile(ChooserCallable<File> callable) {
+    public static void chooseFile(Callable<File> callable) {
         File file = getFileChooser().showOpenDialog(BeanFactory.get(Stage.class));
-        if (Objects.isNull(file) || Objects.isNull(callable)) {
-            return;
-        }
-        callable.call(file);
+        handleFileCallable(file, callable);
     }
 
     public static void showSuccess() {
@@ -67,10 +63,33 @@ public class FxUtils {
         }
     }
 
-    public static void putDraggedFileContent(TextInputControl control, DragEvent event) {
-        List<File> files = event.getDragboard().getFiles();
-        if (Checker.isNotEmpty(files)) {
-            control.setText(FileUtil.readUtf8String(files.get(0)));
+    public static void dropFileContent(TextInputControl control, DragEvent event) {
+        dropFiles(event, files -> control.setText(FileUtil.readUtf8String(files.get(0))));
+    }
+
+    public static void dropFiles(DragEvent event, Map<Object, Callable<List<File>>> eventCallableMap) {
+        handleFileListCallable(event.getDragboard().getFiles(), eventCallableMap.get(event.getSource()));
+    }
+
+    public static void dropFiles(DragEvent event, Callable<List<File>> callable) {
+        handleFileListCallable(event.getDragboard().getFiles(), callable);
+    }
+
+    public static void addFiles(ObservableList<File> view, List<File> list) {
+        if (CollUtil.isEmpty(list)) {
+            return;
+        }
+        WeConfig config = BeanFactory.get(WeConfig.class);
+        for (File file : list) {
+            if (!config.getFileFilter().getFilterPattern().matcher(file.getName()).matches()) {
+                // 文件不匹配
+                continue;
+            }
+            if (file.isFile() && !view.contains(file)) {
+                view.add(file);
+            } else if (file.isDirectory()) {
+                addFiles(view, CollUtil.newArrayList(file.listFiles()));
+            }
         }
     }
 
@@ -89,5 +108,19 @@ public class FxUtils {
         chooser.setTitle(TitleConsts.APP_TITLE);
         chooser.setInitialDirectory(new File(BeanFactory.get(WeConfig.class).getFileChooserInitDir()));
         return chooser;
+    }
+
+    private static void handleFileListCallable(List<File> files, Callable<List<File>> callable) {
+        if (CollUtil.isEmpty(files) || Objects.isNull(callable)) {
+            return;
+        }
+        callable.call(files);
+    }
+
+    private static void handleFileCallable(File file, Callable<File> callable) {
+        if (Objects.isNull(file) || Objects.isNull(callable)) {
+            return;
+        }
+        callable.call(file);
     }
 }

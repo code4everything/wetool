@@ -59,7 +59,7 @@ public class QrCodeGeneratorController implements BaseViewController {
 
     @Override
     public void dragFileDropped(DragEvent event) {
-        FxUtils.putDraggedFileContent(content, event);
+        FxUtils.dropFileContent(content, event);
     }
 
     @Override
