@@ -2,7 +2,6 @@ package org.code4everything.wetool.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
-import com.zhazhapan.util.dialog.Alerts;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -13,6 +12,7 @@ import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.FxDialogs;
 import org.code4everything.wetool.util.FxUtils;
 
 import java.io.File;
@@ -53,7 +53,7 @@ public class QrCodeGeneratorController implements BaseViewController {
             is.close();
             FileUtil.del(TEMP_FILE);
         } catch (Exception e) {
-            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.QR_CODE_ERROR);
+            FxDialogs.showException(TipConsts.QR_CODE_ERROR, e);
         }
     }
 

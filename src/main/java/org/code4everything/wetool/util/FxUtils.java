@@ -2,8 +2,6 @@ package org.code4everything.wetool.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import com.zhazhapan.modules.constant.ValueConsts;
-import com.zhazhapan.util.dialog.Alerts;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.DragEvent;
@@ -53,15 +51,11 @@ public class FxUtils {
         handleFileCallable(file, callable);
     }
 
-    public static void showSuccess() {
-        Alerts.showInformation(TitleConsts.APP_TITLE, TipConsts.OPERATION_SUCCESS);
-    }
-
     public static void openLink(String url) {
         try {
             Desktop.getDesktop().browse(new URI(url));
         } catch (URISyntaxException | IOException e) {
-            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.OPEN_LINK_ERROR);
+            FxDialogs.showException(TipConsts.OPEN_LINK_ERROR, e);
         }
     }
 
@@ -91,7 +85,7 @@ public class FxUtils {
         try {
             return FXMLLoader.load(WeUtils.class.getResource(url));
         } catch (Exception e) {
-            Alerts.showException(ValueConsts.FATAL_ERROR, e);
+            FxDialogs.showException(TipConsts.FXML_ERROR, e);
             return null;
         }
     }

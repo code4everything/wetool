@@ -4,9 +4,7 @@ import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.zhazhapan.modules.constant.ValueConsts;
-import com.zhazhapan.util.Checker;
-import com.zhazhapan.util.dialog.Alerts;
+import cn.hutool.core.util.StrUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
@@ -21,6 +19,7 @@ import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.FxDialogs;
 import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
@@ -79,16 +78,17 @@ public class MainController {
             clipboard = last = com.zhazhapan.modules.constant.ValueConsts.EMPTY_STRING;
 
         }
-        if (Checker.isNotEmpty(clipboard) && !last.equals(clipboard)) {
-            // 剪贴板发生变化
-            Date date = new Date();
-            config.appendClipboardHistory(date, clipboard);
-            ClipboardHistoryController controller = BeanFactory.get(ClipboardHistoryController.class);
-            if (ObjectUtil.isNotNull(controller)) {
-                // 显示到文本框
-                final String clip = clipboard;
-                Platform.runLater(() -> controller.insert(date, clip));
-            }
+        if (StrUtil.isEmpty(clipboard) || last.equals(clipboard)) {
+            return;
+        }
+        // 剪贴板发生变化
+        Date date = new Date();
+        config.appendClipboardHistory(date, clipboard);
+        ClipboardHistoryController controller = BeanFactory.get(ClipboardHistoryController.class);
+        if (ObjectUtil.isNotNull(controller)) {
+            // 显示到文本框
+            final String clip = clipboard;
+            Platform.runLater(() -> controller.insert(date, clip));
         }
     }
 
@@ -149,7 +149,7 @@ public class MainController {
         }
         VBox box = FxUtils.loadFxml(url);
         if (Objects.isNull(box)) {
-            Alerts.showError(ValueConsts.ERROR, TipConsts.FXML_ERROR);
+            FxDialogs.showError(TipConsts.FXML_ERROR);
             return;
         }
         // 打开选项卡
@@ -197,7 +197,7 @@ public class MainController {
     }
 
     public void about() {
-        Alerts.showInformation(TitleConsts.APP_TITLE, TitleConsts.ABOUT_APP, TipConsts.ABOUT_APP);
+        FxDialogs.showInformation(TitleConsts.ABOUT_APP, TipConsts.ABOUT_APP);
     }
 
     public void closeAllTab() {

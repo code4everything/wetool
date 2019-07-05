@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
-import com.zhazhapan.util.Checker;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
@@ -14,6 +13,7 @@ import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.Callable;
+import org.code4everything.wetool.util.FxDialogs;
 import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
@@ -128,7 +128,7 @@ public class FileManagerController implements BaseViewController {
         List<String> destFiles = destFilesOfTabRename.getItems();
         destFiles.clear();
         for (File file : list) {
-            if (Checker.isEmpty(postfix) || postfix.equals(StringConsts.Sign.DOT)) {
+            if (StrUtil.isEmpty(postfix) || postfix.equals(StringConsts.Sign.DOT)) {
                 postfix = "." + FileUtil.extName(file);
             }
             String fileName = prefix + (start++) + postfix;
@@ -149,7 +149,7 @@ public class FileManagerController implements BaseViewController {
             srcFiles.remove(srcFile);
             srcFiles.add(new File(destFiles.get(i)));
         }
-        FxUtils.showSuccess();
+        FxDialogs.showSuccess();
     }
 
     public void removeFilesFromTabRename() {
@@ -209,7 +209,7 @@ public class FileManagerController implements BaseViewController {
                 files.set(i, new File(folder + File.separator + file.getName()));
             }
         }
-        FxUtils.showSuccess();
+        FxDialogs.showSuccess();
     }
 
     public void chooseFolder() {

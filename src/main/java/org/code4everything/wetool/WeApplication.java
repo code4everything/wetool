@@ -2,8 +2,6 @@ package org.code4everything.wetool;
 
 import cn.hutool.core.io.FileUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.zhazhapan.modules.constant.ValueConsts;
-import com.zhazhapan.util.dialog.Alerts;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -19,6 +17,7 @@ import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.FxDialogs;
 import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
@@ -56,7 +55,7 @@ public class WeApplication extends Application {
         // 加载主界面
         VBox root = FxUtils.loadFxml(ViewConsts.MAIN);
         if (Objects.isNull(root)) {
-            Alerts.showError(ValueConsts.FATAL_ERROR, TipConsts.INIT_ERROR);
+            FxDialogs.showError(TipConsts.INIT_ERROR);
             WeUtils.exitSystem();
         }
         // 设置标题
@@ -115,7 +114,7 @@ public class WeApplication extends Application {
             tray.add(trayIcon);
             isTraySuccess = true;
         } catch (Exception e) {
-            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.TRAY_ERROR);
+            FxDialogs.showException(TipConsts.TRAY_ERROR, e);
         }
     }
 

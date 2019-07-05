@@ -4,7 +4,6 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONPath;
-import com.zhazhapan.util.dialog.Alerts;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -15,6 +14,7 @@ import org.code4everything.wetool.Config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.util.FxDialogs;
 import org.code4everything.wetool.util.FxUtils;
 
 /**
@@ -52,10 +52,11 @@ public class JsonParserController implements BaseViewController {
         }
         ThreadUtil.execute(() -> {
             try {
+
                 String parsedJson = JSON.toJSONString(JSONPath.extract(json, path), true);
                 Platform.runLater(() -> parsedJsonContent.setText(parsedJson));
             } catch (Exception e) {
-                Platform.runLater(() -> Alerts.showError(TitleConsts.APP_TITLE, TipConsts.JSON_PARSE_ERROR));
+                FxDialogs.showException(TipConsts.JSON_PARSE_ERROR, e);
             }
         });
     }
