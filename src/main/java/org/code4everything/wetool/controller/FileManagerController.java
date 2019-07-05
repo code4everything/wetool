@@ -3,27 +3,20 @@ package org.code4everything.wetool.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zhazhapan.util.ArrayUtils;
 import com.zhazhapan.util.Checker;
-import com.zhazhapan.util.Formatter;
-import com.zhazhapan.util.dialog.Alerts;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.boot.base.constant.StringConsts;
-import org.code4everything.wetool.Config.WeConfig;
-import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,170 +26,142 @@ import java.util.List;
 @Slf4j
 public class FileManagerController implements BaseViewController {
 
-    private final WeConfig config = BeanFactory.get(WeConfig.class);
+    @FXML
+    public ListView<File> srcFilesOfTabRename;
 
     @FXML
-    public ListView<File> selectedFilesOfRenameTab;
+    public TextField prefixOfTabRename;
 
     @FXML
-    public TextField filePrefixOfRenameTab;
+    public TextField postfixOfTabRename;
 
     @FXML
-    public TextField filePostfixOfRenameTab;
+    public TextField startOfTabRename;
 
     @FXML
-    public TextField startNumberOfRenameTab;
+    public ListView<String> destFilesOfTabRename;
 
     @FXML
-    public ListView<String> destFilesOfRenameTab;
+    public TextField queryOfTabRename;
 
     @FXML
-    public TextField fileQueryStringOfRenameTab;
+    public TextField replaceOfTabRename;
 
     @FXML
-    public TextField fileReplaceStringOfRenameTab;
+    public TextField addOfTabRename;
 
     @FXML
-    public TextField fileAddableText;
+    public ComboBox<String> modeOfTabRename;
 
     @FXML
-    public ComboBox<String> fileAddableCombo;
+    public TextField destFolderOfTabCopy;
 
     @FXML
-    public TextField destFolderOfCopyTab;
+    public ListView<File> srcFilesOfTabCopy;
 
     @FXML
-    public ListView<File> selectedFilesOfCopyTab;
-
-    @FXML
-    public CheckBox isDeleteSrcOfCopyTab;
+    public CheckBox deleteOfTabCopy;
 
     @FXML
     public TabPane fileManagerTab;
 
     @FXML
-    public CheckBox isDeleteSrcOfSplitTab;
+    public ListView<File> srcFilesOfTabMerge;
 
     @FXML
-    public TextField splitPoint;
+    public TextField filterOfTabMerge;
 
     @FXML
-    public TextArea fileContent;
-
-    @FXML
-    public TextField destFolderOfSplitTab;
-
-    @FXML
-    public File splittingFile;
-
-    @FXML
-    public ListView<File> selectedFilesOfMergeTab;
-
-    @FXML
-    public TextField contentFilter;
-
-    @FXML
-    public CheckBox deleteSrcOfMergeTab;
-
-    @FXML
-    public TextField srcFolderOfDeleteTab;
-
-    @FXML
-    public TextArea filenameOfDeleteTab;
+    public CheckBox deleteOfTabMerge;
 
     @FXML
     private void initialize() {
         BeanFactory.registerView(TitleConsts.FILE_MANAGER, this);
         //设置多选
-        selectedFilesOfRenameTab.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        selectedFilesOfCopyTab.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        selectedFilesOfMergeTab.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        srcFilesOfTabRename.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        srcFilesOfTabCopy.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        srcFilesOfTabMerge.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         //设置可编辑
-        destFilesOfRenameTab.setCellFactory(TextFieldListCell.forListView());
-        destFilesOfRenameTab.setEditable(true);
+        destFilesOfTabRename.setCellFactory(TextFieldListCell.forListView());
+        destFilesOfTabRename.setEditable(true);
 
-        fileAddableCombo.getItems().addAll(TitleConsts.FILENAME_BEFORE, TitleConsts.FILENAME_AFTER);
-        fileAddableCombo.getSelectionModel().selectLast();
-        fileAddableCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> generateNewNameForAddRename());
-
-        fileContent.setWrapText(config.getAutoWrap());
+        modeOfTabRename.getItems().addAll(TitleConsts.FILENAME_BEFORE, TitleConsts.FILENAME_AFTER);
+        modeOfTabRename.getSelectionModel().selectLast();
+        modeOfTabRename.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> generateNewNameForAdding());
     }
 
-    public void generateNewNameForFormatRename() {
-        ObservableList<File> list = selectedFilesOfRenameTab.getItems();
-        if (Checker.isNotEmpty(list)) {
-            // 开始索引
-            int start = WeUtils.parseInt(startNumberOfRenameTab.getText(), 0);
-            // 文件前缀
-            String prefix = WeUtils.replaceVariable(filePrefixOfRenameTab.getText());
-            // 文件后缀
-            String postfix = WeUtils.replaceVariable(filePostfixOfRenameTab.getText());
-            if (StrUtil.isNotEmpty(postfix) && !postfix.startsWith(StringConsts.Sign.DOT)) {
-                postfix = "." + postfix;
+    public void generateNewNameForFormatting() {
+        ObservableList<File> list = srcFilesOfTabRename.getItems();
+        if (CollUtil.isEmpty(list)) {
+            return;
+        }
+        // 开始索引
+        int start = WeUtils.parseInt(startOfTabRename.getText(), 0);
+        // 文件前缀
+        String prefix = WeUtils.replaceVariable(prefixOfTabRename.getText());
+        // 文件后缀
+        String postfix = WeUtils.replaceVariable(postfixOfTabRename.getText());
+        if (StrUtil.isNotEmpty(postfix) && !postfix.startsWith(StringConsts.Sign.DOT)) {
+            postfix = "." + postfix;
+        }
+        // 目标文件
+        ObservableList<String> destFiles = destFilesOfTabRename.getItems();
+        destFiles.clear();
+        for (File file : list) {
+            if (Checker.isEmpty(postfix) || postfix.equals(StringConsts.Sign.DOT)) {
+                postfix = "." + FileUtil.extName(file);
             }
-            // 目标文件
-            ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
-            destFiles.clear();
-            for (File file : list) {
-                if (Checker.isEmpty(postfix) || postfix.equals(StringConsts.Sign.DOT)) {
-                    postfix = "." + FileUtil.extName(file);
-                }
-                String fileName = prefix + (start++) + postfix;
-                destFiles.add(file.getParent() + File.separator + fileName);
-            }
+            String fileName = prefix + (start++) + postfix;
+            destFiles.add(file.getParent() + File.separator + fileName);
         }
     }
 
     public void renameFiles() {
-        ObservableList<File> srcFiles = selectedFilesOfRenameTab.getItems();
-        ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
+        ObservableList<File> srcFiles = srcFilesOfTabRename.getItems();
+        ObservableList<String> destFiles = destFilesOfTabRename.getItems();
         int len = srcFiles.size();
-        if (Checker.isNotEmpty(srcFiles) && len == destFiles.size()) {
-            for (int i = 0; i < len; i++) {
-                File srcFile = srcFiles.get(0);
-                FileUtil.rename(srcFile, destFiles.get(i), false, true);
-                srcFiles.remove(srcFile);
-                srcFiles.add(new File(destFiles.get(i)));
-            }
-            FxUtils.showSuccess();
-        }
-    }
-
-    public void removeFilesFromRenameTab() {
-        ObservableList<File> files = selectedFilesOfRenameTab.getSelectionModel().getSelectedItems();
-        if (CollUtil.isEmpty(files)) {
+        if (CollUtil.isEmpty(srcFiles) || len != destFiles.size()) {
             return;
         }
-        ObservableList<File> fileList = selectedFilesOfRenameTab.getItems();
-        fileList.removeAll(files);
+        for (int i = 0; i < len; i++) {
+            File srcFile = srcFiles.get(0);
+            FileUtil.rename(srcFile, destFiles.get(i), false, true);
+            srcFiles.remove(srcFile);
+            srcFiles.add(new File(destFiles.get(i)));
+        }
+        FxUtils.showSuccess();
     }
 
-    public void generateNewNameForReplaceRename() {
-        ObservableList<File> list = selectedFilesOfRenameTab.getItems();
+    public void removeFilesFromTabRename() {
+        removeSelectedFiles(srcFilesOfTabRename);
+    }
+
+    public void generateNewNameForReplacing() {
+        ObservableList<File> list = srcFilesOfTabRename.getItems();
         if (CollUtil.isEmpty(list)) {
             return;
         }
-        ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
+        ObservableList<String> destFiles = destFilesOfTabRename.getItems();
         destFiles.clear();
         for (File file : list) {
             String filename = file.getName();
-            String query = StrUtil.nullToEmpty(fileQueryStringOfRenameTab.getText());
-            String replace = WeUtils.replaceVariable(fileReplaceStringOfRenameTab.getText());
+            String query = StrUtil.nullToEmpty(queryOfTabRename.getText());
+            String replace = WeUtils.replaceVariable(replaceOfTabRename.getText());
             destFiles.add(file.getParent() + File.separator + filename.replaceAll(query, replace));
         }
     }
 
-    public void generateNewNameForAddRename() {
-        ObservableList<File> list = selectedFilesOfRenameTab.getItems();
+    public void generateNewNameForAdding() {
+        ObservableList<File> list = srcFilesOfTabRename.getItems();
         if (CollUtil.isEmpty(list)) {
             return;
         }
-        ObservableList<String> destFiles = destFilesOfRenameTab.getItems();
+        ObservableList<String> destFiles = destFilesOfTabRename.getItems();
         destFiles.clear();
         for (File file : list) {
-            String text = WeUtils.replaceVariable(fileAddableText.getText());
+            String text = WeUtils.replaceVariable(addOfTabRename.getText());
             String filename = file.getName();
-            if (TitleConsts.FILENAME_BEFORE.equals(fileAddableCombo.getSelectionModel().getSelectedItem())) {
+            if (TitleConsts.FILENAME_BEFORE.equals(modeOfTabRename.getSelectionModel().getSelectedItem())) {
                 // 文件名之前添加
                 filename = text + filename;
             } else {
@@ -209,24 +174,26 @@ public class FileManagerController implements BaseViewController {
     }
 
     public void copyFiles() {
-        WeUtils.copyFiles(selectedFilesOfCopyTab.getItems(), destFolderOfCopyTab.getText(),
-                          isDeleteSrcOfCopyTab.isSelected());
-    }
-
-    public void browseSrcFolder() {
-        File file = WeUtils.getChooseFile();
-        if (Checker.isNotNull(file)) {
-            int idx = fileManagerTab.getSelectionModel().getSelectedIndex();
-            switch (idx) {
-                case 1:
-                    destFolderOfCopyTab.setText(file.getParent());
-                    break;
-                case 2:
-                    destFolderOfSplitTab.setText(file.getParent());
-                default:
-                    break;
+        ObservableList<File> files = srcFilesOfTabCopy.getItems();
+        if (CollUtil.isEmpty(files) || StrUtil.isEmpty(destFolderOfTabCopy.getText())) {
+            return;
+        }
+        File folder = new File(destFolderOfTabCopy.getText());
+        for (int i = 0; i < files.size(); i++) {
+            File file = files.get(i);
+            FileUtil.copy(file, folder, true);
+            if (deleteOfTabCopy.isSelected()) {
+                // 删除源文件
+                FileUtil.del(file);
+                // 更新源文件的文件名
+                files.set(i, new File(folder + File.separator + file.getName()));
             }
         }
+        FxUtils.showSuccess();
+    }
+
+    public void chooseFolder() {
+        FxUtils.chooseFile(file -> destFolderOfTabCopy.setText(file.getParent()));
     }
 
     public void dragFileDroppedOfCopyTab(DragEvent event) {
@@ -234,83 +201,25 @@ public class FileManagerController implements BaseViewController {
         if (Checker.isNotEmpty(files)) {
             Object target = event.getGestureTarget();
             if (target instanceof ListView) {
-                WeUtils.putFilesInListView(event.getDragboard().getFiles(), selectedFilesOfCopyTab.getItems());
+                WeUtils.putFilesInListView(event.getDragboard().getFiles(), srcFilesOfTabCopy.getItems());
             } else if (target instanceof TextField) {
-                destFolderOfCopyTab.setText(WeUtils.getFolder(files.get(0)));
+                destFolderOfTabCopy.setText(WeUtils.parseFolder(files.get(0)));
             }
-        }
-    }
-
-    public void splitFile() {
-        String pointStr = splitPoint.getText();
-        String folder = destFolderOfSplitTab.getText();
-        if (Checker.isNotNull(splittingFile) && Checker.isNotEmpty(pointStr) && Checker.isNotEmpty(folder)) {
-            String[] points = pointStr.split(com.zhazhapan.modules.constant.ValueConsts.COMMA_SIGN);
-            int len = points.length;
-            long[] ps = new long[points.length];
-            for (int i = 0; i < len; i++) {
-                ps[i] = Formatter.stringToLong(points[i]);
-            }
-            Arrays.sort(ps);
-            ps = ArrayUtils.unique(ps, com.zhazhapan.modules.constant.ValueConsts.ONE_INT, Long.MAX_VALUE);
-            WeUtils.splitFile(splittingFile, ps, folder, isDeleteSrcOfSplitTab.isSelected());
-        }
-    }
-
-    public void dragFileDroppedOfSplitTab(DragEvent event) {
-        List<File> files = event.getDragboard().getFiles();
-        if (Checker.isNotEmpty(files)) {
-            Object target = event.getGestureTarget();
-            File file = files.get(0);
-            if (target instanceof TextArea) {
-                splittingFile = file;
-                fileContent.setText(WeUtils.readFile(file));
-            } else if (target instanceof TextField) {
-                destFolderOfSplitTab.setText(WeUtils.getFolder(file));
-            }
-        }
-    }
-
-    public void generateSplitPoint() {
-        int caret = fileContent.getCaretPosition();
-        String points = Checker.checkNull(splitPoint.getText()).trim();
-        if (!points.contains(String.valueOf(caret))) {
-            splitPoint.setText(points + (Checker.isEmpty(points) || points.endsWith(",") ? caret : "," + caret));
-        }
-    }
-
-    public void scrollTo() {
-        String points = splitPoint.getText();
-        if (Checker.isNotEmpty(points) && Checker.isNotEmpty(fileContent.getText())) {
-            int position = splitPoint.getCaretPosition();
-            String before = points.substring(0, position);
-            String after = points.substring(position);
-            String point = "";
-            if (Checker.isNotEmpty(before)) {
-                String[] temp = before.split(com.zhazhapan.modules.constant.ValueConsts.COMMA_SIGN);
-                point = temp[temp.length - 1].trim();
-            }
-            if (Checker.isNotEmpty(after)) {
-                point += after.split(com.zhazhapan.modules.constant.ValueConsts.COMMA_SIGN)[0].trim();
-            }
-            int caret = Formatter.stringToInt(point);
-            fileContent.setScrollTop(caret > -1 ? caret : 0);
         }
     }
 
     public void mergeFiles() {
-        WeUtils.mergeFiles(selectedFilesOfMergeTab.getItems(), contentFilter.getText(),
-                           deleteSrcOfMergeTab.isSelected());
+        WeUtils.mergeFiles(srcFilesOfTabMerge.getItems(), filterOfTabMerge.getText(), deleteOfTabMerge.isSelected());
     }
 
-    public void removeFilesOfCopyTab() {
-        WeUtils.removeSelectedItems(selectedFilesOfCopyTab);
+    public void removeFilesFromTabCopy() {
+        removeSelectedFiles(srcFilesOfTabCopy);
     }
 
     public void goForward() {
-        ObservableList<File> files = selectedFilesOfMergeTab.getSelectionModel().getSelectedItems();
+        ObservableList<File> files = srcFilesOfTabMerge.getSelectionModel().getSelectedItems();
         if (Checker.isNotEmpty(files)) {
-            ObservableList<File> list = selectedFilesOfMergeTab.getItems();
+            ObservableList<File> list = srcFilesOfTabMerge.getItems();
             int len = files.size();
             if (len < list.size()) {
                 for (int i = 0; i < len; i++) {
@@ -326,9 +235,9 @@ public class FileManagerController implements BaseViewController {
     }
 
     public void goBack() {
-        ObservableList<File> files = selectedFilesOfMergeTab.getSelectionModel().getSelectedItems();
+        ObservableList<File> files = srcFilesOfTabMerge.getSelectionModel().getSelectedItems();
         if (Checker.isNotEmpty(files)) {
-            ObservableList<File> list = selectedFilesOfMergeTab.getItems();
+            ObservableList<File> list = srcFilesOfTabMerge.getItems();
             int size = list.size();
             int len = files.size();
             if (files.size() < size) {
@@ -344,57 +253,16 @@ public class FileManagerController implements BaseViewController {
         }
     }
 
-    public void removeFilesOfMergeTab() {
-        WeUtils.removeSelectedItems(selectedFilesOfMergeTab);
+    public void removeFilesFromTabMerge() {
+        removeSelectedFiles(srcFilesOfTabMerge);
     }
 
-    public void deleteFiles() {
-        String filenames = filenameOfDeleteTab.getText();
-        if (Checker.isNotEmpty(filenames)) {
-            deleteFiles(new File(srcFolderOfDeleteTab.getText()),
-                        filenames.split(com.zhazhapan.modules.constant.ValueConsts.COMMA_SIGN));
-            Alerts.showInformation(TitleConsts.APP_TITLE, TipConsts.OPERATION_SUCCESS);
+    private void removeSelectedFiles(ListView<File> fileListView) {
+        ObservableList<File> removes = fileListView.getSelectionModel().getSelectedItems();
+        if (CollUtil.isEmpty(removes)) {
+            return;
         }
-    }
-
-    private void deleteFiles(File folder, String[] filenames) {
-        if (folder.exists() && folder.isDirectory()) {
-            File[] files = folder.listFiles();
-            if (Checker.isNotNull(files) && files.length > 0) {
-                for (File file : files) {
-                    String filename = file.getName();
-                    for (String fn : filenames) {
-                        String nf = fn.trim();
-                        if (Checker.isNotEmpty(nf) && filename.endsWith(fn)) {
-                            WeUtils.deleteFiles(file);
-                            break;
-                        }
-                    }
-                    if (file.isDirectory()) {
-                        deleteFiles(file, filenames);
-                    }
-                }
-            }
-        }
-    }
-
-    public void dragFileDroppedOfDeleteTab(DragEvent event) {
-        List<File> files = event.getDragboard().getFiles();
-        if (Checker.isNotEmpty(files)) {
-            srcFolderOfDeleteTab.setText(WeUtils.getFolder(files.get(0)));
-        }
-    }
-
-    public void dragFilesDroppedOfDeleteTab(DragEvent event) {
-        List<File> files = event.getDragboard().getFiles();
-        if (Checker.isNotEmpty(files)) {
-            for (File file : files) {
-                String fns = Checker.checkNull(filenameOfDeleteTab.getText()).trim();
-                boolean endsWith =
-                        Checker.isEmpty(fns) || fns.endsWith(com.zhazhapan.modules.constant.ValueConsts.COMMA_SIGN);
-                filenameOfDeleteTab.appendText((endsWith ? "" : ", ") + file.getName());
-            }
-        }
+        fileListView.getItems().removeAll(removes);
     }
 
     @Override
@@ -414,14 +282,6 @@ public class FileManagerController implements BaseViewController {
     @Override
     public void openMultiFiles(List<File> files) {
         WeUtils.putFilesInListViewOfFileManagerTab(files);
-    }
-
-    @Override
-    public String getSavingContent() {
-        if (fileManagerTab.getSelectionModel().getSelectedIndex() == IntegerConsts.TWO) {
-            return fileContent.getText();
-        }
-        return "";
     }
 
     @Override

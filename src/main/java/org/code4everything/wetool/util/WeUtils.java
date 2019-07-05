@@ -6,15 +6,11 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
 import com.zhazhapan.util.Checker;
 import com.zhazhapan.util.FileExecutor;
-import com.zhazhapan.util.NetUtils;
-import com.zhazhapan.util.ThreadPool;
 import com.zhazhapan.util.dialog.Alerts;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.IntegerConsts;
@@ -38,9 +34,9 @@ import java.util.Objects;
 @UtilityClass
 public class WeUtils {
 
-    public static final String TIME_VARIABLE = "%(TIME|time)%";
+    private static final String TIME_VARIABLE = "%(TIME|time)%";
 
-    public static final String DATE_VARIABLE = "%(DATE|date)%";
+    private static final String DATE_VARIABLE = "%(DATE|date)%";
 
     private static WeConfig config;
 
@@ -55,41 +51,9 @@ public class WeUtils {
         return SystemUtil.getOsInfo().getName().startsWith("Window");
     }
 
-    public static void deleteFiles(File file) {
-        if (Checker.isNotNull(file)) {
-            if (file.isDirectory()) {
-                try {
-                    FileExecutor.deleteDirectory(file);
-                } catch (IOException e) {
-                    Alerts.showError(TitleConsts.APP_TITLE, TipConsts.DELETE_FILE_ERROR);
-                }
-            } else {
-                FileExecutor.deleteFile(file);
-            }
-        }
-    }
-
-    public static String whois(String domain) {
-        try {
-            return NetUtils.whois(domain);
-        } catch (Exception e) {
-            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.NETWORK_ERROR);
-            return null;
-        }
-    }
-
-    public static String getLocationByIp(String ip) {
-        try {
-            return NetUtils.getLocationByIp(ip);
-        } catch (Exception e) {
-            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.NETWORK_ERROR);
-            return null;
-        }
-    }
-
     public static void mergeFiles(ObservableList<File> fileObservableList, String filter, boolean isDelete) {
         if (Checker.isNotEmpty(fileObservableList)) {
-            File file = getSaveFile();
+            File file = FxUtils.fileSaving();
             File[] files = new File[fileObservableList.size()];
             files = fileObservableList.toArray(files);
             try {
@@ -107,50 +71,8 @@ public class WeUtils {
         }
     }
 
-    public static void removeSelectedItems(ListView<File> fileListView) {
-        ObservableList<File> files = fileListView.getSelectionModel().getSelectedItems();
-        if (Checker.isNotEmpty(files)) {
-            fileListView.getItems().removeAll(files);
-        }
-    }
-
-    public static void splitFile(File file, long[] points, String folder, boolean deleteSrc) {
-        try {
-            FileExecutor.splitFile(file, points, folder);
-            if (deleteSrc) {
-                file.delete();
-            }
-            FxUtils.showSuccess();
-        } catch (IOException e) {
-            Alerts.showError(TitleConsts.APP_TITLE, TipConsts.SPLIT_FILE_ERROR);
-        }
-    }
-
-    public static String getFolder(File file) {
+    public static String parseFolder(File file) {
         return file.isDirectory() ? file.getAbsolutePath() : file.getParent();
-    }
-
-    public static void copyFiles(ObservableList<File> list, String folder, boolean deleteSrc) {
-        if (Checker.isNotEmpty(list) && Checker.isNotEmpty(folder)) {
-            ThreadPool.executor.submit(() -> {
-                File[] files = new File[list.size()];
-                list.toArray(files);
-                try {
-                    FileExecutor.copyFiles(files, folder);
-                    if (deleteSrc) {
-                        int i = 0;
-                        for (File f : list) {
-                            list.set(i++,
-                                     new File(folder + com.zhazhapan.modules.constant.ValueConsts.SEPARATOR + f.getName()));
-                            f.delete();
-                        }
-                    }
-                    FxUtils.showSuccess();
-                } catch (IOException e) {
-                    Alerts.showError(TitleConsts.APP_TITLE, TipConsts.COPY_FILE_ERROR);
-                }
-            });
-        }
     }
 
     public static String replaceVariable(String str) {
@@ -178,33 +100,13 @@ public class WeUtils {
             int idx = fileManagerController.fileManagerTab.getSelectionModel().getSelectedIndex();
             switch (idx) {
                 case 0:
-                    putFilesInListView(files, fileManagerController.selectedFilesOfRenameTab);
+                    putFilesInListView(files, fileManagerController.srcFilesOfTabRename);
                     break;
                 case 1:
-                    putFilesInListView(files, fileManagerController.selectedFilesOfCopyTab);
+                    putFilesInListView(files, fileManagerController.srcFilesOfTabCopy);
                     break;
                 case 2:
-                    File file = null;
-                    if (files instanceof File) {
-                        file = (File) files;
-                    } else if (files instanceof List) {
-                        List<File> list = (List<File>) files;
-                        if (Checker.isNotEmpty(list)) {
-                            file = list.get(0);
-                        }
-                    }
-                    if (Checker.isNotNull(file)) {
-                        fileManagerController.splittingFile = file;
-                        fileManagerController.fileContent.setText(readFile(file));
-                    }
-                    break;
-                case 3:
-                    putFilesInListView(files, fileManagerController.selectedFilesOfMergeTab);
-                    break;
-                case 4:
-                    if (files instanceof File) {
-                        fileManagerController.srcFolderOfDeleteTab.setText(getFolder((File) files));
-                    }
+                    putFilesInListView(files, fileManagerController.srcFilesOfTabMerge);
                     break;
                 default:
                     break;
@@ -263,25 +165,6 @@ public class WeUtils {
             Alerts.showError(TitleConsts.APP_TITLE, TipConsts.READ_FILE_ERROR);
         }
         return result;
-    }
-
-    public static File getSaveFile() {
-        return getFileChooser().showSaveDialog(BeanFactory.get(Stage.class));
-    }
-
-    public static List<File> getChooseFiles() {
-        return getFileChooser().showOpenMultipleDialog(BeanFactory.get(Stage.class));
-    }
-
-    public static File getChooseFile() {
-        return getFileChooser().showOpenDialog(BeanFactory.get(Stage.class));
-    }
-
-    private static FileChooser getFileChooser() {
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle(TitleConsts.APP_TITLE);
-        chooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        return chooser;
     }
 
     public static void exitSystem() {

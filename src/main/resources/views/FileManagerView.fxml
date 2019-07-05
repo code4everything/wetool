@@ -16,14 +16,14 @@
                     <padding>
                         <Insets left="10.0" right="10.0"/>
                     </padding>
-                    <ListView fx:id="selectedFilesOfRenameTab" editable="true"
+                    <ListView fx:id="srcFilesOfTabRename" editable="true"
                               onDragDropped="#dragFileDropped" onDragOver="#dragFileOver"
                               prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                         <contextMenu>
                             <ContextMenu>
                                 <items>
                                     <MenuItem mnemonicParsing="false"
-                                              onAction="#removeFilesFromRenameTab" text="删除"/>
+                                              onAction="#removeFilesFromTabRename" text="删除"/>
                                 </items>
                             </ContextMenu>
                         </contextMenu>
@@ -44,8 +44,8 @@
                                 <padding>
                                     <Insets top="10.0"/>
                                 </padding>
-                                <TextField fx:id="filePrefixOfRenameTab"
-                                           onKeyReleased="#generateNewNameForFormatRename"
+                                <TextField fx:id="prefixOfTabRename"
+                                           onKeyReleased="#generateNewNameForFormatting"
                                            promptText="文件前缀" VBox.vgrow="NEVER">
                                     <tooltip>
                                         <Tooltip autoHide="true"
@@ -56,8 +56,8 @@
                                     <VBox.margin>
                                         <Insets top="10.0"/>
                                     </VBox.margin>
-                                    <TextField fx:id="filePostfixOfRenameTab"
-                                               onKeyReleased="#generateNewNameForFormatRename"
+                                    <TextField fx:id="postfixOfTabRename"
+                                               onKeyReleased="#generateNewNameForFormatting"
                                                prefHeight="27.0" prefWidth="193.0"
                                                promptText="文件后缀" HBox.hgrow="ALWAYS">
                                         <tooltip>
@@ -65,8 +65,8 @@
                                                      text="支持变量：%DATE%, %TIME%"/>
                                         </tooltip>
                                     </TextField>
-                                    <TextField fx:id="startNumberOfRenameTab"
-                                               onKeyReleased="#generateNewNameForFormatRename"
+                                    <TextField fx:id="startOfTabRename"
+                                               onKeyReleased="#generateNewNameForFormatting"
                                                prefHeight="27.0" prefWidth="107.0"
                                                promptText="开始数字" text="1"
                                                HBox.hgrow="ALWAYS">
@@ -86,11 +86,11 @@
                                 <padding>
                                     <Insets top="10.0"/>
                                 </padding>
-                                <TextField fx:id="fileQueryStringOfRenameTab"
-                                           onKeyReleased="#generateNewNameForReplaceRename"
+                                <TextField fx:id="queryOfTabRename"
+                                           onKeyReleased="#generateNewNameForReplacing"
                                            promptText="查找（支持正则匹配）" VBox.vgrow="NEVER"/>
-                                <TextField fx:id="fileReplaceStringOfRenameTab"
-                                           onKeyReleased="#generateNewNameForReplaceRename"
+                                <TextField fx:id="replaceOfTabRename"
+                                           onKeyReleased="#generateNewNameForReplacing"
                                            promptText="替换成" VBox.vgrow="NEVER">
                                     <VBox.margin>
                                         <Insets top="10.0"/>
@@ -107,15 +107,15 @@
                                 <padding>
                                     <Insets top="10.0"/>
                                 </padding>
-                                <TextField fx:id="fileAddableText"
-                                           onKeyReleased="#generateNewNameForAddRename"
+                                <TextField fx:id="addOfTabRename"
+                                           onKeyReleased="#generateNewNameForAdding"
                                            promptText="文本内容" VBox.vgrow="NEVER">
                                     <tooltip>
                                         <Tooltip autoHide="true"
                                                  text="支持变量：%DATE%, %TIME%"/>
                                     </tooltip>
                                 </TextField>
-                                <ComboBox fx:id="fileAddableCombo"
+                                <ComboBox fx:id="modeOfTabRename"
                                           maxWidth="1.7976931348623157E308"
                                           prefHeight="27.0" prefWidth="293.0"
                                           VBox.vgrow="NEVER">
@@ -126,7 +126,7 @@
                             </VBox>
                         </Tab>
                     </TabPane>
-                    <ListView fx:id="destFilesOfRenameTab" prefHeight="200.0" prefWidth="200.0"
+                    <ListView fx:id="destFilesOfTabRename" prefHeight="200.0" prefWidth="200.0"
                               VBox.vgrow="ALWAYS">
                         <VBox.margin>
                             <Insets/>
@@ -148,20 +148,20 @@
                     <Insets left="10.0" right="10.0" top="10.0"/>
                 </padding>
                 <HBox VBox.vgrow="NEVER">
-                    <TextField fx:id="destFolderOfCopyTab" onDragDropped="#dragFileDroppedOfCopyTab"
+                    <TextField fx:id="destFolderOfTabCopy" onDragDropped="#dragFileDroppedOfCopyTab"
                                onDragOver="#dragFileOver" promptText="目标文件夹" HBox.hgrow="ALWAYS">
                         <tooltip>
                             <Tooltip autoHide="true" text="拖曳文件至此"/>
                         </tooltip>
                     </TextField>
-                    <Button mnemonicParsing="false" onAction="#browseSrcFolder" text="浏览"
+                    <Button mnemonicParsing="false" onAction="#chooseFolder" text="浏览"
                             HBox.hgrow="NEVER">
                         <HBox.margin>
                             <Insets left="10.0"/>
                         </HBox.margin>
                     </Button>
                 </HBox>
-                <ListView fx:id="selectedFilesOfCopyTab" onDragDropped="#dragFileDroppedOfCopyTab"
+                <ListView fx:id="srcFilesOfTabCopy" onDragDropped="#dragFileDroppedOfCopyTab"
                           onDragOver="#dragFileOver" prefHeight="200.0" prefWidth="200.0"
                           VBox.vgrow="ALWAYS">
                     <tooltip>
@@ -173,7 +173,7 @@
                     <contextMenu>
                         <ContextMenu>
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#removeFilesOfCopyTab"
+                                <MenuItem mnemonicParsing="false" onAction="#removeFilesFromTabCopy"
                                           text="删除"/>
                             </items>
                         </ContextMenu>
@@ -183,7 +183,7 @@
                     <padding>
                         <Insets bottom="10.0" top="10.0"/>
                     </padding>
-                    <CheckBox fx:id="isDeleteSrcOfCopyTab" mnemonicParsing="false" text="删除源文件">
+                    <CheckBox fx:id="deleteOfTabCopy" mnemonicParsing="false" text="删除源文件">
                         <HBox.margin>
                             <Insets top="5.0"/>
                         </HBox.margin>
@@ -198,66 +198,12 @@
                 </HBox>
             </VBox>
         </Tab>
-        <Tab closable="false" text="拆分文件">
-            <VBox prefHeight="200.0" prefWidth="100.0">
-                <padding>
-                    <Insets left="10.0" right="10.0" top="10.0"/>
-                </padding>
-                <HBox prefHeight="24.0" prefWidth="580.0" VBox.vgrow="NEVER">
-                    <TextField fx:id="destFolderOfSplitTab" onDragDropped="#dragFileDroppedOfSplitTab"
-                               onDragOver="#dragFileOver" promptText="目标文件夹" HBox.hgrow="ALWAYS">
-                        <tooltip>
-                            <Tooltip autoHide="true" text="拖曳文件至此"/>
-                        </tooltip>
-                    </TextField>
-                    <Button mnemonicParsing="false" onAction="#browseSrcFolder" text="浏览"
-                            HBox.hgrow="NEVER">
-                        <HBox.margin>
-                            <Insets left="10.0"/>
-                        </HBox.margin>
-                    </Button>
-                </HBox>
-                <TextArea fx:id="fileContent" onDragDropped="#dragFileDroppedOfSplitTab"
-                          onDragOver="#dragFileOver" onMouseClicked="#generateSplitPoint" prefHeight="200.0"
-                          prefWidth="200.0" promptText="文件内容, 可拖曳文件至此" VBox.vgrow="ALWAYS">
-                    <tooltip>
-                        <Tooltip autoHide="true" text="拖曳文件至此"/>
-                    </tooltip>
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                </TextArea>
-                <TextField fx:id="splitPoint" onMouseClicked="#scrollTo" promptText="拆分点"
-                           VBox.vgrow="NEVER">
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                </TextField>
-                <HBox prefHeight="31.0" prefWidth="580.0">
-                    <padding>
-                        <Insets bottom="10.0" top="10.0"/>
-                    </padding>
-                    <CheckBox fx:id="isDeleteSrcOfSplitTab" mnemonicParsing="false" text="删除源文件">
-                        <HBox.margin>
-                            <Insets top="5.0"/>
-                        </HBox.margin>
-                    </CheckBox>
-                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                            onAction="#splitFile" prefHeight="27.0" prefWidth="368.0" text="拆分文件"
-                            HBox.hgrow="ALWAYS">
-                        <HBox.margin>
-                            <Insets left="10.0"/>
-                        </HBox.margin>
-                    </Button>
-                </HBox>
-            </VBox>
-        </Tab>
         <Tab closable="false" text="合并文件">
             <VBox prefHeight="200.0" prefWidth="100.0">
                 <padding>
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                 </padding>
-                <ListView fx:id="selectedFilesOfMergeTab" onDragDropped="#dragFileDropped"
+                <ListView fx:id="srcFilesOfTabMerge" onDragDropped="#dragFileDropped"
                           onDragOver="#dragFileOver" prefHeight="200.0" prefWidth="200.0"
                           VBox.vgrow="ALWAYS">
                     <tooltip>
@@ -268,7 +214,7 @@
                             <items>
                                 <MenuItem mnemonicParsing="false" onAction="#goForward" text="上移"/>
                                 <MenuItem mnemonicParsing="false" onAction="#goBack" text="下移"/>
-                                <MenuItem mnemonicParsing="false" onAction="#removeFilesOfMergeTab"
+                                <MenuItem mnemonicParsing="false" onAction="#removeFilesFromTabMerge"
                                           text="删除"/>
                             </items>
                         </ContextMenu>
@@ -278,9 +224,9 @@
                     <VBox.margin>
                         <Insets top="10.0"/>
                     </VBox.margin>
-                    <TextField fx:id="contentFilter" promptText="文本过滤，过滤掉（正则表达式）匹配的字符串"
+                    <TextField fx:id="filterOfTabMerge" promptText="文本过滤，过滤掉（正则表达式）匹配的字符串"
                                HBox.hgrow="ALWAYS"/>
-                    <CheckBox fx:id="deleteSrcOfMergeTab" mnemonicParsing="false" text="删除源文件"
+                    <CheckBox fx:id="deleteOfTabMerge" mnemonicParsing="false" text="删除源文件"
                               HBox.hgrow="NEVER">
                         <HBox.margin>
                             <Insets left="10.0" top="5.0"/>
@@ -293,36 +239,6 @@
                         </HBox.margin>
                     </Button>
                 </HBox>
-            </VBox>
-        </Tab>
-        <Tab text="删除文件">
-            <VBox>
-                <padding>
-                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                </padding>
-                <TextField fx:id="srcFolderOfDeleteTab" promptText="源文件夹（支持拖曳）" VBox.vgrow="NEVER"
-                           onDragDropped="#dragFileDroppedOfDeleteTab"
-                           onDragOver="#dragFileOver">
-                    <tooltip>
-                        <Tooltip autoHide="true" text="拖曳文件至此"/>
-                    </tooltip>
-                </TextField>
-                <TextArea fx:id="filenameOfDeleteTab" prefHeight="200.0" prefWidth="200.0"
-                          promptText="待删除的文件名，用英文逗号分隔" VBox.vgrow="ALWAYS" onDragDropped="#dragFilesDroppedOfDeleteTab"
-                          onDragOver="#dragFileOver">
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                    <tooltip>
-                        <Tooltip autoHide="true" text="拖曳文件至此"/>
-                    </tooltip>
-                </TextArea>
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteFiles"
-                        text="删除文件夹下所有列出的文件" VBox.vgrow="NEVER">
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                </Button>
             </VBox>
         </Tab>
     </TabPane>

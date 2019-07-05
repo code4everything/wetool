@@ -1,13 +1,11 @@
 package org.code4everything.wetool.Config;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.code4everything.boot.base.bean.BaseBean;
 
 import java.io.Serializable;
@@ -34,7 +32,14 @@ public class WeConfig implements BaseBean, Serializable {
 
     private WeFileFilter fileFilter;
 
+    private String fileChooserInitDir;
+
     private transient LinkedList<Pair<Date, String>> clipboardHistory = new LinkedList<>();
+
+    @Generated
+    public String getFileChooserInitDir() {
+        return StrUtil.isEmpty(fileChooserInitDir) ? FileUtil.getUserHomePath() : fileChooserInitDir;
+    }
 
     public void appendClipboardHistory(Date date, String content) {
         if (clipboardHistory.size() < clipboardSize) {
