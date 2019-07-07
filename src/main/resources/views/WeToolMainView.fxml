@@ -13,6 +13,7 @@
             <MenuItem onAction="#saveFile" text="保存(_S)"/>
             <MenuItem onAction="#openAllTab" text="打开所有标签(_Z)"/>
             <MenuItem onAction="#closeAllTab" text="关闭所有标签(_C)"/>
+            <MenuItem onAction="#restart" text="重启(_R)"/>
             <MenuItem onAction="#quit" text="退出(_Q)"/>
         </Menu>
         <Menu text="工具(_T)">

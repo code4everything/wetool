@@ -216,4 +216,12 @@ public class MainController {
     public void openLog() {
         FxUtils.openFile(StrUtil.join(File.separator, FileUtil.getUserHomePath(), "logs", "wetool", "wetool.log"));
     }
+
+    public void restart() {
+        String jarPath = System.getProperty("java.class.path");
+        if (FileUtil.exist(jarPath)) {
+            FxUtils.openFile(jarPath);
+            WeUtils.exitSystem();
+        }
+    }
 }
