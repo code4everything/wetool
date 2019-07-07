@@ -108,6 +108,10 @@ public class WeApplication extends Application {
         item = new MenuItem(TitleConsts.HIDE);
         item.addActionListener(e -> Platform.runLater(() -> stage.hide()));
         popupMenu.add(item);
+        // 重启
+        item = new MenuItem(TitleConsts.RESTART);
+        item.addActionListener(e -> FxUtils.restart());
+        popupMenu.add(item);
         // 退出
         item = new MenuItem(TitleConsts.EXIT);
         item.addActionListener(e -> WeUtils.exitSystem());

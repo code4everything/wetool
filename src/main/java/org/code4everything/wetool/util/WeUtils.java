@@ -37,7 +37,7 @@ public class WeUtils {
     public static String compressString(String string) {
         string = string.trim();
         if (string.length() > getCompressLen()) {
-            string = string.substring(0, getCompressLen());
+            string = string.substring(0, getCompressLen()) + " ......";
         }
         return string.replaceAll("(\\s{2,}|\r\n|\r|\n)", " ").trim();
     }

@@ -218,10 +218,6 @@ public class MainController {
     }
 
     public void restart() {
-        String jarPath = System.getProperty("java.class.path");
-        if (FileUtil.exist(jarPath)) {
-            FxUtils.openFile(jarPath);
-            WeUtils.exitSystem();
-        }
+        FxUtils.restart();
     }
 }

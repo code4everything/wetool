@@ -36,4 +36,6 @@ public class TitleConsts {
     public static final String SHOW = "显示";
 
     public static final String EXIT = "退出";
+
+    public static final String RESTART = "重启";
 }

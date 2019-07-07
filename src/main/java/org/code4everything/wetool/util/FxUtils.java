@@ -67,6 +67,14 @@ public class FxUtils {
         }
     }
 
+    public static void restart() {
+        String jarPath = System.getProperty("java.class.path");
+        if (FileUtil.exist(jarPath)) {
+            FxUtils.openFile(jarPath);
+            WeUtils.exitSystem();
+        }
+    }
+
     public static void dropFileContent(TextInputControl control, DragEvent event) {
         dropFiles(event, files -> control.setText(FileUtil.readUtf8String(files.get(0))));
     }
