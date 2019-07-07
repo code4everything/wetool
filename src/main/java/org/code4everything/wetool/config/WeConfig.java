@@ -28,13 +28,30 @@ public class WeConfig implements BaseBean, Serializable {
 
     private WeInitialize initialize;
 
+    /**
+     * 剪贴板列表长度
+     */
     private Integer clipboardSize;
 
+    /**
+     * 文本框是否自动换行
+     */
     private Boolean autoWrap;
 
+    /**
+     * 文件过滤
+     */
     private String fileFilter;
 
+    /**
+     * 初始化选择文件的路径
+     */
     private String fileChooserInitDir;
+
+    /**
+     * 字符串记录到日志的长度（会压缩裁剪）
+     */
+    private Integer logCompressLen;
 
     private transient LinkedList<Pair<Date, String>> clipboardHistory = new LinkedList<>();
 

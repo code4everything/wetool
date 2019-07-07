@@ -14,6 +14,7 @@ import org.code4everything.wetool.factory.BeanFactory;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author pantao
@@ -27,7 +28,7 @@ public class WeUtils {
 
     private static final String DATE_VARIABLE = "%(DATE|date)%";
 
-    private static final int MAX_COMPRESS_LEN = 64;
+    private static int compressLen = 0;
 
     public static boolean isWindows() {
         return SystemUtil.getOsInfo().getName().startsWith("Window");
@@ -35,10 +36,10 @@ public class WeUtils {
 
     public static String compressString(String string) {
         string = string.trim();
-        if (string.length() > MAX_COMPRESS_LEN) {
-            string = string.substring(0, MAX_COMPRESS_LEN);
+        if (string.length() > getCompressLen()) {
+            string = string.substring(0, getCompressLen());
         }
-        return string.replaceAll("(\\s{2,}|\r\n|\r|\n)", " ");
+        return string.replaceAll("(\\s{2,}|\r\n|\r|\n)", " ").trim();
     }
 
     public static void addFiles(List<File> src, List<File> adds) {
@@ -85,5 +86,13 @@ public class WeUtils {
     public static void exitSystem() {
         log.info("exit wetool");
         System.exit(IntegerConsts.ZERO);
+    }
+
+    private static int getCompressLen() {
+        if (compressLen < 1) {
+            Integer val = BeanFactory.get(WeConfig.class).getLogCompressLen();
+            compressLen = Objects.isNull(val) || val < 1 ? 64 : val;
+        }
+        return compressLen;
     }
 }

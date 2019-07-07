@@ -21,5 +21,6 @@
     "fileFilter": "^[^.].*$",
     "clipboardSize": 20,
     "autoWrap": false,
-    "fileChooserInitDir": ""
+    "fileChooserInitDir": "",
+    "logCompressLen": 64
 }
