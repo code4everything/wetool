@@ -1,5 +1,6 @@
 package org.code4everything.wetool.controller;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.ObjectUtil;
@@ -23,6 +24,7 @@ import org.code4everything.wetool.util.FxDialogs;
 import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -209,5 +211,9 @@ public class MainController {
     public void openAllTab() {
         config.getInitialize().getTabs().setLoads(config.getInitialize().getTabs().getSupports());
         loadTabs();
+    }
+
+    public void openLog() {
+        FxUtils.openFile(StrUtil.join(File.separator, FileUtil.getUserHomePath(), "logs", "wetool", "wetool.log"));
     }
 }

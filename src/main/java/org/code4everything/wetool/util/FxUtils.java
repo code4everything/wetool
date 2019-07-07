@@ -59,6 +59,14 @@ public class FxUtils {
         }
     }
 
+    public static void openFile(String file) {
+        try {
+            Desktop.getDesktop().open(new File(file));
+        } catch (IOException e) {
+            FxDialogs.showException(TipConsts.OPEN_FILE_ERROR, e);
+        }
+    }
+
     public static void dropFileContent(TextInputControl control, DragEvent event) {
         dropFiles(event, files -> control.setText(FileUtil.readUtf8String(files.get(0))));
     }

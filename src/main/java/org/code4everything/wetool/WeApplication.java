@@ -1,6 +1,7 @@
 package org.code4everything.wetool;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSONObject;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -39,9 +40,10 @@ public class WeApplication extends Application {
     private boolean isTraySuccess = false;
 
     public static void main(String[] args) {
-        log.info("starting wetool");
+        log.info("start wetool");
+        log.info("current os: {}", SystemUtil.getOsInfo().getName());
         // 解析配置文件
-        log.info("loading config");
+        log.info("load config");
         String path = FileUtils.currentWorkDir("we-config.json");
         if (!FileUtil.exist(path)) {
             log.error("config not found");
@@ -50,7 +52,7 @@ public class WeApplication extends Application {
         WeConfig config = JSONObject.parseObject(FileUtil.readUtf8String(path), WeConfig.class);
         BeanFactory.register(config);
         // 启动应用
-        log.info("loading app gui");
+        log.info("load app gui");
         launch(args);
     }
 

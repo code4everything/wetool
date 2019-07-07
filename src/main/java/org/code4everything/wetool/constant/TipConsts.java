@@ -9,6 +9,8 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class TipConsts {
 
+    public static final String OPEN_FILE_ERROR = "打开文件失败";
+
     public static final String QR_CODE_ERROR = "生成二维码失败";
 
     public static final String TRAY_ERROR = "设置系统托盘失败";

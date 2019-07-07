@@ -7,26 +7,26 @@
       xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.code4everything.wetool.controller.MainController">
     <MenuBar VBox.vgrow="NEVER">
-        <Menu mnemonicParsing="false" text="文件">
-            <MenuItem mnemonicParsing="false" onAction="#openFile" text="打开"/>
-            <MenuItem mnemonicParsing="false" onAction="#openMultiFile" text="批量打开"/>
-            <MenuItem mnemonicParsing="false" onAction="#saveFile" text="保存"/>
-            <!--<MenuItem mnemonicParsing="false" text="设置"/>-->
-            <MenuItem mnemonicParsing="false" onAction="#openAllTab" text="打开所有标签"/>
-            <MenuItem mnemonicParsing="false" onAction="#closeAllTab" text="关闭所有标签"/>
-            <MenuItem mnemonicParsing="false" onAction="#quit" text="退出"/>
+        <Menu text="文件(_F)">
+            <MenuItem onAction="#openFile" text="打开(_O)"/>
+            <MenuItem onAction="#openMultiFile" text="批量打开(_M)"/>
+            <MenuItem onAction="#saveFile" text="保存(_S)"/>
+            <MenuItem onAction="#openAllTab" text="打开所有标签(_Z)"/>
+            <MenuItem onAction="#closeAllTab" text="关闭所有标签(_C)"/>
+            <MenuItem onAction="#quit" text="退出(_Q)"/>
         </Menu>
-        <Menu mnemonicParsing="false" text="工具">
-            <MenuItem mnemonicParsing="false" onAction="#openJsonParserTab" text="JSON解析"/>
-            <MenuItem mnemonicParsing="false" onAction="#openFileManagerTab" text="文件批处理"/>
-            <MenuItem mnemonicParsing="false" onAction="#openRandomGeneratorTab" text="随机生成器"/>
-            <MenuItem mnemonicParsing="false" onAction="#openClipboardHistoryTab" text="剪贴板历史"/>
-            <MenuItem mnemonicParsing="false" onAction="#openQrCodeGeneratorTab" text="二维码生成器"/>
-            <MenuItem mnemonicParsing="false" onAction="#openCharsetConverterTab" text="编码转换器"/>
-            <MenuItem mnemonicParsing="false" onAction="#openNetworkToolTab" text="网络工具"/>
+        <Menu text="工具(_T)">
+            <MenuItem onAction="#openJsonParserTab" text="JSON解析(_J)"/>
+            <MenuItem onAction="#openFileManagerTab" text="文件批处理(_B)"/>
+            <MenuItem onAction="#openRandomGeneratorTab" text="随机生成器(_R)"/>
+            <MenuItem onAction="#openClipboardHistoryTab" text="剪贴板历史(_P)"/>
+            <MenuItem onAction="#openQrCodeGeneratorTab" text="二维码生成器(_G)"/>
+            <MenuItem onAction="#openCharsetConverterTab" text="编码转换器(_V)"/>
+            <MenuItem onAction="#openNetworkToolTab" text="网络工具(_N)"/>
         </Menu>
-        <Menu mnemonicParsing="false" text="帮助">
-            <MenuItem mnemonicParsing="false" onAction="#about" text="关于"/>
+        <Menu text="帮助(_H)">
+            <MenuItem onAction="#openLog" text="打开日志(_L)"/>
+            <MenuItem onAction="#about" text="关于(_A)"/>
         </Menu>
     </MenuBar>
     <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS"/>
