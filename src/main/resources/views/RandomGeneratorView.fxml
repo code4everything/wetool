@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.code4everything.wetool.controller.RandomGeneratorController">
+      fx:controller="org.code4everything.wetool.controller.generator.RandomGeneratorController">
     <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="47.0" prefWidth="599.0"
           VBox.vgrow="NEVER">
         <padding>

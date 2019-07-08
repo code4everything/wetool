@@ -13,6 +13,8 @@ public class TitleConsts {
 
     public static final String CHARSET_CONVERTER = "编码转换器";
 
+    public static final String NARY_CONVERTER = "进制转换";
+
     public static final String QR_CODE_GENERATOR = "二维码生成器";
 
     public static final String CLIPBOARD_HISTORY = "剪贴板历史";

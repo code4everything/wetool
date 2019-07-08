@@ -143,6 +143,10 @@ public class MainController {
         openTab(TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
     }
 
+    public void openNaryConverterTab() {
+        openTab(TitleConsts.NARY_CONVERTER, ViewConsts.NARY_CONVERTER);
+    }
+
     private void openTab(String tabName, String url) {
         List<Tab> tabs = tabPane.getTabs();
         for (Tab t : tabs) {

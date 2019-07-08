@@ -25,5 +25,7 @@ public class ViewConsts {
 
     public static final String JSON_PARSER = "/views/JsonParserView.fxml";
 
-    public static final String MAIN = "/views/WeToolMainView.fxml";
+    public static final String MAIN = "/views/MainView.fxml";
+
+    public static final String NARY_CONVERTER = "/views/NaryConverterView.fxml";
 }

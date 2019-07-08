@@ -1,4 +1,4 @@
-package org.code4everything.wetool.controller;
+package org.code4everything.wetool.controller.generator;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
@@ -12,6 +12,7 @@ import org.code4everything.boot.base.FileUtils;
 import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.controller.BaseViewController;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.FxDialogs;
 import org.code4everything.wetool.util.FxUtils;

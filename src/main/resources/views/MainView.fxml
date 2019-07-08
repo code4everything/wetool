@@ -17,13 +17,20 @@
             <MenuItem onAction="#quit" text="退出(_Q)"/>
         </Menu>
         <Menu text="工具(_T)">
-            <MenuItem onAction="#openJsonParserTab" text="JSON解析(_J)"/>
             <MenuItem onAction="#openFileManagerTab" text="文件批处理(_B)"/>
-            <MenuItem onAction="#openRandomGeneratorTab" text="随机生成器(_R)"/>
             <MenuItem onAction="#openClipboardHistoryTab" text="剪贴板历史(_P)"/>
-            <MenuItem onAction="#openQrCodeGeneratorTab" text="二维码生成器(_G)"/>
-            <MenuItem onAction="#openCharsetConverterTab" text="编码转换器(_V)"/>
             <MenuItem onAction="#openNetworkToolTab" text="网络工具(_N)"/>
+            <MenuItem onAction="#openJsonParserTab" text="JSON解析(_J)"/>
+            <SeparatorMenuItem/>
+            <Menu text="转换器(_C)">
+                <MenuItem onAction="#openCharsetConverterTab" text="编码转换器(_V)"/>
+                <MenuItem onAction="#openNaryConverterTab" text="进制转换器(_N)"/>
+            </Menu>
+            <SeparatorMenuItem/>
+            <Menu text="生成器(_C)">
+                <MenuItem onAction="#openRandomGeneratorTab" text="随机生成器(_R)"/>
+                <MenuItem onAction="#openQrCodeGeneratorTab" text="二维码生成器(_G)"/>
+            </Menu>
         </Menu>
         <Menu text="帮助(_H)">
             <MenuItem onAction="#openLog" text="打开日志(_L)"/>

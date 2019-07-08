@@ -14,13 +14,14 @@
                 "ClipboardHistory",
                 "QrCodeGenerator",
                 "CharsetConverter",
-                "NetworkTool"
+                "NetworkTool",
+                "NaryConverter"
             ]
         }
     },
     "fileFilter": "^[^.].*$",
     "clipboardSize": 20,
-    "autoWrap": false,
+    "autoWrap": true,
     "fileChooserInitDir": "",
     "logCompressLen": 64
 }

@@ -1,4 +1,4 @@
-package org.code4everything.wetool.controller;
+package org.code4everything.wetool.controller.generator;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.controller.BaseViewController;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.WeUtils;
 

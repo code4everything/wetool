@@ -6,13 +6,13 @@
 <?import javafx.scene.text.Font?>
 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.code4everything.wetool.controller.converter.CharsetConverterController">
+      fx:controller="org.code4everything.wetool.controller.converter.NaryConverterController">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
     <TextArea fx:id="originalContent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
               onDragDropped="#dragFileDropped" onDragOver="#dragFileOver" prefHeight="82.0" prefWidth="580.0"
-              promptText="原字符集" VBox.vgrow="ALWAYS">
+              promptText="原进制数据" VBox.vgrow="ALWAYS">
         <tooltip>
             <Tooltip autoHide="true" text="拖曳文件至此"/>
         </tooltip>
@@ -21,7 +21,7 @@
         <VBox.margin>
             <Insets bottom="10.0" top="10.0"/>
         </VBox.margin>
-        <ComboBox fx:id="originalCharset" prefWidth="150.0" HBox.hgrow="NEVER"/>
+        <ComboBox fx:id="originalNary" prefWidth="150.0" HBox.hgrow="NEVER"/>
         <Label text="转" HBox.hgrow="NEVER">
             <HBox.margin>
                 <Insets left="10.0" top="5.0"/>
@@ -30,12 +30,12 @@
                 <Font size="14.0"/>
             </font>
         </Label>
-        <ComboBox fx:id="convertCharset" prefWidth="150.0" HBox.hgrow="NEVER">
+        <ComboBox fx:id="convertNary" prefWidth="150.0" HBox.hgrow="NEVER">
             <HBox.margin>
                 <Insets left="10.0"/>
             </HBox.margin>
         </ComboBox>
     </HBox>
     <TextArea fx:id="convertedContent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-              prefHeight="200.0" prefWidth="200.0" promptText="转换后的字符集" VBox.vgrow="ALWAYS"/>
+              prefHeight="200.0" prefWidth="200.0" promptText="转换后的进制" VBox.vgrow="ALWAYS"/>
 </VBox>

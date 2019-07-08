@@ -1,4 +1,4 @@
-package org.code4everything.wetool.controller;
+package org.code4everything.wetool.controller.converter;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.CharsetUtil;
@@ -8,7 +8,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.FxUtils;
@@ -19,11 +18,9 @@ import org.code4everything.wetool.util.WeUtils;
  * @since 2018/4/4
  */
 @Slf4j
-public class CharsetConverterController implements BaseViewController {
+public class CharsetConverterController extends AbstractConverter {
 
     private static final String BASE64 = "BASE64";
-
-    private final WeConfig config = BeanFactory.get(WeConfig.class);
 
     @FXML
     public TextArea originalContent;
@@ -50,17 +47,11 @@ public class CharsetConverterController implements BaseViewController {
         convertCharset.getItems().addAll(charset);
         convertCharset.getSelectionModel().selectFirst();
 
-        // 监听下拉框事件
-        originalCharset.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) -> convert());
-        convertCharset.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) -> convert());
-
-        // 设置文本框
-        originalContent.textProperty().addListener((o, ov, nv) -> convert());
-        originalContent.setWrapText(config.getAutoWrap());
-        convertedContent.setWrapText(config.getAutoWrap());
+        super.initConverter(originalContent, convertedContent, originalCharset, convertCharset);
     }
 
-    private void convert() {
+    @Override
+    void convert() {
         String originalText = originalContent.getText();
         if (StrUtil.isEmpty(originalText)) {
             return;

@@ -1,4 +1,4 @@
-package org.code4everything.wetool.controller;
+package org.code4everything.wetool.controller.parser;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.controller.BaseViewController;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.FxDialogs;
 import org.code4everything.wetool.util.FxUtils;
