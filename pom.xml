@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.code4everything</groupId>
             <artifactId>boot-surface</artifactId>
-            <version>1.1.4</version>
+            <version>1.1.5</version>
         </dependency>
         <!--快速开发工具-->
         <dependency>
