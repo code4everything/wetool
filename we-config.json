@@ -5,7 +5,7 @@
         "fullscreen": false,
         "tabs": {
             "loads": [
-                "ClipboardHistory"
+                "FileManager"
             ],
             "supports": [
                 "FileManager",
