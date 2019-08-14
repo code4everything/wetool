@@ -33,6 +33,7 @@
             </Menu>
         </Menu>
         <Menu text="帮助(_H)">
+            <MenuItem onAction="#openConfig" text="打开配置文件(_C)"/>
             <MenuItem onAction="#openLog" text="打开日志(_L)"/>
             <MenuItem onAction="#about" text="关于(_A)"/>
         </Menu>

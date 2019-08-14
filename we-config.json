@@ -19,8 +19,13 @@
             ]
         }
     },
+    "clipboard": {
+        "localSize": 20,
+        "pushApi": "",
+        "pullApi": "",
+        "enableSync": false
+    },
     "fileFilter": "^[^.].*$",
-    "clipboardSize": 20,
     "autoWrap": true,
     "fileChooserInitDir": "",
     "logCompressLen": 64

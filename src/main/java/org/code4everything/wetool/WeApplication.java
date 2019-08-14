@@ -11,7 +11,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
@@ -44,7 +43,7 @@ public class WeApplication extends Application {
         log.info("current os: {}", SystemUtil.getOsInfo().getName());
         // 解析配置文件
         log.info("load config");
-        String path = FileUtils.currentWorkDir("we-config.json");
+        String path = WeConfig.PATH;
         if (!FileUtil.exist(path)) {
             log.error("config not found");
             WeUtils.exitSystem();

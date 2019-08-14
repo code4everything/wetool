@@ -224,4 +224,8 @@ public class MainController {
     public void restart() {
         FxUtils.restart();
     }
+
+    public void openConfig() {
+        FxUtils.openFile(WeConfig.PATH);
+    }
 }
