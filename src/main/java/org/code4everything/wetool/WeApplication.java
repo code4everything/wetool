@@ -2,7 +2,7 @@ package org.code4everything.wetool;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.system.SystemUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -49,7 +49,7 @@ public class WeApplication extends Application {
             log.error("config not found");
             WeUtils.exitSystem();
         }
-        WeConfig config = JSONObject.parseObject(FileUtil.readUtf8String(path), WeConfig.class);
+        WeConfig config = JSON.parseObject(FileUtil.readUtf8String(path), WeConfig.class);
         BeanFactory.register(config);
         // 启动应用
         log.info("load app gui");

@@ -2,6 +2,8 @@ package org.code4everything.wetool.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.DragEvent;
@@ -61,18 +63,19 @@ public class FxUtils {
 
     public static void openFile(String file) {
         try {
-            Desktop.getDesktop().open(new File(file));
+            Desktop.getDesktop().open(FileUtil.file(file));
         } catch (IOException e) {
             FxDialogs.showException(TipConsts.OPEN_FILE_ERROR, e);
         }
     }
 
     public static void restart() {
-        String jarPath = System.getProperty("java.class.path");
-        if (FileUtil.exist(jarPath)) {
-            FxUtils.openFile(jarPath);
-            WeUtils.exitSystem();
-        }
+        // 获取当前程序运行路径
+        final String jarPath = File.separator + System.getProperty("java.class.path");
+        // 文件名的截取索引
+        final int idx = Math.max(jarPath.lastIndexOf('/'), jarPath.lastIndexOf('\\')) + 1;
+        ThreadUtil.execute(() -> RuntimeUtil.execForStr("javaw -jar ./" + jarPath.substring(idx)));
+        WeUtils.exitSystem();
     }
 
     public static void dropFileContent(TextInputControl control, DragEvent event) {
