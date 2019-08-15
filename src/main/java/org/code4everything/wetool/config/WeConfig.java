@@ -6,7 +6,6 @@ import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.*;
-import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.bean.BaseBean;
 
 import java.io.Serializable;
@@ -25,13 +24,14 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class WeConfig implements BaseBean, Serializable {
 
-    public static final String PATH = FileUtils.currentWorkDir("we-config.json");
-
     private static final long serialVersionUID = 6105929832284264685L;
 
     private WeInitialize initialize;
 
-    private WeClipboard clipboard;
+    /**
+     * 剪贴板列表长度
+     */
+    private Integer clipboardSize;
 
     /**
      * 文本框是否自动换行
@@ -80,7 +80,7 @@ public class WeConfig implements BaseBean, Serializable {
     }
 
     public void appendClipboardHistory(Date date, String content) {
-        if (clipboardHistory.size() < clipboard.getLocalSize()) {
+        if (clipboardHistory.size() < clipboardSize) {
             clipboardHistory.add(new Pair<>(date, StrUtil.nullToEmpty(content)));
         } else {
             clipboardHistory.removeFirst();
