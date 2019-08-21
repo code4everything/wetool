@@ -44,7 +44,7 @@ public class QrCodeGeneratorController implements BaseViewController {
 
     @FXML
     private void initialize() {
-        log.info("load tab qr code generator");
+        log.info("open tab for qr code generator");
         BeanFactory.registerView(TitleConsts.QR_CODE_GENERATOR, this);
         content.setWrapText(config.getAutoWrap());
     }

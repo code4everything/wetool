@@ -101,7 +101,6 @@ public class FxUtils {
     }
 
     public static VBox loadFxml(String url) {
-        log.info("load fxml {}", url);
         try {
             return FXMLLoader.load(WeUtils.class.getResource(url));
         } catch (Exception e) {

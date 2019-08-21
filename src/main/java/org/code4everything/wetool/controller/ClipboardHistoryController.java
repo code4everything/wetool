@@ -30,7 +30,7 @@ public class ClipboardHistoryController implements BaseViewController {
 
     @FXML
     private void initialize() {
-        log.info("load tab clipboard history");
+        log.info("open tab for clipboard history");
         BeanFactory.registerView(TitleConsts.CLIPBOARD_HISTORY, this);
         clipboardHistory.setWrapText(config.getAutoWrap());
         for (Pair<Date, String> pair : config.getClipboardHistory()) {

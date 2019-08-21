@@ -83,7 +83,7 @@ public class FileManagerController implements BaseViewController {
 
     @FXML
     private void initialize() {
-        log.info("load tab file manager");
+        log.info("open tab for file manager");
         BeanFactory.registerView(TitleConsts.FILE_MANAGER, this);
 
         //设置多选
@@ -146,7 +146,7 @@ public class FileManagerController implements BaseViewController {
         for (String destFile : destFiles) {
             File srcFile = srcFiles.get(0);
             FileUtil.rename(srcFile, destFile, false, true);
-            log.info("rename file {} to {}", srcFile.getAbsolutePath(), destFile);
+            log.info("rename file '{}' to '{}'", srcFile.getAbsolutePath(), destFile);
             // 更新源文件名
             srcFiles.remove(srcFile);
             srcFiles.add(new File(destFile));
@@ -204,9 +204,9 @@ public class FileManagerController implements BaseViewController {
         for (int i = 0; i < files.size(); i++) {
             File file = files.get(i);
             FileUtil.copy(file, folder, true);
-            log.info("copy file {} to folder {}", file.getAbsolutePath(), folder.getAbsolutePath());
+            log.info("copy file '{}' to folder '{}'", file.getAbsolutePath(), folder.getAbsolutePath());
             if (deleteOfTabCopy.isSelected()) {
-                log.info("delete source file {}", file.getAbsolutePath());
+                log.info("delete source file: {}", file.getAbsolutePath());
                 // 删除源文件
                 FileUtil.del(file);
                 // 更新源文件的文件名
@@ -237,10 +237,10 @@ public class FileManagerController implements BaseViewController {
                 }
                 // 合并
                 FileUtil.appendUtf8String(str, file);
-                log.info("merge file {} to {}", f.getAbsolutePath(), file.getAbsolutePath());
+                log.info("merge file '{}' into '{}'", f.getAbsolutePath(), file.getAbsolutePath());
                 if (delete) {
                     FileUtil.del(f);
-                    log.info("delete source file {}", f.getAbsolutePath());
+                    log.info("delete source file: {}", f.getAbsolutePath());
                 }
             }
             if (delete) {

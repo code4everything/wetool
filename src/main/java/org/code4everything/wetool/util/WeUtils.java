@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.system.SystemUtil;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.IntegerConsts;
@@ -30,10 +29,6 @@ public class WeUtils {
 
     private static int compressLen = 0;
 
-    public static boolean isWindows() {
-        return SystemUtil.getOsInfo().getName().startsWith("Window");
-    }
-
     public static String compressString(String string) {
         string = string.trim();
         if (string.length() > getCompressLen()) {
@@ -50,7 +45,7 @@ public class WeUtils {
         for (File file : adds) {
             if (!config.getFilterPattern().matcher(file.getName()).matches()) {
                 // 文件不匹配
-                log.info("file {} not match", file.getAbsolutePath());
+                log.info("filter file: {}", file.getAbsolutePath());
                 continue;
             }
             if (file.isFile() && !src.contains(file)) {
@@ -84,7 +79,7 @@ public class WeUtils {
     }
 
     public static void exitSystem() {
-        log.info("exit wetool");
+        log.info("wetool exited");
         System.exit(IntegerConsts.ZERO);
     }
 

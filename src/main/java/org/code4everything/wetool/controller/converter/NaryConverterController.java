@@ -39,7 +39,7 @@ public class NaryConverterController extends AbstractConverter {
 
     @FXML
     private void initialize() {
-        log.info("load tab nary converter");
+        log.info("open tab for nary converter");
         BeanFactory.registerView(TitleConsts.NARY_CONVERTER, this);
         // 支持的进制
         String[] nary = {"二进制", "十六进制"};

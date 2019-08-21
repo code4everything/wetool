@@ -58,12 +58,11 @@ public class MainController {
      */
     @FXML
     private void initialize() {
-        log.info("wetool started");
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
         // 监听剪贴板和JVM
         EXECUTOR.scheduleWithFixedDelay(() -> {
             watchClipboard();
-            watchJvm();
+            watchJVM();
         }, 0, IntegerConsts.ONE_THOUSAND_AND_TWENTY_FOUR, TimeUnit.MILLISECONDS);
         // 加载默认选项卡
         loadTabs();
@@ -97,7 +96,7 @@ public class MainController {
         }
     }
 
-    private void watchJvm() {
+    private void watchJVM() {
         // 监听JVM内存变化
         if (stage.isShowing() && !stage.isIconified()) {
             Platform.runLater(() -> {
@@ -225,6 +224,6 @@ public class MainController {
     }
 
     public void openConfig() {
-        FxUtils.openFile(WeConfig.PATH);
+        FxUtils.openFile(BeanFactory.get(WeConfig.class).getCurrentPath());
     }
 }

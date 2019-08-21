@@ -37,7 +37,7 @@ public class NetworkToolController implements BaseViewController {
 
     @FXML
     private void initialize() {
-        log.info("load tab network tool");
+        log.info("open tab for network tool");
         BeanFactory.registerView(TitleConsts.NETWORK_TOOL, this);
         Platform.runLater(() -> {
             privateIpv4.setText(NetUtil.getLocalhostStr());

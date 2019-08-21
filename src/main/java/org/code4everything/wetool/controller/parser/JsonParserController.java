@@ -41,7 +41,7 @@ public class JsonParserController implements BaseViewController {
 
     @FXML
     private void initialize() {
-        log.info("load tab json parser");
+        log.info("open tab for json parser");
         BeanFactory.registerView(TitleConsts.JSON_PARSER, this);
         jsonContent.setWrapText(config.getAutoWrap());
         parsedJsonContent.setWrapText(config.getAutoWrap());

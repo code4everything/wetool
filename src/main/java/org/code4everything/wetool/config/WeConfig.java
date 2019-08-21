@@ -6,7 +6,6 @@ import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.*;
-import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.bean.BaseBean;
 
 import java.io.Serializable;
@@ -26,9 +25,12 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class WeConfig implements BaseBean, Serializable {
 
-    public static final String PATH = FileUtils.currentWorkDir("we-config.json");
-
     private static final long serialVersionUID = 6105929832284264685L;
+
+    /**
+     * 当前读取的配置文件路径
+     */
+    private String currentPath;
 
     private WeInitialize initialize;
 

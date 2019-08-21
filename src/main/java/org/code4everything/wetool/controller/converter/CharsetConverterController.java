@@ -36,7 +36,7 @@ public class CharsetConverterController extends AbstractConverter {
 
     @FXML
     private void initialize() {
-        log.info("load tab charset converter");
+        log.info("open tab for charset converter");
         BeanFactory.registerView(TitleConsts.CHARSET_CONVERTER, this);
         // 支持的编码
         String[] charset = {"UTF-8", "ISO-8859-1", "GBK", BASE64};

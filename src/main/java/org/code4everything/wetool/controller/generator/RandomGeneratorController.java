@@ -78,7 +78,7 @@ public class RandomGeneratorController implements BaseViewController {
 
     @FXML
     public void initialize() {
-        log.info("load tab random generator");
+        log.info("open tab for random generator");
         BeanFactory.registerView(TitleConsts.RANDOM_GENERATOR, this);
     }
 
