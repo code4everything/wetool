@@ -15,7 +15,7 @@ public class TipConsts {
 
     public static final String TRAY_ERROR = "设置系统托盘失败";
 
-    public static final String ABOUT_APP = "当前版本：v1.5\r\n\r\n项目地址：https://github.com/code4everything/wetool\r\n";
+    public static final String ABOUT_APP = "当前版本：v1.5.0\r\n\r\n项目地址：https://github.com/code4everything/wetool\r\n";
 
     public static final String OPERATION_SUCCESS = "操作成功";
 

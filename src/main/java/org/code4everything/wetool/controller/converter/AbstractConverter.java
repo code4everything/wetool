@@ -25,5 +25,8 @@ public abstract class AbstractConverter implements BaseViewController {
         destArea.setWrapText(config.getAutoWrap());
     }
 
+    /**
+     * 转换器
+     */
     abstract void convert();
 }

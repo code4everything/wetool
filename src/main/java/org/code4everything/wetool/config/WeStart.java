@@ -40,7 +40,7 @@ public class WeStart implements BaseBean, Serializable {
 
     @Override
     public void requireNonNullProperty() {
-        String msg = "the value of field '%s' at class '" + this.getClass().getName() + "' must not be empty";
+        String msg = "the value of field '%s' at class '" + getClass().getName() + "' must not be empty";
         if (StrUtil.isEmpty(alias)) {
             throw new NullPointerException(String.format(msg, "alias"));
         }

@@ -3,11 +3,13 @@ package org.code4everything.wetool.config;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
-import cn.hutool.core.swing.ClipboardUtil;
+import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.bean.BaseBean;
+import org.code4everything.wetool.util.WeUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,6 +23,7 @@ import java.util.regex.Pattern;
  * @since 2019/7/3
  **/
 @Data
+@Slf4j
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -69,12 +72,18 @@ public class WeConfig implements BaseBean, Serializable {
 
     private transient Pattern filterPattern = Pattern.compile("");
 
-    public void requireNonNull() {
-        requireNonNullProperty();
-        initialize.requireNonNullProperty();
-        initialize.getTabs().requireNonNullProperty();
-        if (CollUtil.isNotEmpty(quickStarts)) {
-            quickStarts.forEach(WeStart::requireNonNullProperty);
+    @Override
+    public void init() {
+        try {
+            requireNonNullProperty();
+            initialize.requireNonNullProperty();
+            initialize.getTabs().requireNonNullProperty();
+            if (CollUtil.isNotEmpty(quickStarts)) {
+                quickStarts.forEach(WeStart::requireNonNullProperty);
+            }
+        } catch (Exception e) {
+            log.error("config file format error: {}", e.getMessage());
+            WeUtils.exitSystem();
         }
         filterPattern = null;
     }

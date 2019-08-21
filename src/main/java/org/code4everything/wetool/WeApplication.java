@@ -76,12 +76,7 @@ public class WeApplication extends Application {
         config.setCurrentPath(path);
         BeanFactory.register(config);
         // 检测空指针
-        try {
-            config.requireNonNull();
-        } catch (Exception e) {
-            log.error("config file format error: {}", e.getMessage());
-            WeUtils.exitSystem();
-        }
+        config.init();
     }
 
     public static void main(String[] args) {
