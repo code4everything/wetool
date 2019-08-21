@@ -19,6 +19,13 @@
             ]
         }
     },
+    "quickStarts": [
+        {
+            "alias": "配置文件",
+            "location": "./we-config.json",
+            "subStarts": []
+        }
+    ],
     "fileFilter": "^[^.].*$",
     "clipboardSize": 20,
     "autoWrap": true,

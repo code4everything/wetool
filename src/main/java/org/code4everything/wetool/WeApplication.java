@@ -1,5 +1,6 @@
 package org.code4everything.wetool;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
@@ -13,6 +14,7 @@ import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.config.WeConfig;
+import org.code4everything.wetool.config.WeStart;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
@@ -25,6 +27,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -92,6 +95,22 @@ public class WeApplication extends Application {
         stage.show();
     }
 
+    private void setQuickStartMenu(Menu menu, List<WeStart> starts) {
+        starts.forEach(start -> {
+            if (CollUtil.isEmpty(start.getSubStarts())) {
+                // 添加子菜单
+                MenuItem item = new MenuItem(start.getAlias());
+                item.addActionListener(e -> FxUtils.openFile(start.getLocation()));
+                menu.add(item);
+            } else {
+                // 添加父级菜单
+                Menu subMenu = new Menu(start.getAlias());
+                menu.add(subMenu);
+                setQuickStartMenu(subMenu, start.getSubStarts());
+            }
+        });
+    }
+
     /**
      * 系统托盘
      */
@@ -99,19 +118,26 @@ public class WeApplication extends Application {
         Platform.setImplicitExit(false);
         // 添加托盘邮件菜单
         PopupMenu popupMenu = new PopupMenu();
+        // 快捷打开
+        Menu menu = new Menu(TitleConsts.QUICK_START);
+        setQuickStartMenu(menu, BeanFactory.get(WeConfig.class).getQuickStarts());
+        popupMenu.add(menu);
+        // 重启
+        popupMenu.addSeparator();
+        MenuItem item = new MenuItem(TitleConsts.RESTART);
+        item.addActionListener(e -> FxUtils.restart());
+        popupMenu.add(item);
         // 显示
-        MenuItem item = new MenuItem(TitleConsts.SHOW);
+        popupMenu.addSeparator();
+        item = new MenuItem(TitleConsts.SHOW);
         item.addActionListener(e -> Platform.runLater(() -> stage.show()));
         popupMenu.add(item);
         // 隐藏
         item = new MenuItem(TitleConsts.HIDE);
         item.addActionListener(e -> Platform.runLater(() -> stage.hide()));
         popupMenu.add(item);
-        // 重启
-        item = new MenuItem(TitleConsts.RESTART);
-        item.addActionListener(e -> FxUtils.restart());
-        popupMenu.add(item);
         // 退出
+        popupMenu.addSeparator();
         item = new MenuItem(TitleConsts.EXIT);
         item.addActionListener(e -> WeUtils.exitSystem());
         popupMenu.add(item);

@@ -12,6 +12,7 @@ import org.code4everything.boot.base.bean.BaseBean;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -55,6 +56,11 @@ public class WeConfig implements BaseBean, Serializable {
      * 字符串记录到日志的长度（会压缩裁剪）
      */
     private Integer logCompressLen;
+
+    /**
+     * 快速打开
+     */
+    private List<WeStart> quickStarts;
 
     private transient LinkedList<Pair<Date, String>> clipboardHistory = new LinkedList<>();
 

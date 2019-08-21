@@ -64,7 +64,7 @@ public class FxUtils {
     public static void openFile(String file) {
         try {
             Desktop.getDesktop().open(FileUtil.file(file));
-        } catch (IOException e) {
+        } catch (Exception e) {
             FxDialogs.showException(TipConsts.OPEN_FILE_ERROR, e);
         }
     }

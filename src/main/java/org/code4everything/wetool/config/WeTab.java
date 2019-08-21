@@ -17,7 +17,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class WeTabs implements BaseBean, Serializable {
+public class WeTab implements BaseBean, Serializable {
 
     private static final long serialVersionUID = -7095575648923571810L;
 
