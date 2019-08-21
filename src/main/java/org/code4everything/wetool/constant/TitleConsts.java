@@ -41,5 +41,5 @@ public class TitleConsts {
 
     public static final String RESTART = "重启";
 
-    public static final String QUICK_START = "打开";
+    public static final String QUICK_START = "快启";
 }

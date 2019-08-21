@@ -81,7 +81,6 @@ public class WeApplication extends Application {
         log.info("start wetool on os: {}", SystemUtil.getOsInfo().getName());
         parseConfig();
         launch(args);
-        log.info("wetool started");
     }
 
     @Override
@@ -115,6 +114,7 @@ public class WeApplication extends Application {
 
         enableTray();
         stage.show();
+        log.info("wetool started");
     }
 
     private void setQuickStartMenu(Menu menu, List<WeStart> starts) {
@@ -141,11 +141,14 @@ public class WeApplication extends Application {
         // 添加托盘邮件菜单
         PopupMenu popupMenu = new PopupMenu();
         // 快捷打开
-        Menu menu = new Menu(TitleConsts.QUICK_START);
-        setQuickStartMenu(menu, BeanFactory.get(WeConfig.class).getQuickStarts());
-        popupMenu.add(menu);
+        List<WeStart> starts = BeanFactory.get(WeConfig.class).getQuickStarts();
+        if (CollUtil.isNotEmpty(starts)) {
+            Menu menu = new Menu(TitleConsts.QUICK_START);
+            setQuickStartMenu(menu, starts);
+            popupMenu.add(menu);
+            popupMenu.addSeparator();
+        }
         // 重启
-        popupMenu.addSeparator();
         MenuItem item = new MenuItem(TitleConsts.RESTART);
         item.addActionListener(e -> FxUtils.restart());
         popupMenu.add(item);

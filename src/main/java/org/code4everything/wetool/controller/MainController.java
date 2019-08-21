@@ -1,5 +1,6 @@
 package org.code4everything.wetool.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.swing.ClipboardUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
@@ -8,14 +9,13 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.config.WeConfig;
+import org.code4everything.wetool.config.WeStart;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
@@ -53,6 +53,9 @@ public class MainController {
     @FXML
     public ProgressBar jvm;
 
+    @FXML
+    public Menu fileMenu;
+
     /**
      * 此对象暂时不注册到工厂
      */
@@ -64,8 +67,32 @@ public class MainController {
             watchClipboard();
             watchJVM();
         }, 0, IntegerConsts.ONE_THOUSAND_AND_TWENTY_FOUR, TimeUnit.MILLISECONDS);
+        // 加载快速启动选项
+        List<WeStart> starts = BeanFactory.get(WeConfig.class).getQuickStarts();
+        if (CollUtil.isNotEmpty(starts)) {
+            Menu menu = new Menu(TitleConsts.QUICK_START);
+            setQuickStartMenu(menu, starts);
+            fileMenu.getItems().add(0, new SeparatorMenuItem());
+            fileMenu.getItems().add(0, menu);
+        }
         // 加载默认选项卡
         loadTabs();
+    }
+
+    private void setQuickStartMenu(Menu menu, List<WeStart> starts) {
+        starts.forEach(start -> {
+            if (CollUtil.isEmpty(start.getSubStarts())) {
+                // 添加子菜单
+                MenuItem item = new MenuItem(start.getAlias());
+                item.onActionProperty().addListener(e -> FxUtils.openFile(start.getLocation()));
+                menu.getItems().add(item);
+            } else {
+                // 添加父级菜单
+                Menu subMenu = new Menu(start.getAlias());
+                menu.getItems().add(subMenu);
+                setQuickStartMenu(subMenu, start.getSubStarts());
+            }
+        });
     }
 
     private void watchClipboard() {
