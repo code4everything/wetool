@@ -3,10 +3,9 @@
         "width": 1000,
         "height": 700,
         "fullscreen": false,
+        "hide": false,
         "tabs": {
-            "loads": [
-                "FileManager"
-            ],
+            "loads": [],
             "supports": [
                 "FileManager",
                 "JsonParser",

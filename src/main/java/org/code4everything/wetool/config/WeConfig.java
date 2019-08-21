@@ -1,5 +1,6 @@
 package org.code4everything.wetool.config;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.ClipboardUtil;
@@ -66,7 +67,17 @@ public class WeConfig implements BaseBean, Serializable {
 
     private transient LinkedList<Pair<Date, String>> clipboardHistory = new LinkedList<>();
 
-    private transient Pattern filterPattern;
+    private transient Pattern filterPattern = Pattern.compile("");
+
+    public void requireNonNull() {
+        requireNonNullProperty();
+        initialize.requireNonNullProperty();
+        initialize.getTabs().requireNonNullProperty();
+        if (CollUtil.isNotEmpty(quickStarts)) {
+            quickStarts.forEach(WeStart::requireNonNullProperty);
+        }
+        filterPattern = null;
+    }
 
     @Generated
     public Pattern getFilterPattern() {
@@ -83,7 +94,6 @@ public class WeConfig implements BaseBean, Serializable {
     private void setFilterPattern(Pattern filterPattern) {
         this.filterPattern = filterPattern;
     }
-
 
     @Generated
     public String getFileChooserInitDir() {

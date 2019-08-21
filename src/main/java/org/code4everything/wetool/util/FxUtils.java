@@ -74,7 +74,7 @@ public class FxUtils {
         final String jarPath = System.getProperty("java.class.path");
         // 文件名的截取索引
         final int idx = Math.max(jarPath.lastIndexOf('/'), jarPath.lastIndexOf('\\')) + 1;
-        ThreadUtil.execute(() -> RuntimeUtil.execForStr("javaw -jar ./" + jarPath.substring(idx)));
+        ThreadUtil.execute(() -> RuntimeUtil.execForStr("java -jar ./" + jarPath.substring(idx)));
         WeUtils.exitSystem();
     }
 

@@ -1,5 +1,7 @@
 package org.code4everything.wetool.config;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,4 +37,17 @@ public class WeStart implements BaseBean, Serializable {
      * 子菜单
      */
     private List<WeStart> subStarts;
+
+    @Override
+    public void requireNonNullProperty() {
+        String msg = "the value of field '%s' at class '" + this.getClass().getName() + "' must not be empty";
+        if (StrUtil.isEmpty(alias)) {
+            throw new NullPointerException(String.format(msg, "alias"));
+        }
+        if (CollUtil.isNotEmpty(subStarts)) {
+            subStarts.forEach(WeStart::requireNonNullProperty);
+        } else if (StrUtil.isEmpty(location)) {
+            throw new NullPointerException(String.format(msg, "location"));
+        }
+    }
 }

@@ -75,6 +75,13 @@ public class WeApplication extends Application {
         WeConfig config = JSON.parseObject(FileUtil.readUtf8String(path), WeConfig.class);
         config.setCurrentPath(path);
         BeanFactory.register(config);
+        // 检测空指针
+        try {
+            config.requireNonNull();
+        } catch (Exception e) {
+            log.error("config file format error: {}", e.getMessage());
+            WeUtils.exitSystem();
+        }
     }
 
     public static void main(String[] args) {
@@ -99,11 +106,7 @@ public class WeApplication extends Application {
         stage.setTitle(TitleConsts.APP_TITLE);
         // 监听关闭事件
         stage.setOnCloseRequest((WindowEvent event) -> {
-            if (isTraySuccess) {
-                stage.hide();
-            } else {
-                stage.setIconified(true);
-            }
+            hideStage();
             event.consume();
         });
         // 设置大小
@@ -112,9 +115,23 @@ public class WeApplication extends Application {
         stage.setHeight(config.getInitialize().getHeight());
         stage.setFullScreen(config.getInitialize().getFullscreen());
 
-        enableTray();
-        stage.show();
+        if (SystemUtil.getOsInfo().isWindows()) {
+            enableTray();
+        }
+        if (BeanFactory.get(WeConfig.class).getInitialize().getHide()) {
+            hideStage();
+        } else {
+            stage.show();
+        }
         log.info("wetool started");
+    }
+
+    private void hideStage() {
+        if (isTraySuccess) {
+            stage.hide();
+        } else {
+            stage.setIconified(true);
+        }
     }
 
     private void setQuickStartMenu(Menu menu, List<WeStart> starts) {
@@ -148,18 +165,18 @@ public class WeApplication extends Application {
             popupMenu.add(menu);
             popupMenu.addSeparator();
         }
-        // 重启
-        MenuItem item = new MenuItem(TitleConsts.RESTART);
-        item.addActionListener(e -> FxUtils.restart());
-        popupMenu.add(item);
         // 显示
-        popupMenu.addSeparator();
-        item = new MenuItem(TitleConsts.SHOW);
+        MenuItem item = new MenuItem(TitleConsts.SHOW);
         item.addActionListener(e -> Platform.runLater(() -> stage.show()));
         popupMenu.add(item);
         // 隐藏
         item = new MenuItem(TitleConsts.HIDE);
         item.addActionListener(e -> Platform.runLater(() -> stage.hide()));
+        popupMenu.add(item);
+        // 重启
+        popupMenu.addSeparator();
+        item = new MenuItem(TitleConsts.RESTART);
+        item.addActionListener(e -> FxUtils.restart());
         popupMenu.add(item);
         // 退出
         popupMenu.addSeparator();

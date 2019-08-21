@@ -26,5 +26,7 @@ public class WeInitialize implements BaseBean, Serializable {
 
     private Boolean fullscreen;
 
+    private Boolean hide;
+
     private WeTab tabs;
 }

@@ -84,7 +84,7 @@ public class MainController {
             if (CollUtil.isEmpty(start.getSubStarts())) {
                 // 添加子菜单
                 MenuItem item = new MenuItem(start.getAlias());
-                item.onActionProperty().addListener(e -> FxUtils.openFile(start.getLocation()));
+                item.setOnAction(e -> FxUtils.openFile(start.getLocation()));
                 menu.getItems().add(item);
             } else {
                 // 添加父级菜单
