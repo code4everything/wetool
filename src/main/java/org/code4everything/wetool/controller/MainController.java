@@ -2,10 +2,10 @@ package org.code4everything.wetool.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -25,9 +25,7 @@ import org.code4everything.wetool.util.FxUtils;
 import org.code4everything.wetool.util.WeUtils;
 
 import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -39,9 +37,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MainController {
 
-    private static final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).build();
+    private final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).build();
 
-    private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(1, FACTORY);
+    private final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(1, FACTORY);
+
+    private final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
 
     private final Stage stage = BeanFactory.get(Stage.class);
 
@@ -55,6 +55,20 @@ public class MainController {
 
     @FXML
     public Menu fileMenu;
+
+    @FXML
+    public Menu toolMenu;
+
+    {
+        TAB_MAP.put("FileManager", new Pair<>(TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER));
+        TAB_MAP.put("JsonParser", new Pair<>(TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER));
+        TAB_MAP.put("RandomGenerator", new Pair<>(TitleConsts.RANDOM_GENERATOR, ViewConsts.RANDOM_GENERATOR));
+        TAB_MAP.put("ClipboardHistory", new Pair<>(TitleConsts.CLIPBOARD_HISTORY, ViewConsts.CLIPBOARD_HISTORY));
+        TAB_MAP.put("QrCodeGenerator", new Pair<>(TitleConsts.QR_CODE_GENERATOR, ViewConsts.QR_CODE_GENERATOR));
+        TAB_MAP.put("CharsetConverter", new Pair<>(TitleConsts.CHARSET_CONVERTER, ViewConsts.CHARSET_CONVERTER));
+        TAB_MAP.put("NetworkTool", new Pair<>(TitleConsts.NETWORK_TOOL, ViewConsts.NETWORK_TOOL));
+        TAB_MAP.put("NaryConverter", new Pair<>(TitleConsts.NARY_CONVERTER, ViewConsts.NARY_CONVERTER));
+    }
 
     /**
      * 此对象暂时不注册到工厂
@@ -75,8 +89,21 @@ public class MainController {
             fileMenu.getItems().add(0, new SeparatorMenuItem());
             fileMenu.getItems().add(0, menu);
         }
+        // 加载工具选项卡
+        loadToolMenus(toolMenu);
         // 加载默认选项卡
         loadTabs();
+    }
+
+    private void loadToolMenus(Menu menu) {
+        menu.getItems().forEach(item -> {
+            System.out.println(item.getClass().getName());
+            if (item instanceof Menu) {
+                loadToolMenus((Menu) item);
+            } else if (StrUtil.isNotEmpty(item.getId())) {
+                item.setOnAction(e -> openTab(TAB_MAP.get(item.getId())));
+            }
+        });
     }
 
     private void setQuickStartMenu(Menu menu, List<WeStart> starts) {
@@ -135,58 +162,29 @@ public class MainController {
     }
 
     private void loadTabs() {
-        for (Object tabName : config.getInitialize().getTabs().getLoads()) {
-            ReflectUtil.invoke(this, "open" + tabName + "Tab");
+        for (String tabName : config.getInitialize().getTabs().getLoads()) {
+            openTab(TAB_MAP.get(tabName));
         }
     }
 
-    public void openNetworkToolTab() {
-        openTab(TitleConsts.NETWORK_TOOL, ViewConsts.NETWORK_TOOL);
-    }
-
-    public void openCharsetConverterTab() {
-        openTab(TitleConsts.CHARSET_CONVERTER, ViewConsts.CHARSET_CONVERTER);
-    }
-
-    public void openClipboardHistoryTab() {
-        openTab(TitleConsts.CLIPBOARD_HISTORY, ViewConsts.CLIPBOARD_HISTORY);
-    }
-
-    public void openRandomGeneratorTab() {
-        openTab(TitleConsts.RANDOM_GENERATOR, ViewConsts.RANDOM_GENERATOR);
-    }
-
-    public void openQrCodeGeneratorTab() {
-        openTab(TitleConsts.QR_CODE_GENERATOR, ViewConsts.QR_CODE_GENERATOR);
-    }
-
-    public void openJsonParserTab() {
-        openTab(TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER);
-    }
-
-    public void openFileManagerTab() {
-        openTab(TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
-    }
-
-    public void openNaryConverterTab() {
-        openTab(TitleConsts.NARY_CONVERTER, ViewConsts.NARY_CONVERTER);
-    }
-
-    private void openTab(String tabName, String url) {
+    private void openTab(Pair<String, String> tabPair) {
+        if (Objects.isNull(tabPair)) {
+            return;
+        }
         List<Tab> tabs = tabPane.getTabs();
         for (Tab t : tabs) {
-            if (t.getText().equals(tabName)) {
+            if (t.getText().equals(tabPair.getKey())) {
                 // 选项卡已打开，退出方法
                 tabPane.getSelectionModel().select(t);
                 return;
             }
         }
-        VBox box = FxUtils.loadFxml(url);
+        VBox box = FxUtils.loadFxml(tabPair.getValue());
         if (Objects.isNull(box)) {
             return;
         }
         // 打开选项卡
-        Tab tab = new Tab(tabName);
+        Tab tab = new Tab(tabPair.getKey());
         tab.setContent(box);
         tab.setClosable(true);
         tabs.add(tab);

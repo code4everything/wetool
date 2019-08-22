@@ -19,20 +19,20 @@
             <SeparatorMenuItem/>
             <MenuItem onAction="#quit" text="退出(_Q)"/>
         </Menu>
-        <Menu text="工具(_T)">
-            <MenuItem onAction="#openFileManagerTab" text="文件批处理(_B)"/>
-            <MenuItem onAction="#openClipboardHistoryTab" text="剪贴板历史(_P)"/>
-            <MenuItem onAction="#openNetworkToolTab" text="网络工具(_N)"/>
-            <MenuItem onAction="#openJsonParserTab" text="JSON解析(_J)"/>
+        <Menu text="工具(_T)" fx:id="toolMenu">
+            <MenuItem text="文件批处理(_B)" id="FileManager"/>
+            <MenuItem text="剪贴板历史(_P)" id="ClipboardHistory"/>
+            <MenuItem text="网络工具(_N)" id="NetworkTool"/>
+            <MenuItem text="JSON解析(_J)" id="JsonParser"/>
             <SeparatorMenuItem/>
             <Menu text="转换器(_C)">
-                <MenuItem onAction="#openCharsetConverterTab" text="编码转换器(_V)"/>
-                <MenuItem onAction="#openNaryConverterTab" text="进制转换器(_N)"/>
+                <MenuItem text="编码转换器(_V)" id="CharsetConverter"/>
+                <MenuItem text="进制转换器(_N)" id="NaryConverter"/>
             </Menu>
             <SeparatorMenuItem/>
             <Menu text="生成器(_C)">
-                <MenuItem onAction="#openRandomGeneratorTab" text="随机生成器(_R)"/>
-                <MenuItem onAction="#openQrCodeGeneratorTab" text="二维码生成器(_G)"/>
+                <MenuItem text="随机生成器(_R)" id="RandomGenerator"/>
+                <MenuItem text="二维码生成器(_G)" id="QrCodeGenerator"/>
             </Menu>
         </Menu>
         <Menu text="帮助(_H)">
