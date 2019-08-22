@@ -20,7 +20,6 @@ import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
-import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
@@ -178,7 +177,7 @@ public class MainController {
             return;
         }
         // 打开选项卡
-        FxUtils.openTab(box, AppConsts.Title.APP_TITLE, tabPair.getKey());
+        FxUtils.openTab(box, tabPair.getKey());
     }
 
     public void openFile() {
