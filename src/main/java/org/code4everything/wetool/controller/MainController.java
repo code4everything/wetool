@@ -97,7 +97,6 @@ public class MainController {
 
     private void loadToolMenus(Menu menu) {
         menu.getItems().forEach(item -> {
-            System.out.println(item.getClass().getName());
             if (item instanceof Menu) {
                 loadToolMenus((Menu) item);
             } else if (StrUtil.isNotEmpty(item.getId())) {
@@ -236,8 +235,7 @@ public class MainController {
     }
 
     public void openAllTab() {
-        config.getInitialize().getTabs().setLoads(config.getInitialize().getTabs().getSupports());
-        loadTabs();
+        TAB_MAP.forEach((k, v) -> openTab(v));
     }
 
     public void openLog() {
