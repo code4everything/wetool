@@ -3,11 +3,13 @@ package org.code4everything.wetool.controller.converter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.common.base.Strings;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.code4everything.boot.base.StringUtils;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.factory.BeanFactory;
 import org.code4everything.wetool.util.FxUtils;
@@ -78,18 +80,18 @@ public class NaryConverterController extends AbstractConverter {
         StringBuilder builder = new StringBuilder();
         for (int len = hex.length(); len > 0; len -= INT_HEX_LEN) {
             int dec = Integer.parseUnsignedInt(hex.substring(Math.max(0, len - INT_HEX_LEN), len), 16);
-            builder.insert(0, Integer.toBinaryString(dec));
+            builder.insert(0, Strings.padStart(Integer.toBinaryString(dec), 32, '0'));
         }
-        return builder.toString();
+        return StringUtils.trim(builder.toString(), '0', 2);
     }
 
     private String convert2Hex(String binary) {
         StringBuilder builder = new StringBuilder();
         for (int len = binary.length(); len > 0; len -= INT_BIN_LEN) {
             int dec = Integer.parseUnsignedInt(binary.substring(Math.max(0, len - INT_BIN_LEN), len), 2);
-            builder.insert(0, Integer.toHexString(dec));
+            builder.insert(0, Strings.padStart(Integer.toHexString(dec), 8, '0'));
         }
-        return builder.toString();
+        return StringUtils.trim(builder.toString(), '0', 2);
     }
 
     @Override
@@ -123,6 +125,6 @@ public class NaryConverterController extends AbstractConverter {
                 builder.append(Integer.toHexString((b & 0xff) + 0x100).substring(1));
             }
         }
-        originalContent.setText(builder.toString());
+        originalContent.setText(StringUtils.trim(builder.toString(), '0', 2));
     }
 }
