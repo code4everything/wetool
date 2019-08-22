@@ -9,14 +9,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
-import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.controller.BaseViewController;
-import org.code4everything.wetool.factory.BeanFactory;
-import org.code4everything.wetool.util.FxDialogs;
-import org.code4everything.wetool.util.FxUtils;
-import org.code4everything.wetool.util.WeUtils;
+import org.code4everything.wetool.plugin.support.BaseViewController;
+import org.code4everything.wetool.plugin.support.config.WeConfig;
+import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.util.FxDialogs;
+import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +32,7 @@ public class QrCodeGeneratorController implements BaseViewController {
 
     private static final File TEMP_FILE = new File(FileUtils.currentWorkDir("qrcode.jpg"));
 
-    private final WeConfig config = BeanFactory.get(WeConfig.class);
+    private final WeConfig config = WeUtils.getConfig();
 
     @FXML
     public TextArea content;

@@ -10,8 +10,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.factory.BeanFactory;
-import org.code4everything.wetool.util.FxUtils;
+import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.plugin.support.BaseViewController;
 
 /**
  * @author pantao

@@ -31,8 +31,6 @@ public class TitleConsts {
 
     public static final String JSON_PARSER = "JSON解析器";
 
-    public static final String APP_TITLE = "工具集";
-
     public static final String HIDE = "隐藏";
 
     public static final String SHOW = "显示";

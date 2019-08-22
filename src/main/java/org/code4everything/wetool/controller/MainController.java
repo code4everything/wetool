@@ -10,19 +10,21 @@ import cn.hutool.core.util.StrUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.IntegerConsts;
-import org.code4everything.wetool.config.WeConfig;
-import org.code4everything.wetool.config.WeStart;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
-import org.code4everything.wetool.factory.BeanFactory;
-import org.code4everything.wetool.util.FxDialogs;
-import org.code4everything.wetool.util.FxUtils;
-import org.code4everything.wetool.util.WeUtils;
+import org.code4everything.wetool.plugin.support.BaseViewController;
+import org.code4everything.wetool.plugin.support.config.WeConfig;
+import org.code4everything.wetool.plugin.support.config.WeStart;
+import org.code4everything.wetool.plugin.support.constant.AppConsts;
+import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.util.FxDialogs;
+import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 import java.io.File;
 import java.util.*;
@@ -43,9 +45,9 @@ public class MainController {
 
     private final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
 
-    private final Stage stage = BeanFactory.get(Stage.class);
+    private final Stage stage = FxUtils.getStage();
 
-    private final WeConfig config = BeanFactory.get(WeConfig.class);
+    private final WeConfig config = WeUtils.getConfig();
 
     @FXML
     public TabPane tabPane;
@@ -75,6 +77,7 @@ public class MainController {
      */
     @FXML
     private void initialize() {
+        BeanFactory.register(tabPane);
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
         // 监听剪贴板和JVM
         EXECUTOR.scheduleWithFixedDelay(() -> {
@@ -82,7 +85,7 @@ public class MainController {
             watchJVM();
         }, 0, IntegerConsts.ONE_THOUSAND_AND_TWENTY_FOUR, TimeUnit.MILLISECONDS);
         // 加载快速启动选项
-        List<WeStart> starts = BeanFactory.get(WeConfig.class).getQuickStarts();
+        List<WeStart> starts = WeUtils.getConfig().getQuickStarts();
         if (CollUtil.isNotEmpty(starts)) {
             Menu menu = new Menu(TitleConsts.QUICK_START);
             setQuickStartMenu(menu, starts);
@@ -170,29 +173,17 @@ public class MainController {
         if (Objects.isNull(tabPair)) {
             return;
         }
-        List<Tab> tabs = tabPane.getTabs();
-        for (Tab t : tabs) {
-            if (t.getText().equals(tabPair.getKey())) {
-                // 选项卡已打开，退出方法
-                tabPane.getSelectionModel().select(t);
-                return;
-            }
-        }
-        VBox box = FxUtils.loadFxml(tabPair.getValue());
+        Pane box = FxUtils.loadFxml(tabPair.getValue());
         if (Objects.isNull(box)) {
             return;
         }
         // 打开选项卡
-        Tab tab = new Tab(tabPair.getKey());
-        tab.setContent(box);
-        tab.setClosable(true);
-        tabs.add(tab);
-        tabPane.getSelectionModel().select(tab);
+        FxUtils.openTab(box, AppConsts.Title.APP_TITLE, tabPair.getKey());
     }
 
     public void openFile() {
         FxUtils.chooseFile(file -> {
-            BaseViewController controller = getCurrentTabController();
+            BaseViewController controller = FxUtils.getSelectedTabController();
             if (ObjectUtil.isNotNull(controller)) {
                 controller.openFile(file);
             }
@@ -201,7 +192,7 @@ public class MainController {
 
     public void saveFile() {
         FxUtils.saveFile(file -> {
-            BaseViewController controller = getCurrentTabController();
+            BaseViewController controller = FxUtils.getSelectedTabController();
             if (ObjectUtil.isNotNull(controller)) {
                 controller.saveFile(file);
             }
@@ -210,16 +201,11 @@ public class MainController {
 
     public void openMultiFile() {
         FxUtils.chooseFiles(files -> {
-            BaseViewController controller = getCurrentTabController();
+            BaseViewController controller = FxUtils.getSelectedTabController();
             if (ObjectUtil.isNotNull(controller)) {
                 controller.openMultiFiles(files);
             }
         });
-    }
-
-    private BaseViewController getCurrentTabController() {
-        Tab tab = tabPane.getSelectionModel().getSelectedItem();
-        return Objects.isNull(tab) ? null : BeanFactory.getView(tab.getText());
     }
 
     public void quit() {
@@ -247,6 +233,6 @@ public class MainController {
     }
 
     public void openConfig() {
-        FxUtils.openFile(BeanFactory.get(WeConfig.class).getCurrentPath());
+        FxUtils.openFile(WeUtils.getConfig().getCurrentPath());
     }
 }

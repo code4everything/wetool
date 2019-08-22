@@ -2,9 +2,10 @@ package org.code4everything.wetool.controller.converter;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
-import org.code4everything.wetool.config.WeConfig;
-import org.code4everything.wetool.controller.BaseViewController;
-import org.code4everything.wetool.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.config.WeConfig;
+import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.BaseViewController;
+import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 /**
  * @author pantao
@@ -12,7 +13,7 @@ import org.code4everything.wetool.factory.BeanFactory;
  **/
 public abstract class AbstractConverter implements BaseViewController {
 
-    protected final WeConfig config = BeanFactory.get(WeConfig.class);
+    protected final WeConfig config = WeUtils.getConfig();
 
     void initConverter(TextArea srcArea, TextArea destArea, ComboBox<String> srcNary, ComboBox<String> destNary) {
         // 监听下拉框事件

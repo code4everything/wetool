@@ -9,9 +9,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.factory.BeanFactory;
-import org.code4everything.wetool.util.FxUtils;
-import org.code4everything.wetool.util.WeUtils;
+import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 /**
  * @author pantao

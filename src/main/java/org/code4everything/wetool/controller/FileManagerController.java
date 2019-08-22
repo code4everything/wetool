@@ -11,11 +11,12 @@ import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.factory.BeanFactory;
-import org.code4everything.wetool.util.Callable;
-import org.code4everything.wetool.util.FxDialogs;
-import org.code4everything.wetool.util.FxUtils;
-import org.code4everything.wetool.util.WeUtils;
+import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.util.Callable;
+import org.code4everything.wetool.plugin.support.util.FxDialogs;
+import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.plugin.support.BaseViewController;
 
 import java.io.File;
 import java.util.HashMap;

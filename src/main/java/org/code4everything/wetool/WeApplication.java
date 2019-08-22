@@ -10,21 +10,22 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
-import org.code4everything.wetool.config.WeConfig;
-import org.code4everything.wetool.config.WeStart;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
-import org.code4everything.wetool.factory.BeanFactory;
-import org.code4everything.wetool.util.FxDialogs;
-import org.code4everything.wetool.util.FxUtils;
-import org.code4everything.wetool.util.WeUtils;
+import org.code4everything.wetool.plugin.support.config.WeConfig;
+import org.code4everything.wetool.plugin.support.config.WeStart;
+import org.code4everything.wetool.plugin.support.constant.AppConsts;
+import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.util.FxDialogs;
+import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -90,7 +91,7 @@ public class WeApplication extends Application {
         this.stage = stage;
         BeanFactory.register(stage);
         // 加载主界面
-        VBox root = FxUtils.loadFxml(ViewConsts.MAIN);
+        Pane root = FxUtils.loadFxml(ViewConsts.MAIN);
         if (Objects.isNull(root)) {
             FxDialogs.showError(TipConsts.INIT_ERROR);
             WeUtils.exitSystem();
@@ -98,14 +99,14 @@ public class WeApplication extends Application {
         // 设置标题
         stage.setScene(new Scene(Objects.requireNonNull(root)));
         stage.getIcons().add(new Image(getClass().getResourceAsStream(ViewConsts.ICON)));
-        stage.setTitle(TitleConsts.APP_TITLE);
+        stage.setTitle(AppConsts.Title.APP_TITLE);
         // 监听关闭事件
         stage.setOnCloseRequest((WindowEvent event) -> {
             hideStage();
             event.consume();
         });
         // 设置大小
-        WeConfig config = BeanFactory.get(WeConfig.class);
+        WeConfig config = WeUtils.getConfig();
         stage.setWidth(config.getInitialize().getWidth());
         stage.setHeight(config.getInitialize().getHeight());
         stage.setFullScreen(config.getInitialize().getFullscreen());
@@ -113,7 +114,7 @@ public class WeApplication extends Application {
         if (SystemUtil.getOsInfo().isWindows()) {
             enableTray();
         }
-        if (BeanFactory.get(WeConfig.class).getInitialize().getHide()) {
+        if (WeUtils.getConfig().getInitialize().getHide()) {
             hideStage();
         } else {
             stage.show();
@@ -153,7 +154,7 @@ public class WeApplication extends Application {
         // 添加托盘邮件菜单
         PopupMenu popupMenu = new PopupMenu();
         // 快捷打开
-        List<WeStart> starts = BeanFactory.get(WeConfig.class).getQuickStarts();
+        List<WeStart> starts = WeUtils.getConfig().getQuickStarts();
         if (CollUtil.isNotEmpty(starts)) {
             Menu menu = new Menu(TitleConsts.QUICK_START);
             setQuickStartMenu(menu, starts);
@@ -182,9 +183,9 @@ public class WeApplication extends Application {
         try {
             SystemTray tray = SystemTray.getSystemTray();
             java.awt.Image image = ImageIO.read(getClass().getResourceAsStream(ViewConsts.ICON));
-            TrayIcon trayIcon = new TrayIcon(image, TitleConsts.APP_TITLE, popupMenu);
+            TrayIcon trayIcon = new TrayIcon(image, AppConsts.Title.APP_TITLE, popupMenu);
             trayIcon.setImageAutoSize(true);
-            trayIcon.setToolTip(TitleConsts.APP_TITLE);
+            trayIcon.setToolTip(AppConsts.Title.APP_TITLE);
             trayIcon.addMouseListener(new TrayMouseListener());
             tray.add(trayIcon);
             isTraySuccess = true;

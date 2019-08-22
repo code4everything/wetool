@@ -11,13 +11,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.code4everything.wetool.config.WeConfig;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.controller.BaseViewController;
-import org.code4everything.wetool.factory.BeanFactory;
-import org.code4everything.wetool.util.FxDialogs;
-import org.code4everything.wetool.util.FxUtils;
+import org.code4everything.wetool.plugin.support.config.WeConfig;
+import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.util.FxDialogs;
+import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.plugin.support.BaseViewController;
+import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 /**
  * @author pantao
@@ -28,7 +29,7 @@ public class JsonParserController implements BaseViewController {
 
     private static final String JSON_HELPER_URL = "https://github.com/alibaba/fastjson/wiki/JSONPath";
 
-    private final WeConfig config = BeanFactory.get(WeConfig.class);
+    private final WeConfig config = WeUtils.getConfig();
 
     @FXML
     public TextArea jsonContent;
