@@ -35,6 +35,7 @@
                 <MenuItem text="二维码生成器(_G)" id="QrCodeGenerator"/>
             </Menu>
         </Menu>
+        <Menu text="插件(_P)" fx:id="pluginMenu"/>
         <Menu text="帮助(_H)">
             <MenuItem onAction="#openConfig" text="打开配置文件(_C)"/>
             <MenuItem onAction="#openLog" text="打开日志(_L)"/>

@@ -2,23 +2,31 @@ package org.code4everything.wetool.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
+import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.plugin.support.BaseViewController;
+import org.code4everything.wetool.plugin.support.WePluginSupportable;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
+import org.code4everything.wetool.plugin.support.config.WePluginInfo;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
@@ -30,6 +38,8 @@ import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 /**
  * @author pantao
@@ -59,6 +69,9 @@ public class MainController {
 
     @FXML
     public Menu toolMenu;
+
+    @FXML
+    public Menu pluginMenu;
 
     {
         TAB_MAP.put("FileManager", new Pair<>(TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER));
@@ -95,6 +108,48 @@ public class MainController {
         loadToolMenus(toolMenu);
         // 加载默认选项卡
         loadTabs();
+        // 加载插件
+        ThreadUtil.execute(this::loadPlugins);
+    }
+
+    private void loadPlugins() {
+        File pluginParent = new File(FileUtils.currentWorkDir("plugins"));
+        if (!pluginParent.exists()) {
+            return;
+        }
+        File[] files = pluginParent.listFiles();
+        if (ArrayUtil.isEmpty(files)) {
+            return;
+        }
+        for (File file : files) {
+            if (file.isFile()) {
+                WePluginSupportable plugin;
+                WePluginInfo info;
+                try {
+                    // 包装成 JarFile
+                    JarFile jar = new JarFile(file);
+                    // 读取插件信息
+                    ZipEntry entry = jar.getEntry("plugin.json");
+                    if (Objects.isNull(entry)) {
+                        log.error("plugin {} load failed: {}", file.getName(), "plugin.json not found");
+                        continue;
+                    }
+                    info = JSON.parseObject(IoUtil.read(jar.getInputStream(entry), "utf-8"), WePluginInfo.class);
+                    // 加载插件类
+                    Class<?> clazz = ClassLoaderUtil.getJarClassLoader(file).loadClass(info.getSupportedClass());
+                    plugin = (WePluginSupportable) clazz.newInstance();
+                } catch (Exception e) {
+                    FxDialogs.showException("plugin file load failed: " + file.getName(), e);
+                    continue;
+                }
+                // 添加插件菜单
+                log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
+                MenuItem item = plugin.registerPlugin();
+                if (ObjectUtil.isNotNull(item)) {
+                    Platform.runLater(() -> pluginMenu.getItems().add(item));
+                }
+            }
+        }
     }
 
     private void loadToolMenus(Menu menu) {
