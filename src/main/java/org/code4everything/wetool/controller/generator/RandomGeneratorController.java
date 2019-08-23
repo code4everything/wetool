@@ -6,9 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
-import org.code4everything.wetool.plugin.support.BaseViewController;
 
 /**
  * @author pantao
@@ -77,7 +77,7 @@ public class RandomGeneratorController implements BaseViewController {
     public TextField textResult;
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         log.info("open tab for random generator");
         BeanFactory.registerView(TitleConsts.RANDOM_GENERATOR, this);
     }

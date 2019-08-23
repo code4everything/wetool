@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
+import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
@@ -90,6 +91,7 @@ public class MainController {
     @FXML
     private void initialize() {
         BeanFactory.register(tabPane);
+        WeApplication.setMainController(this);
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
         // 监听剪贴板和JVM
         EXECUTOR.scheduleWithFixedDelay(() -> {
@@ -143,12 +145,16 @@ public class MainController {
                     continue;
                 }
                 // 添加插件菜单
-                log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
-                MenuItem item = plugin.registerPlugin();
-                if (ObjectUtil.isNotNull(item)) {
-                    Platform.runLater(() -> pluginMenu.getItems().add(item));
-                }
+                registerPlugin(info, plugin);
             }
+        }
+    }
+
+    public void registerPlugin(WePluginInfo info, WePluginSupportable supportable) {
+        log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
+        MenuItem item = supportable.registerPlugin();
+        if (ObjectUtil.isNotNull(item)) {
+            Platform.runLater(() -> pluginMenu.getItems().add(item));
         }
     }
 
