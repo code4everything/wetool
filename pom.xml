@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.code4everything</groupId>
     <artifactId>wetool</artifactId>
-    <version>1.5.0</version>
+    <version>1.0.0</version>
 
     <properties>
         <java.veresion>1.8</java.veresion>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.code4everything</groupId>
             <artifactId>wetool-plugin-support</artifactId>
-            <version>1.5.0</version>
+            <version>1.0.0</version>
         </dependency>
         <!--日志打印-->
         <dependency>
