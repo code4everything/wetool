@@ -23,6 +23,14 @@
         </repository>
     </repositories>
 
+    <!--私有仓库发布-->
+    <distributionManagement>
+        <repository>
+            <id>ease-maven</id>
+            <url>ftp://maven.code4everything.org/repository</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.code4everything</groupId>
@@ -95,5 +103,12 @@
                 </executions>
             </plugin>
         </plugins>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ftp</artifactId>
+                <version>1.0-beta-6</version>
+            </extension>
+        </extensions>
     </build>
 </project>
