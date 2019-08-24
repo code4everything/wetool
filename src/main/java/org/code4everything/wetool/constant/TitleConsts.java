@@ -40,4 +40,6 @@ public class TitleConsts {
     public static final String RESTART = "重启";
 
     public static final String QUICK_START = "快启";
+
+    public static final String PLUGIN = "插件";
 }

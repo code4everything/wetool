@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
+import org.code4everything.boot.base.ObjectUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
@@ -44,9 +46,23 @@ public class WeApplication extends Application {
 
     protected static MainController mainController;
 
+    private static Menu pluginMenu;
+
     private Stage stage;
 
     private boolean isTraySuccess = false;
+
+    public static void main(String[] args) {
+        log.info("start wetool on os: {}", SystemUtil.getOsInfo().getName());
+        parseConfig();
+        launch(args);
+    }
+
+    public static void addIntoPluginMenu(MenuItem menuItem) {
+        if (ObjectUtils.isNotNull(pluginMenu, menuItem)) {
+            Platform.runLater(() -> pluginMenu.add(menuItem));
+        }
+    }
 
     public static void setMainController(MainController mainController) {
         WeApplication.mainController = mainController;
@@ -80,17 +96,14 @@ public class WeApplication extends Application {
             WeUtils.exitSystem();
         }
         log.info("load config file: {}", path);
-        WeConfig config = JSON.parseObject(FileUtil.readUtf8String(path), WeConfig.class);
+        // 解析JSON配置
+        JSONObject json = JSON.parseObject(FileUtil.readUtf8String(path));
+        WeConfig config = json.toJavaObject(WeConfig.class);
+        config.setConfigJson(json);
         config.setCurrentPath(path);
         BeanFactory.register(config);
         // 检测空指针
         config.init();
-    }
-
-    public static void main(String[] args) {
-        log.info("start wetool on os: {}", SystemUtil.getOsInfo().getName());
-        parseConfig();
-        launch(args);
     }
 
     @Override
@@ -168,6 +181,10 @@ public class WeApplication extends Application {
             popupMenu.add(menu);
             popupMenu.addSeparator();
         }
+        // 插件菜单
+        pluginMenu = new Menu(TitleConsts.PLUGIN);
+        popupMenu.add(pluginMenu);
+        popupMenu.addSeparator();
         // 显示
         MenuItem item = new MenuItem(TitleConsts.SHOW);
         item.addActionListener(e -> Platform.runLater(() -> stage.show()));

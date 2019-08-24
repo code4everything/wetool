@@ -137,6 +137,11 @@ public class MainController {
                         continue;
                     }
                     info = JSON.parseObject(IoUtil.read(jar.getInputStream(entry), "utf-8"), WePluginInfo.class);
+                    if (config.getPluginDisables().contains(info)) {
+                        // 插件被禁止加载
+                        log.info("plugin {}-{}-{} disabled", info.getAuthor(), info.getName(), info.getVersion());
+                        continue;
+                    }
                     // 加载插件类
                     Class<?> clazz = ClassLoaderUtil.getJarClassLoader(file).loadClass(info.getSupportedClass());
                     plugin = (WePluginSupportable) clazz.newInstance();
@@ -151,11 +156,13 @@ public class MainController {
     }
 
     public void registerPlugin(WePluginInfo info, WePluginSupportable supportable) {
-        log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
-        MenuItem item = supportable.registerPlugin();
-        if (ObjectUtil.isNotNull(item)) {
-            Platform.runLater(() -> pluginMenu.getItems().add(item));
+        supportable.initialize();
+        MenuItem barMenu = supportable.registerBarMenu();
+        if (ObjectUtil.isNotNull(barMenu)) {
+            Platform.runLater(() -> pluginMenu.getItems().add(barMenu));
         }
+        WeApplication.addIntoPluginMenu(supportable.registerTrayMenu());
+        log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
     }
 
     private void loadToolMenus(Menu menu) {

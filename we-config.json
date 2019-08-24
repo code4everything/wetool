@@ -25,6 +25,13 @@
             "subStarts": []
         }
     ],
+    "pluginDisables": [
+        {
+            "author": "ease",
+            "version": "1.0.0",
+            "name": "sample"
+        }
+    ],
     "fileFilter": "^[^.].*$",
     "clipboardSize": 20,
     "autoWrap": true,
