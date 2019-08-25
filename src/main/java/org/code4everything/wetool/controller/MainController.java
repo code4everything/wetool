@@ -29,6 +29,7 @@ import org.code4everything.wetool.plugin.support.WePluginSupportable;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WePluginInfo;
 import org.code4everything.wetool.plugin.support.config.WeStart;
+import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
@@ -142,27 +143,46 @@ public class MainController {
                         log.info("plugin {}-{}-{} disabled", info.getAuthor(), info.getName(), info.getVersion());
                         continue;
                     }
+                    String reqVer = info.getRequireWetoolVersion();
+                    String errMsg = "plugin %s-%s-%s incompatible: ";
+                    errMsg = String.format(errMsg, info.getAuthor(), info.getName(), info.getVersion());
+                    // 检查plugin要求wetool依赖的wetool-plugin-support版本是否符合
+                    if (!WeUtils.isRequiredVersion(AppConsts.CURRENT_VERSION, reqVer)) {
+                        log.error(errMsg + "the lower version {} of wetool is required", reqVer);
+                        continue;
+                    }
+                    // 检查wetool要求plugin依赖的wetool-plugin-support版本是否符合
+                    // 要求插件依赖的wetool-plugin-support最低版本
+                    String requiredPluginVersion = "1.0.0";
+                    if (!WeUtils.isRequiredVersion(reqVer, requiredPluginVersion)) {
+                        log.error(errMsg + "version is lower than required");
+                        continue;
+                    }
                     // 加载插件类
                     Class<?> clazz = ClassLoaderUtil.getJarClassLoader(file).loadClass(info.getSupportedClass());
                     plugin = (WePluginSupportable) clazz.newInstance();
+                    // 添加插件菜单
+                    registerPlugin(info, plugin);
                 } catch (Exception e) {
                     FxDialogs.showException("plugin file load failed: " + file.getName(), e);
-                    continue;
                 }
-                // 添加插件菜单
-                registerPlugin(info, plugin);
             }
         }
     }
 
     public void registerPlugin(WePluginInfo info, WePluginSupportable supportable) {
-        supportable.initialize();
+        if (!supportable.initialize()) {
+            log.info("plugin {}-{}-{} initialize error", info.getAuthor(), info.getName(), info.getVersion());
+            return;
+        }
         MenuItem barMenu = supportable.registerBarMenu();
         if (ObjectUtil.isNotNull(barMenu)) {
             Platform.runLater(() -> pluginMenu.getItems().add(barMenu));
         }
-        WeApplication.addIntoPluginMenu(supportable.registerTrayMenu());
+        java.awt.MenuItem trayMenu = supportable.registerTrayMenu();
+        WeApplication.addIntoPluginMenu(trayMenu);
         log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
+        supportable.registered(info, barMenu, trayMenu);
     }
 
     private void loadToolMenus(Menu menu) {
