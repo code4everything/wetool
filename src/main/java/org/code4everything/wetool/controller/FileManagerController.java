@@ -11,12 +11,12 @@ import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.Callable;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
-import org.code4everything.wetool.plugin.support.BaseViewController;
 
 import java.io.File;
 import java.util.HashMap;
@@ -218,7 +218,7 @@ public class FileManagerController implements BaseViewController {
     }
 
     public void chooseFolder() {
-        FxUtils.chooseFile(file -> destFolderOfTabCopy.setText(file.getParent()));
+        FxUtils.chooseFolder(file -> destFolderOfTabCopy.setText(file.getAbsolutePath()));
     }
 
     public void mergeFiles() {
