@@ -14,12 +14,13 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
-import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
@@ -56,15 +57,10 @@ public class MainController {
 
     private final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
 
-    private final Stage stage = FxUtils.getStage();
-
     private final WeConfig config = WeUtils.getConfig();
 
     @FXML
     public TabPane tabPane;
-
-    @FXML
-    public ProgressBar jvm;
 
     @FXML
     public Menu fileMenu;
@@ -94,11 +90,8 @@ public class MainController {
         BeanFactory.register(tabPane);
         WeApplication.setMainController(this);
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
-        // 监听剪贴板和JVM
-        EXECUTOR.scheduleWithFixedDelay(() -> {
-            watchClipboard();
-            watchJVM();
-        }, 0, IntegerConsts.ONE_THOUSAND_AND_TWENTY_FOUR, TimeUnit.MILLISECONDS);
+        // 监听剪贴板
+        EXECUTOR.scheduleWithFixedDelay(this::watchClipboard, 0, 1000, TimeUnit.MILLISECONDS);
         // 加载快速启动选项
         List<WeStart> starts = WeUtils.getConfig().getQuickStarts();
         if (CollUtil.isNotEmpty(starts)) {
@@ -134,7 +127,7 @@ public class MainController {
                     // 读取插件信息
                     ZipEntry entry = jar.getEntry("plugin.json");
                     if (Objects.isNull(entry)) {
-                        log.error("plugin {} load failed: {}", file.getName(), "plugin.json not found");
+                        log.error(StrUtil.format("plugin {} load failed: {}", file.getName(), "plugin.json not found"));
                         continue;
                     }
                     info = JSON.parseObject(IoUtil.read(jar.getInputStream(entry), "utf-8"), WePluginInfo.class);
@@ -238,17 +231,6 @@ public class MainController {
             // 显示到文本框
             final String clip = clipboard;
             Platform.runLater(() -> controller.insert(date, clip));
-        }
-    }
-
-    private void watchJVM() {
-        // 监听JVM内存变化
-        if (stage.isShowing() && !stage.isIconified()) {
-            Platform.runLater(() -> {
-                double total = Runtime.getRuntime().totalMemory();
-                double used = total - Runtime.getRuntime().freeMemory();
-                jvm.setProgress(used / total);
-            });
         }
     }
 
