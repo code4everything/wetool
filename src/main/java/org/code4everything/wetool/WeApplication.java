@@ -110,6 +110,9 @@ public class WeApplication extends Application {
     public void start(Stage stage) {
         this.stage = stage;
         BeanFactory.register(stage);
+        if (SystemUtil.getOsInfo().isWindows()) {
+            enableTray();
+        }
         // 加载主界面
         Pane root = FxUtils.loadFxml(ViewConsts.MAIN);
         if (Objects.isNull(root)) {
@@ -131,9 +134,6 @@ public class WeApplication extends Application {
         stage.setHeight(config.getInitialize().getHeight());
         stage.setFullScreen(config.getInitialize().getFullscreen());
 
-        if (SystemUtil.getOsInfo().isWindows()) {
-            enableTray();
-        }
         if (WeUtils.getConfig().getInitialize().getHide()) {
             hideStage();
         } else {

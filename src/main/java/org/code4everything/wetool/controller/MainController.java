@@ -3,22 +3,22 @@ package org.code4everything.wetool.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.JarClassLoader;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.wetool.WeApplication;
@@ -137,7 +137,8 @@ public class MainController {
                         continue;
                     }
                     // 加载插件类
-                    Class<?> clazz = ClassLoaderUtil.getJarClassLoader(file).loadClass(info.getSupportedClass());
+                    ClassLoader loader = JarClassLoader.loadJarToSystemClassLoader(file);
+                    Class<?> clazz = loader.loadClass(info.getSupportedClass());
                     plugin = (WePluginSupportable) clazz.newInstance();
                     // 添加插件菜单
                     registerPlugin(info, plugin);
@@ -305,5 +306,56 @@ public class MainController {
 
     public void openConfig() {
         FxUtils.openFile(WeUtils.getConfig().getCurrentPath());
+    }
+
+
+    public void seeJavaInfo() {
+        TextArea area = new TextArea(getAllJavaInfos());
+        VBox.setVgrow(area, Priority.ALWAYS);
+        VBox box = new VBox(area);
+        box.setPrefWidth(600);
+        box.setPrefHeight(700);
+        FxDialogs.showDialog(null, box);
+    }
+
+    private String getAllJavaInfos() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("JavaVirtualMachineSpecification信息：\r\n");
+        builder.append("=========================================================================================\r\n");
+        builder.append(SystemUtil.getJvmSpecInfo());
+
+        builder.append("\r\nJavaVirtualMachineImplementation信息：\r\n");
+        builder.append("=========================================================================================\r\n");
+        builder.append(SystemUtil.getJvmInfo());
+
+        builder.append("\r\nJavaSpecification信息：\r\n");
+        builder.append("=========================================================================================\r\n");
+        builder.append(SystemUtil.getJavaSpecInfo());
+
+        builder.append("\r\nJavaImplementation信息：\r\n");
+        builder.append("=========================================================================================\r\n");
+        builder.append(SystemUtil.getJavaInfo());
+
+        builder.append("\r\nJava运行时信息：\r\n");
+        builder.append("=========================================================================================\r\n");
+        builder.append(SystemUtil.getJavaRuntimeInfo());
+
+        builder.append("\r\n系统信息：\r\n");
+        builder.append("=========================================================================================\r\n");
+        builder.append(SystemUtil.getOsInfo());
+
+        builder.append("\r\n用户信息：\r\n");
+        builder.append("=========================================================================================\r\n");
+        builder.append(SystemUtil.getUserInfo());
+
+        builder.append("\r\n当前主机网络地址信息：\r\n");
+        builder.append("=========================================================================================\r\n");
+        builder.append(SystemUtil.getHostInfo());
+
+        builder.append("\r\n运行时信息：\r\n");
+        builder.append("=========================================================================================\r\n");
+        builder.append(SystemUtil.getRuntimeInfo());
+
+        return builder.toString();
     }
 }
