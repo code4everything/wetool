@@ -32,7 +32,7 @@
 - 配置内容可参考：[we-config.json](we-config.json)
 - 属性说明可参考：[WeConfig.Java](https://gitee.com/code4everything/wetool-plugin/blob/master/wetool-plugin-support/src/main/java/org/code4everything/wetool/plugin/support/config/WeConfig.java)
 
-### 下载
+### 下载与使用
 
 - 自行打包
 
@@ -42,12 +42,22 @@
     mvn package
     ```
   
- - 插件的安装
+- 运行
+
+    ``` shell
+    # windows平台
+    javaw -jar ./wetool.jar
+    # mac或linux平台
+    java -jar ./wetool.jar &
+    ```
+    > 日志路径：`${user.home}/logs/wetool/wetool.log`
+  
+- 插件的安装
  
     将插件放到当前工作目录的`plugins`目录下后，并将插件需要的配置信息写到配置文件中，重启程序即可
     
-> 日志路径：`${user.home}/logs/wetool/wetool.log`
-
+    > [插件库](https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository)
+    
 ### 二次开发
 
 开发调试过程中，建议运行[`WeApplicationTest`](src/test/org/code4everything/wetool/WeApplicationTest.java)主类，
