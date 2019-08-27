@@ -29,7 +29,7 @@
 其中`{}`可以为`win`、`mac`和`lin`分别对应`Windows`、`Mac`以及`Linux`平台，如上述文件不存在，那么将加载默认的配置文件`we-config.json`，
 如果配置文件加载失败，程序将放弃运行，直接退出。
 
-- 配置内容可参考：[we-config.json](/we-config.json)
+- 配置内容可参考：[we-config.json](we-config.json)
 - 属性说明可参考：[WeConfig.Java](https://gitee.com/code4everything/wetool-plugin/blob/master/wetool-plugin-support/src/main/java/org/code4everything/wetool/plugin/support/config/WeConfig.java)
 
 ### 下载
@@ -50,8 +50,8 @@
 
 ### 二次开发
 
-开发调试过程中，建议运行[`WeApplicationTest`](/src/test/org/code4everything/wetool/WeApplicationTest.java)主类，
-而不是运行主类[`WeApplication`](/src/main/java/org/code4everything/wetool/WeApplication.java)，
+开发调试过程中，建议运行[`WeApplicationTest`](src/test/org/code4everything/wetool/WeApplicationTest.java)主类，
+而不是运行主类[`WeApplication`](src/main/java/org/code4everything/wetool/WeApplication.java)，
 运行`WeApplication`类时产生的日志数据会被输出到文件中，而`WeApplicationTest`则只会输出到终端，方便开发调试
 
 ### 插件开发
