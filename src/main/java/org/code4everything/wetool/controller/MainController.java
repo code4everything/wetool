@@ -153,15 +153,15 @@ public class MainController {
         String reqVer = info.getRequireWetoolVersion();
         String errMsg = "plugin %s-%s-%s incompatible: ";
         errMsg = String.format(errMsg, info.getAuthor(), info.getName(), info.getVersion());
-        // 检查plugin要求wetool依赖的wetool-plugin-support版本是否符合
+        // 检查plugin要求wetool依赖的wetool-plugin-support版本是否符合要求
         if (!WeUtils.isRequiredVersion(AppConsts.CURRENT_VERSION, reqVer)) {
             log.error(errMsg + "the lower version {} of wetool is required", reqVer);
             return;
         }
-        // 检查wetool要求plugin依赖的wetool-plugin-support版本是否符合
+        // 检查wetool要求plugin依赖的wetool-plugin-support版本是否符合要求
         String requiredPluginVersion = "1.0.0";
         if (!WeUtils.isRequiredVersion(reqVer, requiredPluginVersion)) {
-            log.error(errMsg + "version is lower than required");
+            log.error(errMsg + "version is lower than the required");
             return;
         }
         // 初始化
@@ -178,6 +178,7 @@ public class MainController {
         java.awt.MenuItem trayMenu = supportable.registerTrayMenu();
         WeApplication.addIntoPluginMenu(trayMenu);
         log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
+        // 注册成功回调
         supportable.registered(info, barMenu, trayMenu);
     }
 
