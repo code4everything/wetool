@@ -34,6 +34,8 @@
 
 ### 下载与使用
 
+- [ZIP压缩包下载](http://share.qiniu.segocat.com/tool/wetool/wetool.zip)
+
 - 自行打包
 
     ``` shell
