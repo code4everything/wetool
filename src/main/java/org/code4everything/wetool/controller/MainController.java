@@ -21,6 +21,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
+import org.code4everything.boot.config.BootConfig;
 import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
@@ -166,7 +167,7 @@ public class MainController {
         }
         // 初始化
         if (!supportable.initialize()) {
-            log.info("plugin {}-{}-{} initialize error", info.getAuthor(), info.getName(), info.getVersion());
+            log.info("plugin {}-{}-{} initialize failed", info.getAuthor(), info.getName(), info.getVersion());
             return;
         }
         // 注册主界面插件菜单
@@ -216,7 +217,9 @@ public class MainController {
             clipboard = ClipboardUtil.getStr();
             last = config.getLastClipboardHistoryItem().getValue();
         } catch (Exception e) {
-            log.warn(e.getMessage());
+            if (BootConfig.isDebug()) {
+                log.warn(e.getMessage());
+            }
             clipboard = last = "";
 
         }
@@ -319,7 +322,8 @@ public class MainController {
         FxDialogs.showDialog(null, box);
     }
 
-    private String getAllJavaInfos() {
+    @SuppressWarnings("StringBufferReplaceableByString")
+    public String getAllJavaInfos() {
         StringBuilder builder = new StringBuilder();
         builder.append("JavaVirtualMachineSpecification信息：\r\n");
         builder.append("=========================================================================================\r\n");
@@ -358,5 +362,9 @@ public class MainController {
         builder.append(SystemUtil.getRuntimeInfo());
 
         return builder.toString();
+    }
+
+    public void seePluginRepo() {
+        FxUtils.openLink(TipConsts.REPO_LINK);
     }
 }

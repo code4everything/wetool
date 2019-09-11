@@ -40,6 +40,7 @@
             <MenuItem onAction="#openLog" text="打开日志(_L)"/>
             <SeparatorMenuItem/>
             <MenuItem text="JAVA属性(_J)" onAction="#seeJavaInfo"/>
+            <MenuItem text="插件库(_R)" onAction="#seePluginRepo"/>
             <MenuItem onAction="#about" text="关于(_A)"/>
         </Menu>
     </MenuBar>

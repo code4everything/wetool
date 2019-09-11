@@ -53,7 +53,7 @@ public class WeApplication extends Application {
     private boolean isTraySuccess = false;
 
     public static void main(String[] args) {
-        log.info("start wetool on os: {}", SystemUtil.getOsInfo().getName());
+        log.info("starting wetool on os: {}", SystemUtil.getOsInfo().getName());
         parseConfig();
         launch(args);
     }
