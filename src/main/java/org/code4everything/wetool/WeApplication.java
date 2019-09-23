@@ -3,7 +3,6 @@ package org.code4everything.wetool;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -15,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.ObjectUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
 import org.code4everything.wetool.constant.TipConsts;
@@ -69,28 +67,8 @@ public class WeApplication extends Application {
     }
 
     private static void parseConfig() {
-        OsInfo osInfo = SystemUtil.getOsInfo();
-        // Windows配置文件
-        String winPath = FileUtils.currentWorkDir("we-config-win.json");
-        // Mac配置文件
-        String macPath = FileUtils.currentWorkDir("we-config-mac.json");
-        // Linux配置文件
-        String linPath = FileUtils.currentWorkDir("we-config-lin.json");
-        // 默认配置文件
-        String defPath = FileUtils.currentWorkDir("we-config.json");
-
         // 解析正确的配置文件路径
-        String path = null;
-        if (osInfo.isWindows() && FileUtil.exist(winPath)) {
-            path = winPath;
-        } else if (osInfo.isMac() && FileUtil.exist(macPath)) {
-            path = macPath;
-        } else if (osInfo.isLinux() && FileUtil.exist(linPath)) {
-            path = linPath;
-        } else if (FileUtil.exist(defPath)) {
-            path = defPath;
-        }
-
+        String path = WeUtils.parsePathByOs("we-config.json");
         if (StrUtil.isEmpty(path)) {
             log.error("wetool start error: config file not found");
             WeUtils.exitSystem();

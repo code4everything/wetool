@@ -154,14 +154,13 @@ public class MainController {
         String reqVer = info.getRequireWetoolVersion();
         String errMsg = "plugin %s-%s-%s incompatible: ";
         errMsg = String.format(errMsg, info.getAuthor(), info.getName(), info.getVersion());
-        // 检查plugin要求wetool依赖的wetool-plugin-support版本是否符合要求
+        // 检查plugin要求wetool依赖的wetool-plugin-support版本是否符合要求：current>=required
         if (!WeUtils.isRequiredVersion(AppConsts.CURRENT_VERSION, reqVer)) {
             log.error(errMsg + "the lower version {} of wetool is required", reqVer);
             return;
         }
-        // 检查wetool要求plugin依赖的wetool-plugin-support版本是否符合要求
-        String requiredPluginVersion = "1.0.0";
-        if (!WeUtils.isRequiredVersion(reqVer, requiredPluginVersion)) {
+        // 检查wetool要求plugin依赖的wetool-plugin-support版本是否符合要求：required>=lower
+        if (!WeUtils.isRequiredVersion(reqVer, AppConsts.LOWER_VERSION)) {
             log.error(errMsg + "version is lower than the required");
             return;
         }
