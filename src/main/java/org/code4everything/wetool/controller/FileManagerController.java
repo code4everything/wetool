@@ -8,10 +8,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.DragEvent;
+import javafx.util.StringConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.plugin.support.BaseViewController;
+import org.code4everything.wetool.plugin.support.control.cell.UnmodifiableTextFieldListCell;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.Callable;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
@@ -22,6 +24,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 /**
  * @author pantao
@@ -80,6 +83,9 @@ public class FileManagerController implements BaseViewController {
     @FXML
     public CheckBox deleteOfTabMerge;
 
+    @FXML
+    public TextField removablePrefix;
+
     private List<ListView<File>> listViews;
 
     @FXML
@@ -95,6 +101,18 @@ public class FileManagerController implements BaseViewController {
         //设置可编辑
         destFilesOfTabRename.setCellFactory(TextFieldListCell.forListView());
         destFilesOfTabRename.setEditable(true);
+        srcFilesOfTabCopy.setCellFactory(UnmodifiableTextFieldListCell.forListView(new StringConverter<File>() {
+            @Override
+            public String toString(File file) {
+                return file.getAbsolutePath();
+            }
+
+            @Override
+            public File fromString(String string) {
+                return new File(string);
+            }
+        }));
+        srcFilesOfTabCopy.setEditable(true);
 
         // 设置文件名追加方式
         modeOfTabRename.getItems().addAll(TitleConsts.FILENAME_BEFORE, TitleConsts.FILENAME_AFTER);
@@ -201,13 +219,28 @@ public class FileManagerController implements BaseViewController {
         if (CollUtil.isEmpty(files) || StrUtil.isEmpty(destFolderOfTabCopy.getText())) {
             return;
         }
-        File folder = new File(destFolderOfTabCopy.getText());
+        // 生成父级目录
+        String parent = StrUtil.removeSuffix(destFolderOfTabCopy.getText(), File.separator);
+        String prefix = StrUtil.removeSuffix(removablePrefix.getText(), File.separator);
+        if (StrUtil.isNotEmpty(prefix)) {
+            // 格式化路径
+            prefix = prefix.replaceAll("[/\\\\]", Matcher.quoteReplacement(File.separator));
+        }
+        // 复制文件
         for (int i = 0; i < files.size(); i++) {
             File file = files.get(i);
-            FileUtil.copy(file, folder, true);
-            log.info("copy file '{}' to folder '{}'", file.getAbsolutePath(), folder.getAbsolutePath());
+            String filename = file.getAbsolutePath();
+            // 文件名与目录的分隔索引
+            int idx = filename.lastIndexOf(File.separator);
+            String folder = parent;
+            if (StrUtil.isNotEmpty(prefix)) {
+                String name = StrUtil.removePrefix(filename.substring(0, idx), prefix);
+                folder += File.separator + StrUtil.removePrefix(name, File.separator) + File.separator;
+            }
+            FileUtil.copy(filename, folder + filename.substring(idx + 1), true);
+            log.info("copy file '{}' to folder '{}'", filename, folder);
             if (deleteOfTabCopy.isSelected()) {
-                log.info("delete source file: {}", file.getAbsolutePath());
+                log.info("delete source file: {}", filename);
                 // 删除源文件
                 FileUtil.del(file);
                 // 更新源文件的文件名
@@ -331,7 +364,18 @@ public class FileManagerController implements BaseViewController {
     }
 
     @Override
+    public void openFolder(File folder) {
+        openFile(folder);
+    }
+
+    @Override
     public void openFile(File file) {
         openMultiFiles(Lists.newArrayList(file));
+    }
+
+    public void openFolder() {
+        if (StrUtil.isNotEmpty(destFolderOfTabCopy.getText())) {
+            FxUtils.openFile(destFolderOfTabCopy.getText());
+        }
     }
 }

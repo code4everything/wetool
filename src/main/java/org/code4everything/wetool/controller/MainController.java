@@ -283,6 +283,15 @@ public class MainController {
         });
     }
 
+    public void openFolder() {
+        FxUtils.chooseFolder(folder -> {
+            BaseViewController controller = FxUtils.getSelectedTabController();
+            if (ObjectUtil.isNotNull(controller)) {
+                controller.openFolder(folder);
+            }
+        });
+    }
+
     public void quit() {
         WeUtils.exitSystem();
     }

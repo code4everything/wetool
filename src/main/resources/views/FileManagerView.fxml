@@ -160,6 +160,12 @@
                             <Insets left="10.0"/>
                         </HBox.margin>
                     </Button>
+                    <Button mnemonicParsing="false" onAction="#openFolder" text="打开"
+                            HBox.hgrow="NEVER">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Button>
                 </HBox>
                 <ListView fx:id="srcFilesOfTabCopy" onDragDropped="#dragFileDropped"
                           onDragOver="#dragFileOver" prefHeight="200.0" prefWidth="200.0"
@@ -179,6 +185,11 @@
                         </ContextMenu>
                     </contextMenu>
                 </ListView>
+                <TextField fx:id="removablePrefix" promptText="文件绝对路径删除的前缀字符串，删除后保持路径" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets top="10.0"/>
+                    </VBox.margin>
+                </TextField>
                 <HBox prefHeight="31.0" prefWidth="580.0" VBox.vgrow="NEVER">
                     <padding>
                         <Insets bottom="10.0" top="10.0"/>
@@ -204,8 +215,7 @@
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                 </padding>
                 <ListView fx:id="srcFilesOfTabMerge" onDragDropped="#dragFileDropped"
-                          onDragOver="#dragFileOver" prefHeight="200.0" prefWidth="200.0"
-                          VBox.vgrow="ALWAYS">
+                          onDragOver="#dragFileOver" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <tooltip>
                         <Tooltip autoHide="true" text="拖曳文件至此"/>
                     </tooltip>
@@ -232,8 +242,7 @@
                             <Insets left="10.0" top="5.0"/>
                         </HBox.margin>
                     </CheckBox>
-                    <Button mnemonicParsing="false" onAction="#mergeFiles" text="合并文件"
-                            HBox.hgrow="NEVER">
+                    <Button mnemonicParsing="false" onAction="#mergeFiles" text="合并文件" HBox.hgrow="NEVER">
                         <HBox.margin>
                             <Insets left="10.0"/>
                         </HBox.margin>
