@@ -13,11 +13,11 @@ import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
-import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 /**
@@ -26,8 +26,6 @@ import org.code4everything.wetool.plugin.support.util.WeUtils;
  */
 @Slf4j
 public class JsonParserController implements BaseViewController {
-
-    private static final String JSON_HELPER_URL = "https://github.com/alibaba/fastjson/wiki/JSONPath";
 
     private final WeConfig config = WeUtils.getConfig();
 
@@ -67,7 +65,7 @@ public class JsonParserController implements BaseViewController {
     }
 
     public void seeJsonPathGrammar() {
-        FxUtils.openLink(JSON_HELPER_URL);
+        FxUtils.openLink("https://github.com/alibaba/fastjson/wiki/JSONPath");
     }
 
     public void keyReleased(KeyEvent keyEvent) {

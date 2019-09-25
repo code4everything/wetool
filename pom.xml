@@ -36,6 +36,11 @@
             <artifactId>wetool-plugin-support</artifactId>
             <version>1.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
         <!--日志打印-->
         <dependency>
             <groupId>ch.qos.logback</groupId>

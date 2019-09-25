@@ -23,10 +23,6 @@ import java.io.File;
 @Slf4j
 public class NaryConverterController extends AbstractConverter {
 
-    private static final int INT_BIN_LEN = 32;
-
-    private static final int INT_HEX_LEN = 8;
-
     @FXML
     public TextArea originalContent;
 
@@ -78,8 +74,9 @@ public class NaryConverterController extends AbstractConverter {
 
     private String convert2Binary(String hex) {
         StringBuilder builder = new StringBuilder();
-        for (int len = hex.length(); len > 0; len -= INT_HEX_LEN) {
-            int dec = Integer.parseUnsignedInt(hex.substring(Math.max(0, len - INT_HEX_LEN), len), 16);
+        int hexLen = 8;
+        for (int len = hex.length(); len > 0; len -= hexLen) {
+            int dec = Integer.parseUnsignedInt(hex.substring(Math.max(0, len - hexLen), len), 16);
             builder.insert(0, Strings.padStart(Integer.toBinaryString(dec), 32, '0'));
         }
         return StringUtils.trim(builder.toString(), '0', 2);
@@ -87,8 +84,9 @@ public class NaryConverterController extends AbstractConverter {
 
     private String convert2Hex(String binary) {
         StringBuilder builder = new StringBuilder();
-        for (int len = binary.length(); len > 0; len -= INT_BIN_LEN) {
-            int dec = Integer.parseUnsignedInt(binary.substring(Math.max(0, len - INT_BIN_LEN), len), 2);
+        int binLen = 32;
+        for (int len = binary.length(); len > 0; len -= binLen) {
+            int dec = Integer.parseUnsignedInt(binary.substring(Math.max(0, len - binLen), len), 2);
             builder.insert(0, Strings.padStart(Integer.toHexString(dec), 8, '0'));
         }
         return StringUtils.trim(builder.toString(), '0', 2);

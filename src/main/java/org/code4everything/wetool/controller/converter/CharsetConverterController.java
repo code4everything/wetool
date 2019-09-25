@@ -1,17 +1,22 @@
 package org.code4everything.wetool.controller.converter;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.thirdparty.EncodingDetect;
+
+import java.io.File;
 
 /**
  * @author pantao
@@ -20,7 +25,9 @@ import org.code4everything.wetool.plugin.support.util.WeUtils;
 @Slf4j
 public class CharsetConverterController extends AbstractConverter {
 
-    private static final String BASE64 = "BASE64";
+    private final String BASE64 = "BASE64";
+
+    private final String UTF8 = "UTF-8";
 
     @FXML
     public TextArea originalContent;
@@ -35,11 +42,17 @@ public class CharsetConverterController extends AbstractConverter {
     public TextArea convertedContent;
 
     @FXML
+    public TextField fileCharset;
+
+    @FXML
+    public TextField filePath;
+
+    @FXML
     private void initialize() {
         log.info("open tab for charset converter");
         BeanFactory.registerView(TitleConsts.CHARSET_CONVERTER, this);
         // 支持的编码
-        String[] charset = {"UTF-8", "ISO-8859-1", "GBK", BASE64};
+        String[] charset = {UTF8, "ISO-8859-1", "GBK", BASE64};
 
         // 添加至下拉框
         originalCharset.getItems().addAll(charset);
@@ -56,8 +69,8 @@ public class CharsetConverterController extends AbstractConverter {
         if (StrUtil.isEmpty(originalText)) {
             return;
         }
-        String srcCharset = originalCharset.getSelectionModel().getSelectedItem();
-        String destCharset = convertCharset.getSelectionModel().getSelectedItem();
+        String srcCharset = originalCharset.getValue();
+        String destCharset = convertCharset.getValue();
 
         String result;
         boolean baseDecode = BASE64.equals(srcCharset);
@@ -93,7 +106,28 @@ public class CharsetConverterController extends AbstractConverter {
     }
 
     @Override
-    public void setFileContent(String content) {
-        originalContent.setText(content);
+    public void openFile(File file) {
+        String charset = originalCharset.getValue();
+        if (BASE64.equals(charset)) {
+            charset = UTF8;
+        }
+        originalContent.setText(FileUtil.readString(file, charset));
+    }
+
+    public void recognizeCharset() {
+        FxUtils.chooseFile(file -> {
+            // 设置文件路径
+            filePath.setText(file.getAbsolutePath());
+            fileCharset.setText(EncodingDetect.getJavaEncode(file.getAbsolutePath()));
+        });
+    }
+
+    public void readByCharset() {
+        originalCharset.setValue(fileCharset.getText());
+        openFile(new File(filePath.getText()));
+    }
+
+    public void openFileBySystem() {
+        FxUtils.openFile(filePath.getText());
     }
 }

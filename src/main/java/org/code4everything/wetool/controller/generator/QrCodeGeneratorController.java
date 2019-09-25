@@ -30,7 +30,7 @@ import java.util.Objects;
 @Slf4j
 public class QrCodeGeneratorController implements BaseViewController {
 
-    private static final File TEMP_FILE = new File(FileUtils.currentWorkDir("qrcode.jpg"));
+    private final File TEMP_FILE = new File(FileUtils.currentWorkDir("qrcode.jpg"));
 
     private final WeConfig config = WeUtils.getConfig();
 

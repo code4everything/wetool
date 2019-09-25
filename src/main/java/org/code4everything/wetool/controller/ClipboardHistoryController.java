@@ -7,9 +7,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
-import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 import java.util.Date;
@@ -21,9 +21,9 @@ import java.util.Date;
 @Slf4j
 public class ClipboardHistoryController implements BaseViewController {
 
-    private static final String SEP = StrUtil.repeat("=", 100);
+    private final String SEP = StrUtil.repeat("=", 100);
 
-    private static final String TEMPLATE = SEP + "\r\n{}\r\n" + SEP + "\r\n\r\n{}\r\n\r\n";
+    private final String TEMPLATE = SEP + "\r\n{}\r\n" + SEP + "\r\n\r\n{}\r\n\r\n";
 
     @FXML
     public TextArea clipboardHistory;

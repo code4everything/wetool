@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -10,6 +10,32 @@
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
+    <HBox prefWidth="200.0" VBox.vgrow="NEVER">
+        <VBox.margin>
+            <Insets bottom="10.0"/>
+        </VBox.margin>
+        <Button mnemonicParsing="false" onAction="#recognizeCharset" text="识别文件编码" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets right="10.0"/>
+            </HBox.margin>
+        </Button>
+        <TextField fx:id="filePath" editable="false" promptText="文件路径" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets right="10.0"/>
+            </HBox.margin>
+        </TextField>
+        <TextField fx:id="fileCharset" editable="false" prefWidth="100.0" promptText="文件编码" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets right="10.0"/>
+            </HBox.margin>
+        </TextField>
+        <Button mnemonicParsing="false" onAction="#readByCharset" text="读取文件" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets right="10.0"/>
+            </HBox.margin>
+        </Button>
+        <Button mnemonicParsing="false" onAction="#openFileBySystem" text="打开文件" HBox.hgrow="NEVER"/>
+    </HBox>
     <TextArea fx:id="originalContent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
               onDragDropped="#dragFileDropped" onDragOver="#dragFileOver" prefHeight="82.0" prefWidth="580.0"
               promptText="原字符集" VBox.vgrow="ALWAYS">
@@ -21,7 +47,7 @@
         <VBox.margin>
             <Insets bottom="10.0" top="10.0"/>
         </VBox.margin>
-        <ComboBox fx:id="originalCharset" prefWidth="150.0" HBox.hgrow="NEVER"/>
+        <ComboBox fx:id="originalCharset" editable="true" prefWidth="150.0" HBox.hgrow="NEVER"/>
         <Label text="转" HBox.hgrow="NEVER">
             <HBox.margin>
                 <Insets left="10.0" top="5.0"/>
@@ -30,7 +56,7 @@
                 <Font size="14.0"/>
             </font>
         </Label>
-        <ComboBox fx:id="convertCharset" prefWidth="150.0" HBox.hgrow="NEVER">
+        <ComboBox fx:id="convertCharset" editable="true" prefWidth="150.0" HBox.hgrow="NEVER">
             <HBox.margin>
                 <Insets left="10.0"/>
             </HBox.margin>
