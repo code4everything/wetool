@@ -102,6 +102,7 @@ public class FileManagerController implements BaseViewController {
         destFilesOfTabRename.setCellFactory(TextFieldListCell.forListView());
         destFilesOfTabRename.setEditable(true);
         srcFilesOfTabCopy.setCellFactory(UnmodifiableTextFieldListCell.forListView(new StringConverter<File>() {
+
             @Override
             public String toString(File file) {
                 return file.getAbsolutePath();
@@ -233,7 +234,7 @@ public class FileManagerController implements BaseViewController {
             // 文件名与目录的分隔索引
             int idx = filename.lastIndexOf(File.separator);
             String folder = parent;
-            if (StrUtil.isNotEmpty(prefix)) {
+            if (StrUtil.isNotEmpty(prefix) && filename.startsWith(prefix)) {
                 String name = StrUtil.removePrefix(filename.substring(0, idx), prefix);
                 folder += File.separator + StrUtil.removePrefix(name, File.separator) + File.separator;
             }
