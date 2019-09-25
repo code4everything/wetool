@@ -42,4 +42,6 @@ public class TitleConsts {
     public static final String QUICK_START = "快启";
 
     public static final String PLUGIN = "插件";
+
+    public static final String OPEN = "打开";
 }

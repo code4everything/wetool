@@ -14,8 +14,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.ObjectUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
+import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
@@ -27,9 +29,11 @@ import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.util.FinalUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
@@ -163,6 +167,11 @@ public class WeApplication extends Application {
         pluginMenu = new Menu(TitleConsts.PLUGIN);
         popupMenu.add(pluginMenu);
         popupMenu.addSeparator();
+        // 打开
+        Menu menu = new Menu(TitleConsts.OPEN);
+        addQuickOpenMenu(menu);
+        popupMenu.add(menu);
+        popupMenu.addSeparator();
         // 显示
         MenuItem item = new MenuItem(TitleConsts.SHOW);
         item.addActionListener(e -> Platform.runLater(() -> stage.show()));
@@ -194,6 +203,17 @@ public class WeApplication extends Application {
         } catch (Exception e) {
             FxDialogs.showException(TipConsts.TRAY_ERROR, e);
         }
+    }
+
+    private void addQuickOpenMenu(Menu menu) {
+        menu.add(FxUtils.createMenuItem("配置文件", (ActionListener) e -> FinalUtils.openConfig()));
+        menu.add(FxUtils.createMenuItem("日志文件", (ActionListener) e -> FxUtils.openFile(FileConsts.LOG)));
+        menu.addSeparator();
+        menu.add(FxUtils.createMenuItem("工作目录", (ActionListener) e -> FxUtils.openFile(FileUtils.currentWorkDir())));
+        menu.add(FxUtils.createMenuItem("插件目录", (ActionListener) e -> FinalUtils.openPluginFolder()));
+        menu.add(FxUtils.createMenuItem("日志目录", (ActionListener) e -> FxUtils.openFile(FileConsts.LOG_FOLDER)));
+        menu.addSeparator();
+        menu.add(FxUtils.createMenuItem("插件仓库", (ActionListener) e -> FxUtils.openLink(TipConsts.REPO_LINK)));
     }
 
     private class TrayMouseListener implements MouseListener {

@@ -40,8 +40,9 @@
             <MenuItem onAction="#openConfig" text="打开配置文件(_C)"/>
             <MenuItem onAction="#openLog" text="打开日志(_L)"/>
             <SeparatorMenuItem/>
-            <MenuItem onAction="#openWordFolder" text="打开工作目录(_L)"/>
-            <MenuItem onAction="#openPluginFolder" text="打开插件目录(_L)"/>
+            <MenuItem onAction="#openWorkFolder" text="打开工作目录(_W)"/>
+            <MenuItem onAction="#openPluginFolder" text="打开插件目录(_I)"/>
+            <MenuItem onAction="#openLogFolder" text="打开日志目录(_O)"/>
             <SeparatorMenuItem/>
             <MenuItem text="JAVA属性(_J)" onAction="#seeJavaInfo"/>
             <SeparatorMenuItem/>

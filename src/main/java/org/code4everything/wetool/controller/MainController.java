@@ -1,7 +1,6 @@
 package org.code4everything.wetool.controller;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.JarClassLoader;
 import cn.hutool.core.lang.Pair;
@@ -23,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.wetool.WeApplication;
+import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
@@ -36,6 +36,7 @@ import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.util.FinalUtils;
 
 import java.io.File;
 import java.util.*;
@@ -59,8 +60,6 @@ public class MainController {
     private final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
 
     private final WeConfig config = WeUtils.getConfig();
-
-    private final String pluginFolder = FileUtils.currentWorkDir("plugins");
 
     @FXML
     public TabPane tabPane;
@@ -112,7 +111,7 @@ public class MainController {
     }
 
     private void loadPlugins() {
-        File pluginParent = new File(pluginFolder);
+        File pluginParent = new File(FileConsts.PLUGIN_FOLDER);
         if (!pluginParent.exists()) {
             return;
         }
@@ -311,7 +310,7 @@ public class MainController {
     }
 
     public void openLog() {
-        FxUtils.openFile(StrUtil.join(File.separator, FileUtil.getUserHomePath(), "logs", "wetool", "wetool.log"));
+        FxUtils.openFile(FileConsts.LOG);
     }
 
     public void restart() {
@@ -319,7 +318,7 @@ public class MainController {
     }
 
     public void openConfig() {
-        FxUtils.openFile(WeUtils.getConfig().getCurrentPath());
+        FinalUtils.openConfig();
     }
 
     public void seePluginRepo() {
@@ -327,11 +326,14 @@ public class MainController {
     }
 
     public void openPluginFolder() {
-        FileUtil.mkdir(pluginFolder);
-        FxUtils.openFile(pluginFolder);
+        FinalUtils.openPluginFolder();
     }
 
-    public void openWordFolder() {
+    public void openLogFolder() {
+        FxUtils.openFile(FileConsts.LOG_FOLDER);
+    }
+
+    public void openWorkFolder() {
         FxUtils.openFile(FileUtils.currentWorkDir());
     }
 
