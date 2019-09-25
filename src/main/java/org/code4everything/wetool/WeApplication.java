@@ -36,8 +36,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author pantao
@@ -132,7 +132,7 @@ public class WeApplication extends Application {
         }
     }
 
-    private void setQuickStartMenu(Menu menu, List<WeStart> starts) {
+    private void setQuickStartMenu(Menu menu, Set<WeStart> starts) {
         starts.forEach(start -> {
             if (CollUtil.isEmpty(start.getSubStarts())) {
                 // 添加子菜单
@@ -156,7 +156,7 @@ public class WeApplication extends Application {
         // 添加托盘邮件菜单
         PopupMenu popupMenu = new PopupMenu();
         // 快捷打开
-        List<WeStart> starts = WeUtils.getConfig().getQuickStarts();
+        Set<WeStart> starts = WeUtils.getConfig().getQuickStarts();
         if (CollUtil.isNotEmpty(starts)) {
             Menu menu = new Menu(TitleConsts.QUICK_START);
             setQuickStartMenu(menu, starts);

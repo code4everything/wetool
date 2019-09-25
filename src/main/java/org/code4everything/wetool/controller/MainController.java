@@ -95,7 +95,7 @@ public class MainController {
         // 监听剪贴板
         EXECUTOR.scheduleWithFixedDelay(this::watchClipboard, 0, 1000, TimeUnit.MILLISECONDS);
         // 加载快速启动选项
-        List<WeStart> starts = WeUtils.getConfig().getQuickStarts();
+        Set<WeStart> starts = WeUtils.getConfig().getQuickStarts();
         if (CollUtil.isNotEmpty(starts)) {
             Menu menu = new Menu(TitleConsts.QUICK_START);
             setQuickStartMenu(menu, starts);
@@ -111,44 +111,56 @@ public class MainController {
     }
 
     private void loadPlugins() {
+        // 加载工作目录下的plugins目录
         File pluginParent = new File(FileConsts.PLUGIN_FOLDER);
-        if (!pluginParent.exists()) {
-            return;
-        }
-        File[] files = pluginParent.listFiles();
-        if (ArrayUtil.isEmpty(files)) {
-            return;
-        }
-        for (File file : files) {
-            if (file.isFile()) {
-                WePluginSupportable plugin;
-                WePluginInfo info;
-                try {
-                    // 包装成 JarFile
-                    JarFile jar = new JarFile(file);
-                    // 读取插件信息
-                    ZipEntry entry = jar.getEntry("plugin.json");
-                    if (Objects.isNull(entry)) {
-                        log.error(StrUtil.format("plugin {} load failed: {}", file.getName(), "plugin.json not found"));
-                        continue;
-                    }
-                    info = JSON.parseObject(IoUtil.read(jar.getInputStream(entry), "utf-8"), WePluginInfo.class);
-                    if (config.getPluginDisables().contains(info)) {
-                        // 插件被禁止加载
-                        log.info("plugin {}-{}-{} disabled", info.getAuthor(), info.getName(), info.getVersion());
-                        continue;
-                    }
-                    // 加载插件类
-                    ClassLoader loader = JarClassLoader.loadJarToSystemClassLoader(file);
-                    Class<?> clazz = loader.loadClass(info.getSupportedClass());
-                    plugin = (WePluginSupportable) clazz.newInstance();
-                    // 添加插件菜单
-                    registerPlugin(info, plugin);
-                } catch (Exception e) {
-                    FxDialogs.showException("plugin file load failed: " + file.getName(), e);
+        if (pluginParent.exists()) {
+            File[] files = pluginParent.listFiles();
+            if (ArrayUtil.isNotEmpty(files)) {
+                for (File file : files) {
+                    loadPlugins(file, true);
                 }
             }
         }
+        // 加载其他地方的插件
+        Set<String> paths = WeUtils.getConfig().getPluginPaths();
+        if (CollUtil.isNotEmpty(paths)) {
+            paths.forEach(path -> loadPlugins(new File(path), true));
+        }
+    }
+
+    private void loadPlugins(File file, boolean checkDisable) {
+        if (file.isFile()) {
+            WePluginSupportable plugin;
+            WePluginInfo info;
+            try {
+                // 包装成 JarFile
+                JarFile jar = new JarFile(file);
+                // 读取插件信息
+                ZipEntry entry = jar.getEntry("plugin.json");
+                if (Objects.isNull(entry)) {
+                    log.error(StrUtil.format("plugin {} load failed: {}", file.getName(), "plugin.json not found"));
+                    return;
+                }
+                info = JSON.parseObject(IoUtil.read(jar.getInputStream(entry), "utf-8"), WePluginInfo.class);
+                if (checkDisable && config.getPluginDisables().contains(info)) {
+                    // 插件被禁止加载
+                    log.info("plugin {}-{}-{} disabled", info.getAuthor(), info.getName(), info.getVersion());
+                    return;
+                }
+                // 加载插件类
+                ClassLoader loader = JarClassLoader.loadJarToSystemClassLoader(file);
+                Class<?> clazz = loader.loadClass(info.getSupportedClass());
+                plugin = (WePluginSupportable) clazz.newInstance();
+                // 添加插件菜单
+                registerPlugin(info, plugin);
+            } catch (Exception e) {
+                FxDialogs.showException("plugin file load failed: " + file.getName(), e);
+            }
+        }
+    }
+
+    public void loadPluginsHandy() {
+        FxUtils.chooseFiles(files -> files.forEach(file -> loadPlugins(file, false)));
     }
 
     public void registerPlugin(WePluginInfo info, WePluginSupportable supportable) {
@@ -193,7 +205,7 @@ public class MainController {
         });
     }
 
-    private void setQuickStartMenu(Menu menu, List<WeStart> starts) {
+    private void setQuickStartMenu(Menu menu, Set<WeStart> starts) {
         starts.forEach(start -> {
             if (CollUtil.isEmpty(start.getSubStarts())) {
                 // 添加子菜单

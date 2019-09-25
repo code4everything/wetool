@@ -12,6 +12,8 @@
             <MenuItem onAction="#openFolder" text="打开文件夹(_D)"/>
             <MenuItem onAction="#saveFile" text="保存(_S)"/>
             <SeparatorMenuItem/>
+            <MenuItem text="加载插件(_L)" onAction="#loadPluginsHandy"/>
+            <SeparatorMenuItem/>
             <MenuItem onAction="#openAllTab" text="打开所有标签(_Z)"/>
             <MenuItem onAction="#closeAllTab" text="关闭所有标签(_C)"/>
             <SeparatorMenuItem/>
@@ -30,9 +32,9 @@
                 <MenuItem text="进制转换器(_N)" id="NaryConverter"/>
             </Menu>
             <SeparatorMenuItem/>
-            <Menu text="生成器(_C)">
+            <Menu text="生成器(_G)">
                 <MenuItem text="随机生成器(_R)" id="RandomGenerator"/>
-                <MenuItem text="二维码生成器(_G)" id="QrCodeGenerator"/>
+                <MenuItem text="二维码生成器(_D)" id="QrCodeGenerator"/>
             </Menu>
         </Menu>
         <Menu text="插件(_P)" fx:id="pluginMenu"/>

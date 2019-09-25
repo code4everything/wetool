@@ -25,6 +25,7 @@
             "subStarts": []
         }
     ],
+    "pluginPaths": [],
     "pluginDisables": [
         {
             "author": "ease",
