@@ -379,6 +379,7 @@ public class MainController {
     }
 
     public void openPluginFolder() {
+        FileUtil.mkdir(pluginFolder);
         FxUtils.openFile(pluginFolder);
     }
 }

@@ -60,6 +60,10 @@
     
     > [插件库](https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository)
     
+### 运行截图
+
+![wetool](images/wetool.png)
+
 ### 二次开发
 
 开发调试过程中，建议运行[`WeApplicationTest`](src/test/org/code4everything/wetool/WeApplicationTest.java)主类，
