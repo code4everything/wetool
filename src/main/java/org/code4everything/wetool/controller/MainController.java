@@ -60,6 +60,8 @@ public class MainController {
 
     private final WeConfig config = WeUtils.getConfig();
 
+    private final String pluginFolder = FileUtils.currentWorkDir("plugins");
+
     @FXML
     public TabPane tabPane;
 
@@ -110,7 +112,7 @@ public class MainController {
     }
 
     private void loadPlugins() {
-        File pluginParent = new File(FileUtils.currentWorkDir("plugins"));
+        File pluginParent = new File(pluginFolder);
         if (!pluginParent.exists()) {
             return;
         }
@@ -374,5 +376,9 @@ public class MainController {
 
     public void seePluginRepo() {
         FxUtils.openLink(TipConsts.REPO_LINK);
+    }
+
+    public void openPluginFolder() {
+        FxUtils.openFile(pluginFolder);
     }
 }

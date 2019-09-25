@@ -39,10 +39,11 @@
         <Menu text="帮助(_H)">
             <MenuItem onAction="#openConfig" text="打开配置文件(_C)"/>
             <MenuItem onAction="#openLog" text="打开日志(_L)"/>
+            <MenuItem onAction="#openPluginFolder" text="打开插件目录(_L)"/>
             <SeparatorMenuItem/>
             <MenuItem text="JAVA属性(_J)" onAction="#seeJavaInfo"/>
-            <MenuItem text="插件库(_R)" onAction="#seePluginRepo"/>
-            <MenuItem onAction="#about" text="关于(_A)"/>
+            <MenuItem text="插件仓库(_R)" onAction="#seePluginRepo"/>
+            <MenuItem onAction="#about" text="关于WeTool(_A)"/>
         </Menu>
     </MenuBar>
     <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS"/>
