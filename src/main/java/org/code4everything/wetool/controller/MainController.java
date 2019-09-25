@@ -322,6 +322,18 @@ public class MainController {
         FxUtils.openFile(WeUtils.getConfig().getCurrentPath());
     }
 
+    public void seePluginRepo() {
+        FxUtils.openLink(TipConsts.REPO_LINK);
+    }
+
+    public void openPluginFolder() {
+        FileUtil.mkdir(pluginFolder);
+        FxUtils.openFile(pluginFolder);
+    }
+
+    public void openWordFolder() {
+        FxUtils.openFile(FileUtils.currentWorkDir());
+    }
 
     public void seeJavaInfo() {
         TextArea area = new TextArea(getAllJavaInfos());
@@ -333,7 +345,7 @@ public class MainController {
     }
 
     @SuppressWarnings("StringBufferReplaceableByString")
-    public String getAllJavaInfos() {
+    private String getAllJavaInfos() {
         StringBuilder builder = new StringBuilder();
         builder.append("JavaVirtualMachineSpecification信息：\r\n");
         builder.append("=========================================================================================\r\n");
@@ -372,14 +384,5 @@ public class MainController {
         builder.append(SystemUtil.getRuntimeInfo());
 
         return builder.toString();
-    }
-
-    public void seePluginRepo() {
-        FxUtils.openLink(TipConsts.REPO_LINK);
-    }
-
-    public void openPluginFolder() {
-        FileUtil.mkdir(pluginFolder);
-        FxUtils.openFile(pluginFolder);
     }
 }
