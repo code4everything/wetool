@@ -21,7 +21,6 @@ import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
-import org.code4everything.wetool.controller.MainController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
@@ -46,8 +45,6 @@ import java.util.Set;
 @Slf4j
 public class WeApplication extends Application {
 
-    protected static MainController mainController;
-
     private static Menu pluginMenu;
 
     private Stage stage;
@@ -62,12 +59,8 @@ public class WeApplication extends Application {
 
     public static void addIntoPluginMenu(MenuItem menuItem) {
         if (ObjectUtils.isNotNull(pluginMenu, menuItem)) {
-            Platform.runLater(() -> pluginMenu.add(menuItem));
+            pluginMenu.add(menuItem);
         }
-    }
-
-    public static void setMainController(MainController mainController) {
-        WeApplication.mainController = mainController;
     }
 
     private static void parseConfig() {

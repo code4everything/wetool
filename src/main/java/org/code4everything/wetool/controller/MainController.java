@@ -1,17 +1,12 @@
 package org.code4everything.wetool.controller;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.JarClassLoader;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
-import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
-import com.alibaba.fastjson.JSON;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -21,15 +16,13 @@ import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.config.BootConfig;
-import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
+import org.code4everything.wetool.plugin.PluginLoader;
 import org.code4everything.wetool.plugin.support.BaseViewController;
-import org.code4everything.wetool.plugin.support.WePluginSupportable;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
-import org.code4everything.wetool.plugin.support.config.WePluginInfo;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
@@ -38,13 +31,10 @@ import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.util.FinalUtils;
 
-import java.io.File;
 import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 /**
  * @author pantao
@@ -90,7 +80,7 @@ public class MainController {
     @FXML
     private void initialize() {
         BeanFactory.register(tabPane);
-        WeApplication.setMainController(this);
+        BeanFactory.register(AppConsts.BeanKey.PLUGIN_MENU, pluginMenu);
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
         // 监听剪贴板
         EXECUTOR.scheduleWithFixedDelay(this::watchClipboard, 0, 1000, TimeUnit.MILLISECONDS);
@@ -107,92 +97,11 @@ public class MainController {
         // 加载默认选项卡
         loadTabs();
         // 加载插件
-        ThreadUtil.execute(this::loadPlugins);
-    }
-
-    private void loadPlugins() {
-        // 加载工作目录下的plugins目录
-        File pluginParent = new File(FileConsts.PLUGIN_FOLDER);
-        if (pluginParent.exists()) {
-            File[] files = pluginParent.listFiles();
-            if (ArrayUtil.isNotEmpty(files)) {
-                for (File file : files) {
-                    loadPlugins(file, true);
-                }
-            }
-        }
-        // 加载其他地方的插件
-        Set<String> paths = WeUtils.getConfig().getPluginPaths();
-        if (CollUtil.isNotEmpty(paths)) {
-            paths.forEach(path -> loadPlugins(new File(path), true));
-        }
-    }
-
-    private void loadPlugins(File file, boolean checkDisable) {
-        if (file.isFile()) {
-            WePluginSupportable plugin;
-            WePluginInfo info;
-            try {
-                // 包装成 JarFile
-                JarFile jar = new JarFile(file);
-                // 读取插件信息
-                ZipEntry entry = jar.getEntry("plugin.json");
-                if (Objects.isNull(entry)) {
-                    log.error(StrUtil.format("plugin {} load failed: {}", file.getName(), "plugin.json not found"));
-                    return;
-                }
-                info = JSON.parseObject(IoUtil.read(jar.getInputStream(entry), "utf-8"), WePluginInfo.class);
-                if (checkDisable && config.getPluginDisables().contains(info)) {
-                    // 插件被禁止加载
-                    log.info("plugin {}-{}-{} disabled", info.getAuthor(), info.getName(), info.getVersion());
-                    return;
-                }
-                // 加载插件类
-                ClassLoader loader = JarClassLoader.loadJarToSystemClassLoader(file);
-                Class<?> clazz = loader.loadClass(info.getSupportedClass());
-                plugin = (WePluginSupportable) clazz.newInstance();
-                // 添加插件菜单
-                registerPlugin(info, plugin);
-            } catch (Exception e) {
-                FxDialogs.showException("plugin file load failed: " + file.getName(), e);
-            }
-        }
+        PluginLoader.loadPlugins();
     }
 
     public void loadPluginsHandy() {
-        FxUtils.chooseFiles(files -> files.forEach(file -> loadPlugins(file, false)));
-    }
-
-    public void registerPlugin(WePluginInfo info, WePluginSupportable supportable) {
-        String reqVer = info.getRequireWetoolVersion();
-        String errMsg = "plugin %s-%s-%s incompatible: ";
-        errMsg = String.format(errMsg, info.getAuthor(), info.getName(), info.getVersion());
-        // 检查plugin要求wetool依赖的wetool-plugin-support版本是否符合要求：current>=required
-        if (!WeUtils.isRequiredVersion(AppConsts.CURRENT_VERSION, reqVer)) {
-            log.error(errMsg + "the lower version {} of wetool is required", reqVer);
-            return;
-        }
-        // 检查wetool要求plugin依赖的wetool-plugin-support版本是否符合要求：required>=lower
-        if (!WeUtils.isRequiredVersion(reqVer, AppConsts.LOWER_VERSION)) {
-            log.error(errMsg + "version is lower than the required");
-            return;
-        }
-        // 初始化
-        if (!supportable.initialize()) {
-            log.info("plugin {}-{}-{} initialize failed", info.getAuthor(), info.getName(), info.getVersion());
-            return;
-        }
-        // 注册主界面插件菜单
-        MenuItem barMenu = supportable.registerBarMenu();
-        if (ObjectUtil.isNotNull(barMenu)) {
-            Platform.runLater(() -> pluginMenu.getItems().add(barMenu));
-        }
-        // 注册托盘菜单
-        java.awt.MenuItem trayMenu = supportable.registerTrayMenu();
-        WeApplication.addIntoPluginMenu(trayMenu);
-        log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
-        // 注册成功回调
-        supportable.registered(info, barMenu, trayMenu);
+        FxUtils.chooseFiles(files -> PluginLoader.loadPlugins(files, false));
     }
 
     private void loadToolMenus(Menu menu) {

@@ -3,6 +3,9 @@ package org.code4everything.wetool;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
@@ -10,6 +13,21 @@ import java.util.regex.Matcher;
  * @since 2019/9/24
  */
 public class CommonTest {
+
+    @Test
+    public void testMapIterator() {
+        Map<String, String> map = new HashMap<>(8);
+        map.put("a", "a");
+        map.put("b", "b");
+        map.put("c", "c");
+        assert !map.isEmpty();
+        Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();
+        }
+        assert map.isEmpty();
+    }
 
     @Test
     public void testReplaceFileSeparator() {
