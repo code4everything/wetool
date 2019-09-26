@@ -50,7 +50,7 @@ public final class PluginLoader {
                 }
             }
         }
-        // 加载其他地方的插件
+        // 加载配置文件中的插件
         Set<String> paths = WeUtils.getConfig().getPluginPaths();
         if (CollUtil.isNotEmpty(paths)) {
             paths.forEach(path -> preparePlugin(new File(path), true));

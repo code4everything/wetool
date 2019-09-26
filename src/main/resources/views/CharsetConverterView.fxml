@@ -34,7 +34,17 @@
                 <Insets right="10.0"/>
             </HBox.margin>
         </Button>
-        <Button mnemonicParsing="false" onAction="#openFileBySystem" text="打开文件" HBox.hgrow="NEVER"/>
+        <Button mnemonicParsing="false" onAction="#openFileBySystem" text="打开文件" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets right="10.0"/>
+            </HBox.margin>
+        </Button>
+        <ComboBox fx:id="targetCharset" editable="true" prefWidth="150.0" promptText="目标编码" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets right="10.0"/>
+            </HBox.margin>
+        </ComboBox>
+        <Button mnemonicParsing="false" onAction="#convert2File" text="编码转换" HBox.hgrow="NEVER"/>
     </HBox>
     <TextArea fx:id="originalContent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
               onDragDropped="#dragFileDropped" onDragOver="#dragFileOver" prefHeight="82.0" prefWidth="580.0"

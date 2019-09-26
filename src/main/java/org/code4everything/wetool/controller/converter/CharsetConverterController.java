@@ -17,6 +17,7 @@ import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.thirdparty.EncodingDetect;
 
 import java.io.File;
+import java.nio.charset.Charset;
 
 /**
  * @author pantao
@@ -26,8 +27,6 @@ import java.io.File;
 public class CharsetConverterController extends AbstractConverter {
 
     private final String BASE64 = "BASE64";
-
-    private final String UTF8 = "UTF-8";
 
     @FXML
     public TextArea originalContent;
@@ -48,17 +47,21 @@ public class CharsetConverterController extends AbstractConverter {
     public TextField filePath;
 
     @FXML
+    public ComboBox<String> targetCharset;
+
+    @FXML
     private void initialize() {
         log.info("open tab for charset converter");
         BeanFactory.registerView(TitleConsts.CHARSET_CONVERTER, this);
         // 支持的编码
-        String[] charset = {UTF8, "ISO-8859-1", "GBK", BASE64};
+        String[] charset = {CharsetUtil.UTF_8, CharsetUtil.ISO_8859_1, CharsetUtil.GBK, BASE64};
 
         // 添加至下拉框
         originalCharset.getItems().addAll(charset);
         originalCharset.getSelectionModel().selectFirst();
         convertCharset.getItems().addAll(charset);
         convertCharset.getSelectionModel().selectFirst();
+        targetCharset.getItems().addAll(CharsetUtil.UTF_8, CharsetUtil.GBK, CharsetUtil.ISO_8859_1);
 
         super.initConverter(originalContent, convertedContent, originalCharset, convertCharset);
     }
@@ -109,7 +112,7 @@ public class CharsetConverterController extends AbstractConverter {
     public void openFile(File file) {
         String charset = originalCharset.getValue();
         if (BASE64.equals(charset)) {
-            charset = UTF8;
+            charset = CharsetUtil.UTF_8;
         }
         originalContent.setText(FileUtil.readString(file, charset));
     }
@@ -129,5 +132,18 @@ public class CharsetConverterController extends AbstractConverter {
 
     public void openFileBySystem() {
         FxUtils.openFile(filePath.getText());
+    }
+
+    public void convert2File() {
+        if (StrUtil.isEmpty(filePath.getText()) || fileCharset.getText().equals(targetCharset.getValue())) {
+            return;
+        }
+        File file = new File(filePath.getText());
+        if (file.exists()) {
+            String content = FileUtil.readString(file, fileCharset.getText());
+            Charset charset = Charset.forName(targetCharset.getValue());
+            FileUtil.writeString(content, file, charset);
+            fileCharset.setText(charset.toString());
+        }
     }
 }
