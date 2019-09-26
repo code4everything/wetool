@@ -5,7 +5,16 @@
         "fullscreen": false,
         "hide": false,
         "tabs": {
-            "loads": [],
+            "loads": [
+                "FileManager",
+                "JsonParser",
+                "RandomGenerator",
+                "ClipboardHistory",
+                "QrCodeGenerator",
+                "CharsetConverter",
+                "NetworkTool",
+                "NaryConverter"
+            ],
             "supports": [
                 "FileManager",
                 "JsonParser",

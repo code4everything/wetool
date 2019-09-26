@@ -1,23 +1,31 @@
 package org.code4everything.wetool.controller.converter;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
+import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.thirdparty.EncodingDetect;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author pantao
@@ -50,6 +58,9 @@ public class CharsetConverterController extends AbstractConverter {
     public ComboBox<String> targetCharset;
 
     @FXML
+    public CheckBox chooseFolderCB;
+
+    @FXML
     private void initialize() {
         log.info("open tab for charset converter");
         BeanFactory.registerView(TitleConsts.CHARSET_CONVERTER, this);
@@ -62,6 +73,7 @@ public class CharsetConverterController extends AbstractConverter {
         convertCharset.getItems().addAll(charset);
         convertCharset.getSelectionModel().selectFirst();
         targetCharset.getItems().addAll(CharsetUtil.UTF_8, CharsetUtil.GBK, CharsetUtil.ISO_8859_1);
+        targetCharset.getSelectionModel().selectFirst();
 
         super.initConverter(originalContent, convertedContent, originalCharset, convertCharset);
     }
@@ -145,5 +157,44 @@ public class CharsetConverterController extends AbstractConverter {
             FileUtil.writeString(content, file, charset);
             fileCharset.setText(charset.toString());
         }
+    }
+
+    public void batchConvert() {
+        if (StrUtil.isEmpty(targetCharset.getValue())) {
+            FxDialogs.showInformation(AppConsts.Title.APP_TITLE, "请选择目标编码！");
+            return;
+        }
+        final Charset charset = Charset.forName(targetCharset.getValue());
+        if (chooseFolderCB.isSelected()) {
+            FxUtils.chooseFolder(file -> {
+                batchConvert(Lists.newArrayList(file), charset);
+                FxDialogs.showSuccess();
+            });
+        } else {
+            FxUtils.chooseFiles(files -> {
+                batchConvert(files, charset);
+                FxDialogs.showSuccess();
+            });
+        }
+    }
+
+    private void batchConvert(List<File> files, final Charset charset) {
+        if (CollUtil.isEmpty(files)) {
+            return;
+        }
+        files.forEach(file -> {
+            if (file.exists() && !file.isHidden()) {
+                if (file.isFile()) {
+                    String srcCharset = EncodingDetect.getJavaEncode(file.getAbsolutePath());
+                    FileUtil.writeString(FileUtil.readString(file, srcCharset), file, charset);
+                }
+                if (file.isDirectory()) {
+                    File[] fileArr = file.listFiles();
+                    if (ArrayUtil.isNotEmpty(fileArr)) {
+                        batchConvert(Arrays.asList(fileArr), charset);
+                    }
+                }
+            }
+        });
     }
 }
