@@ -67,8 +67,7 @@ public final class PluginLoader {
     }
 
     private void preparePlugin(File file, boolean checkDisable) {
-        if (file.isFile()) {
-            WePluginInfo info;
+        if (file.exists() && file.isFile()) {
             try {
                 // 包装成 JarFile
                 JarFile jar = new JarFile(file);
@@ -78,16 +77,18 @@ public final class PluginLoader {
                     log.error(StrUtil.format("plugin {} load failed: {}", file.getName(), "plugin.json not found"));
                     return;
                 }
-                info = JSON.parseObject(IoUtil.read(jar.getInputStream(entry), "utf-8"), WePluginInfo.class);
+                String json = IoUtil.read(jar.getInputStream(entry), "utf-8");
+                WePluginInfo info = JSON.parseObject(json, WePluginInfo.class);
                 if (checkDisable && CONFIG.getPluginDisables().contains(info)) {
                     // 插件被禁止加载
                     log.info("plugin {}-{}-{} disabled", info.getAuthor(), info.getName(), info.getVersion());
                     return;
                 }
-
                 WePlugin plugin = new WePlugin(info, file);
                 // 检测插件是否已经加载
                 if (LOADED_PLUGINS.contains(plugin)) {
+                    // 插件已被加载
+                    log.info("plugin {}-{} already loaded", info.getAuthor(), info.getName());
                     return;
                 }
                 replaceIfNewer(plugin);
