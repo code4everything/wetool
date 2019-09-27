@@ -66,7 +66,7 @@
 
 ### 二次开发
 
-开发调试过程中，建议运行[`WeApplicationTest`](src/test/org/code4everything/wetool/WeApplicationTest.java)主类，
+开发调试过程中，建议运行[`WeApplicationTest`](src/test/java/org/code4everything/wetool/WeApplicationTest.java)主类，
 而不是运行主类[`WeApplication`](src/main/java/org/code4everything/wetool/WeApplication.java)，
 运行`WeApplication`类时产生的日志数据会被输出到文件中，而`WeApplicationTest`则只会输出到终端，方便开发调试
 
