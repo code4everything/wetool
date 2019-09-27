@@ -36,6 +36,8 @@
 
 - [wetool-1.0.1.zip](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.1.zip)
 
+- [更新历史](history.md)
+
 - 自行打包
 
     ``` shell
