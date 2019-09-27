@@ -40,7 +40,7 @@
         <Menu text="插件(_P)" fx:id="pluginMenu"/>
         <Menu text="帮助(_H)">
             <MenuItem onAction="#openConfig" text="打开配置文件(_C)"/>
-            <MenuItem onAction="#openLog" text="打开日志(_L)"/>
+            <MenuItem onAction="#openLog" text="打开日志文件(_L)"/>
             <SeparatorMenuItem/>
             <MenuItem onAction="#openWorkFolder" text="打开工作目录(_W)"/>
             <MenuItem onAction="#openPluginFolder" text="打开插件目录(_I)"/>
