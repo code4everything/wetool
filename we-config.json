@@ -38,8 +38,8 @@
     "pluginDisables": [
         {
             "author": "ease",
-            "version": "1.0.0",
-            "name": "sample"
+            "name": "sample",
+            "version": "1.0.0"
         }
     ],
     "fileFilter": "^[^.].*$",

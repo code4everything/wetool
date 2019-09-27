@@ -34,7 +34,7 @@
 
 ### 下载与使用
 
-- [ZIP压缩包下载](http://share.qiniu.segocat.com/tool/wetool/wetool.zip)
+- [wetool-1.0.1.zip](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.1.zip)
 
 - 自行打包
 
