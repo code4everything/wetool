@@ -46,5 +46,6 @@
     "clipboardSize": 20,
     "autoWrap": true,
     "fileChooserInitDir": "",
-    "logCompressLen": 64
+    "logCompressLen": 64,
+    "restartBatch": ""
 }
