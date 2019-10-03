@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.FileConsts;
-import org.code4everything.wetool.plugin.support.WePluginSupportable;
+import org.code4everything.wetool.plugin.support.WePluginSupporter;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WePluginInfo;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
@@ -66,6 +66,10 @@ public final class PluginLoader {
         loadPluginFromPrepared();
     }
 
+    public static void registerPlugin(WePluginInfo info, WePluginSupporter supporter) {
+        registerPlugin(info, supporter, true);
+    }
+
     private void preparePlugin(File file, boolean checkDisable) {
         if (file.exists() && file.isFile()) {
             try {
@@ -77,11 +81,17 @@ public final class PluginLoader {
                     log.error(StrUtil.format("plugin {} load failed: {}", file.getName(), "plugin.json not found"));
                     return;
                 }
+                // 解析配置到对象中
                 String json = IoUtil.read(jar.getInputStream(entry), "utf-8");
                 WePluginInfo info = JSON.parseObject(json, WePluginInfo.class);
+
                 if (checkDisable && CONFIG.getPluginDisables().contains(info)) {
                     // 插件被禁止加载
                     log.info("plugin {}-{}-{} disabled", info.getAuthor(), info.getName(), info.getVersion());
+                    return;
+                }
+                // 兼容性检测
+                if (isIncompatible(info)) {
                     return;
                 }
                 WePlugin plugin = new WePlugin(info, file);
@@ -98,36 +108,26 @@ public final class PluginLoader {
         }
     }
 
-    public static void registerPlugin(WePluginInfo info, WePluginSupportable supportable) {
-        String reqVer = info.getRequireWetoolVersion();
-        String errMsg = "plugin %s-%s-%s incompatible: ";
-        errMsg = String.format(errMsg, info.getAuthor(), info.getName(), info.getVersion());
-        // 检查plugin要求wetool依赖的wetool-plugin-support版本是否符合要求：current>=required
-        if (!WeUtils.isRequiredVersion(AppConsts.CURRENT_VERSION, reqVer)) {
-            log.error(errMsg + "the lower version {} of wetool is required", reqVer);
-            return;
-        }
-        // 检查wetool要求plugin依赖的wetool-plugin-support版本是否符合要求：required>=lower
-        if (!WeUtils.isRequiredVersion(reqVer, AppConsts.LOWER_VERSION)) {
-            log.error(errMsg + "version is lower than the required");
+    private static void registerPlugin(WePluginInfo info, WePluginSupporter supporter, boolean checkCompatible) {
+        if (checkCompatible && isIncompatible(info)) {
             return;
         }
         // 初始化
-        if (!supportable.initialize()) {
+        if (!supporter.initialize()) {
             log.info("plugin {}-{}-{} initialize failed", info.getAuthor(), info.getName(), info.getVersion());
             return;
         }
         // 注册主界面插件菜单
-        MenuItem barMenu = supportable.registerBarMenu();
+        MenuItem barMenu = supporter.registerBarMenu();
         if (ObjectUtil.isNotNull(barMenu)) {
             FxUtils.getPluginMenu().getItems().add(barMenu);
         }
         // 注册托盘菜单
-        java.awt.MenuItem trayMenu = supportable.registerTrayMenu();
+        java.awt.MenuItem trayMenu = supporter.registerTrayMenu();
         WeApplication.addIntoPluginMenu(trayMenu);
         log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
         // 注册成功回调
-        supportable.registered(info, barMenu, trayMenu);
+        supporter.registered(info, barMenu, trayMenu);
     }
 
     private static void replaceIfNewer(WePlugin plugin) {
@@ -146,23 +146,36 @@ public final class PluginLoader {
     private static void loadPluginFromPrepared() {
         Iterator<Map.Entry<String, WePlugin>> iterator = PREPARE_PLUGINS.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, WePlugin> entry = iterator.next();
-            loadPlugin(entry.getValue());
+            WePlugin plugin = iterator.next().getValue();
+            LOADED_PLUGINS.add(plugin);
+            try {
+                // 加载插件类
+                ClassLoader loader = JarClassLoader.loadJarToSystemClassLoader(plugin.getJarFile());
+                Class<?> clazz = loader.loadClass(plugin.getPluginInfo().getSupportedClass());
+                WePluginSupporter supporter = (WePluginSupporter) clazz.newInstance();
+                // 添加插件菜单
+                registerPlugin(plugin.getPluginInfo(), supporter, false);
+            } catch (Exception e) {
+                FxDialogs.showException("plugin file load failed: " + plugin.getJarFile().getName(), e);
+            }
             iterator.remove();
         }
     }
 
-    private static void loadPlugin(WePlugin plugin) {
-        LOADED_PLUGINS.add(plugin);
-        try {
-            // 加载插件类
-            ClassLoader loader = JarClassLoader.loadJarToSystemClassLoader(plugin.getJarFile());
-            Class<?> clazz = loader.loadClass(plugin.getPluginInfo().getSupportedClass());
-            WePluginSupportable supportable = (WePluginSupportable) clazz.newInstance();
-            // 添加插件菜单
-            registerPlugin(plugin.getPluginInfo(), supportable);
-        } catch (Exception e) {
-            FxDialogs.showException("plugin file load failed: " + plugin.getJarFile().getName(), e);
+    private static boolean isIncompatible(WePluginInfo info) {
+        String reqVer = info.getRequireWetoolVersion();
+        String errMsg = "plugin %s-%s-%s incompatible: ";
+        errMsg = String.format(errMsg, info.getAuthor(), info.getName(), info.getVersion());
+        // 检查plugin要求wetool依赖的wetool-plugin-support版本是否符合要求：current>=required
+        if (!WeUtils.isRequiredVersion(AppConsts.CURRENT_VERSION, reqVer)) {
+            log.error(errMsg + "the lower version {} of wetool is required", reqVer);
+            return true;
         }
+        // 检查wetool要求plugin依赖的wetool-plugin-support版本是否符合要求：required>=compatible_lower
+        if (!WeUtils.isRequiredVersion(reqVer, AppConsts.COMPATIBLE_LOWER_VERSION)) {
+            log.error(errMsg + "the version of plugin supporter is lower than the required: " + AppConsts.COMPATIBLE_LOWER_VERSION);
+            return true;
+        }
+        return false;
     }
 }
