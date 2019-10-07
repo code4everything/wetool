@@ -9,8 +9,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class TipConsts {
 
-    public static final String QR_CODE_ERROR = "生成二维码失败";
-
     public static final String TRAY_ERROR = "设置系统托盘失败";
 
     public static final String ABOUT_APP = "当前版本：v1.0.2\r\n\r\n项目地址：https://github.com/code4everything/wetool\r\n";
