@@ -53,6 +53,7 @@ public class QrCodeGeneratorController implements BaseViewController {
         // 压缩并记录进日志
         String compress = WeUtils.compressString(content.getText());
         log.info("generate qr code for content: {}", compress);
+        // 生成二维码
         bytes = QrCodeUtil.generatePng(content.getText(), size, size);
         @Cleanup InputStream inputStream = new ByteArrayInputStream(bytes);
         qrCode.setImage(new Image(inputStream));

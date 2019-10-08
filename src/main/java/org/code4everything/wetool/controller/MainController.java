@@ -152,7 +152,7 @@ public class MainController {
         log.info("clipboard changed: {}", compress);
         Date date = new Date();
         config.appendClipboardHistory(date, clipboard);
-        ClipboardHistoryController controller = BeanFactory.get(ClipboardHistoryController.class);
+        ClipboardHistoryController controller = BeanFactory.getViewObject(TitleConsts.CLIPBOARD_HISTORY);
         if (ObjectUtil.isNotNull(controller)) {
             // 显示到文本框
             final String clip = clipboard;
