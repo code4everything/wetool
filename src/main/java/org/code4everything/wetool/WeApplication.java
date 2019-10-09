@@ -115,6 +115,10 @@ public class WeApplication extends Application {
             stage.show();
         }
         log.info("wetool started");
+        // 处理全局异常
+        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
+            FxDialogs.showException(TipConsts.APP_EXCEPTION, throwable);
+        });
     }
 
     private void hideStage() {

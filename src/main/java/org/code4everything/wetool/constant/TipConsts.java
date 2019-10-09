@@ -17,6 +17,8 @@ public class TipConsts {
 
     public static final String INIT_ERROR = "初始化失败，无法继续运行";
 
+    public static final String APP_EXCEPTION = "程序运行异常！";
+
     // @formatter:off
 
     public static final String REPO_LINK = "https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository";
