@@ -27,7 +27,10 @@ public class FinalUtils {
     }
 
     public static <T extends BaseViewController> T getView(String tabName) {
-        return BeanFactory.getViewObject(AppConsts.Title.APP_TITLE + tabName);
+        String key = AppConsts.Title.APP_TITLE + tabName;
+        T value = BeanFactory.getViewObject(key);
+        WeUtils.printDebug("value of key[{}] is: ", key, value);
+        return value;
     }
 
     public static void registerView(String tabName, BaseViewController viewController) {

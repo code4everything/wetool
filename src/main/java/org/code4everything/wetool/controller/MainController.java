@@ -15,7 +15,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
-import org.code4everything.boot.config.BootConfig;
 import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
@@ -81,9 +80,9 @@ public class MainController {
     private void initialize() {
         BeanFactory.register(tabPane);
         BeanFactory.register(AppConsts.BeanKey.PLUGIN_MENU, pluginMenu);
-        config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
-        // 监听剪贴板
-        EXECUTOR.scheduleWithFixedDelay(this::watchClipboard, 0, 1000, TimeUnit.MILLISECONDS);
+        // 加载插件
+        PluginLoader.loadPlugins();
+
         // 加载快速启动选项
         Set<WeStart> starts = WeUtils.getConfig().getQuickStarts();
         if (CollUtil.isNotEmpty(starts)) {
@@ -96,8 +95,9 @@ public class MainController {
         loadToolMenus(toolMenu);
         // 加载默认选项卡
         loadTabs();
-        // 加载插件
-        PluginLoader.loadPlugins();
+        // 监听剪贴板
+        config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
+        EXECUTOR.scheduleWithFixedDelay(this::watchClipboard, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
     public void loadPluginsHandy() {
@@ -138,11 +138,8 @@ public class MainController {
             clipboard = ClipboardUtil.getStr();
             last = config.getLastClipboardHistoryItem().getValue();
         } catch (Exception e) {
-            if (BootConfig.isDebug()) {
-                log.warn(e.getMessage());
-            }
+            WeUtils.printDebug(e.getMessage());
             clipboard = last = "";
-
         }
         if (StrUtil.isEmpty(clipboard) || last.equals(clipboard)) {
             return;
