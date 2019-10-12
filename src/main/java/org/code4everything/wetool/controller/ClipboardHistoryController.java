@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
-import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.util.FinalUtils;
 
 import java.util.Date;
 
@@ -33,7 +33,7 @@ public class ClipboardHistoryController implements BaseViewController {
     @FXML
     private void initialize() {
         log.info("open tab for clipboard history");
-        BeanFactory.registerView(TitleConsts.CLIPBOARD_HISTORY, this);
+        FinalUtils.registerView(TitleConsts.CLIPBOARD_HISTORY, this);
         clipboardHistory.setWrapText(config.getAutoWrap());
         for (Pair<Date, String> pair : config.getClipboardHistory()) {
             insert(pair.getKey(), pair.getValue());

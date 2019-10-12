@@ -15,10 +15,10 @@ import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
-import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.util.FinalUtils;
 
 /**
  * @author pantao
@@ -41,7 +41,7 @@ public class JsonParserController implements BaseViewController {
     @FXML
     private void initialize() {
         log.info("open tab for json parser");
-        BeanFactory.registerView(TitleConsts.JSON_PARSER, this);
+        FinalUtils.registerView(TitleConsts.JSON_PARSER, this);
         jsonContent.setWrapText(config.getAutoWrap());
         parsedJsonContent.setWrapText(config.getAutoWrap());
     }

@@ -152,7 +152,7 @@ public class MainController {
         log.info("clipboard changed: {}", compress);
         Date date = new Date();
         config.appendClipboardHistory(date, clipboard);
-        ClipboardHistoryController controller = BeanFactory.getViewObject(TitleConsts.CLIPBOARD_HISTORY);
+        ClipboardHistoryController controller = FinalUtils.getView(TitleConsts.CLIPBOARD_HISTORY);
         if (ObjectUtil.isNotNull(controller)) {
             // 显示到文本框
             final String clip = clipboard;
@@ -175,7 +175,7 @@ public class MainController {
             return;
         }
         // 打开选项卡
-        FxUtils.openTab(box, tabPair.getKey());
+        FinalUtils.openTab(box, tabPair.getKey());
     }
 
     public void openFile() {

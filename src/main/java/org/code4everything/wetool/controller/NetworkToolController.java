@@ -10,9 +10,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.plugin.support.factory.BeanFactory;
-import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.BaseViewController;
+import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.util.FinalUtils;
 
 /**
  * @author pantao
@@ -39,7 +39,7 @@ public class NetworkToolController implements BaseViewController {
     @FXML
     private void initialize() {
         log.info("open tab for network tool");
-        BeanFactory.registerView(TitleConsts.NETWORK_TOOL, this);
+        FinalUtils.registerView(TitleConsts.NETWORK_TOOL, this);
         Platform.runLater(() -> {
             privateIpv4.setText(NetUtil.getLocalhostStr());
             macAddress.setText(NetUtil.getLocalMacAddress());

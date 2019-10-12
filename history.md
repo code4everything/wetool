@@ -1,6 +1,8 @@
 ## 更新历史
 
-#### [V1.0.1](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.1.zip)
+#### [v1.0.2]()
+
+#### [v1.0.1](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.1.zip)
 
 - 自定义重启脚本
 - 自定义插件文件路径，新版本自动覆盖旧版本，支持手动加载插件

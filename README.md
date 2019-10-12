@@ -34,7 +34,7 @@
 
 ### 下载与使用
 
-- [wetool-1.0.1.zip](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.1.zip)
+- [wetool-1.0.2.zip](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.2.zip)
 
 - [更新历史](history.md)
 

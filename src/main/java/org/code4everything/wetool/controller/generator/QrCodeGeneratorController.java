@@ -14,9 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
-import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.util.FinalUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -42,7 +42,7 @@ public class QrCodeGeneratorController implements BaseViewController {
     @FXML
     private void initialize() {
         log.info("open tab for qr code generator");
-        BeanFactory.registerView(TitleConsts.QR_CODE_GENERATOR, this);
+        FinalUtils.registerView(TitleConsts.QR_CODE_GENERATOR, this);
         content.setWrapText(config.getAutoWrap());
     }
 

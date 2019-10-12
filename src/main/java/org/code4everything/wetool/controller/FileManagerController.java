@@ -14,11 +14,11 @@ import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.control.cell.UnmodifiableTextFieldListCell;
-import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.Callable;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.util.FinalUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -91,7 +91,7 @@ public class FileManagerController implements BaseViewController {
     @FXML
     private void initialize() {
         log.info("open tab for file manager");
-        BeanFactory.registerView(TitleConsts.FILE_MANAGER, this);
+        FinalUtils.registerView(TitleConsts.FILE_MANAGER, this);
 
         //设置多选
         srcFilesOfTabRename.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

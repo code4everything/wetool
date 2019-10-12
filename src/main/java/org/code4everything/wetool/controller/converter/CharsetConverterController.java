@@ -16,11 +16,11 @@ import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
-import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.thirdparty.EncodingDetect;
+import org.code4everything.wetool.util.FinalUtils;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -63,7 +63,7 @@ public class CharsetConverterController extends AbstractConverter {
     @FXML
     private void initialize() {
         log.info("open tab for charset converter");
-        BeanFactory.registerView(TitleConsts.CHARSET_CONVERTER, this);
+        FinalUtils.registerView(TitleConsts.CHARSET_CONVERTER, this);
         // 支持的编码
         String[] charset = {CharsetUtil.UTF_8, CharsetUtil.ISO_8859_1, CharsetUtil.GBK, BASE64};
 

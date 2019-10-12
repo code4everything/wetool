@@ -11,8 +11,8 @@ import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.StringUtils;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.util.FinalUtils;
 
 import java.io.File;
 
@@ -38,7 +38,7 @@ public class NaryConverterController extends AbstractConverter {
     @FXML
     private void initialize() {
         log.info("open tab for nary converter");
-        BeanFactory.registerView(TitleConsts.NARY_CONVERTER, this);
+        FinalUtils.registerView(TitleConsts.NARY_CONVERTER, this);
         // 支持的进制
         String[] nary = {"二进制", "十六进制"};
 
