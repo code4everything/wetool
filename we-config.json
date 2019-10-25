@@ -1,10 +1,16 @@
 {
+    /*初始化*/
     "initialize": {
+        /*宽度*/
         "width": 1000,
+        /*高度*/
         "height": 700,
+        /*是否全屏*/
         "fullscreen": false,
+        /*启动时是否隐藏主界面*/
         "hide": false,
         "tabs": {
+            /*初始化加载的选项卡*/
             "loads": [
                 "FileManager",
                 "JsonParser",
@@ -15,6 +21,7 @@
                 "NetworkTool",
                 "NaryConverter"
             ],
+            /*支持初始化加载的选项卡，注意：这里只是展示，此配置修改是无效的*/
             "supports": [
                 "FileManager",
                 "JsonParser",
@@ -27,14 +34,20 @@
             ]
         }
     },
+    /*快速启动裁断*/
     "quickStarts": [
         {
+            /*菜单别名是必须的，location与subStarts属性二选一*/
             "alias": "配置文件",
+            /*启动的文件路径，支持相对路径和绝对路径*/
             "location": "./we-config.json",
+            /*subStarts里面又是多个quickStarts，可循环的*/
             "subStarts": []
         }
     ],
+    /*插件的绝对路径*/
     "pluginPaths": [],
+    /*禁用的插件*/
     "pluginDisables": [
         {
             "author": "ease",
@@ -42,10 +55,16 @@
             "version": "1.0.0"
         }
     ],
+    /*文件过滤，过滤掉不匹配的文件*/
     "fileFilter": "^[^.].*$",
+    /*记录的剪贴板历史长度*/
     "clipboardSize": 20,
+    /*文本框是否自动换行*/
     "autoWrap": true,
+    /*文件选择框初始化的文件夹*/
     "fileChooserInitDir": "",
+    /*日志压缩的长度*/
     "logCompressLen": 64,
+    /*自定义重启的脚本路径*/
     "restartBatch": ""
 }
