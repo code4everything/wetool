@@ -18,15 +18,15 @@
     <repositories>
         <repository>
             <id>ease-maven</id>
-            <url>http://maven.code4everything.org/repository</url>
+            <url>https://code4everything.gitee.io/repository/maven</url>
         </repository>
     </repositories>
 
-    <!--私有仓库发布-->
+    <!--本地仓库-->
     <distributionManagement>
         <repository>
             <id>ease-maven</id>
-            <url>ftp://maven.code4everything.org/repository</url>
+            <url>file:${user.home}/.m2/repository</url>
         </repository>
     </distributionManagement>
 
@@ -103,12 +103,5 @@
                 </executions>
             </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ftp</artifactId>
-                <version>1.0-beta-6</version>
-            </extension>
-        </extensions>
     </build>
 </project>
