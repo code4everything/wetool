@@ -264,6 +264,11 @@ public class MainController {
         FxDialogs.showDialog(null, box);
     }
 
+    public void clearAllCache() {
+        tabPane.getTabs().clear();
+        BeanFactory.clearCache();
+    }
+
     @SuppressWarnings("StringBufferReplaceableByString")
     private String getAllJavaInfos() {
         StringBuilder builder = new StringBuilder();

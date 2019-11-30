@@ -34,7 +34,7 @@
             ]
         }
     },
-    /*快速启动裁断*/
+    /*快速启动菜单*/
     "quickStarts": [
         {
             /*菜单别名是必须的，location与subStarts属性二选一*/

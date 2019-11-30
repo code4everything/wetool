@@ -1,6 +1,10 @@
 ## 更新历史
 
-#### [v1.0.2]()
+#### [v1.0.2](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.2.zip)
+
+- 优化二维码生成器
+- 新增全局异常处理
+- 优化代码
 
 #### [v1.0.1](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.1.zip)
 

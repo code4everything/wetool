@@ -16,6 +16,7 @@
             <SeparatorMenuItem/>
             <MenuItem onAction="#openAllTab" text="打开所有标签(_Z)"/>
             <MenuItem onAction="#closeAllTab" text="关闭所有标签(_C)"/>
+            <MenuItem text="清除所有缓存(_I)" onAction="#clearAllCache"/>
             <SeparatorMenuItem/>
             <MenuItem onAction="#restart" text="重启(_R)"/>
             <SeparatorMenuItem/>
