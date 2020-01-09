@@ -1,5 +1,6 @@
 package org.code4everything.wetool;
 
+import org.code4everything.wetool.constant.ViewConsts;
 import org.junit.Test;
 
 import java.io.File;
@@ -36,5 +37,10 @@ public class CommonTest {
         String ans = "parent" + File.separator + "child";
         assert ans.equals(test1.replaceAll("[/\\\\]", Matcher.quoteReplacement(File.separator)));
         assert ans.equals(test2.replaceAll("[/\\\\]", Matcher.quoteReplacement(File.separator)));
+    }
+
+    @Test
+    public void testUrl() {
+        System.out.println(CommonTest.class.getResource(ViewConsts.MAIN));
     }
 }

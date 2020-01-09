@@ -89,7 +89,7 @@ public class WeApplication extends Application {
             enableTray();
         }
         // 加载主界面
-        Pane root = FxUtils.loadFxml(ViewConsts.MAIN);
+        Pane root = FxUtils.loadFxml(WeApplication.class, ViewConsts.MAIN, false);
         if (Objects.isNull(root)) {
             FxDialogs.showError(TipConsts.INIT_ERROR);
             WeUtils.exitSystem();

@@ -15,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
+import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
@@ -167,7 +168,7 @@ public class MainController {
         if (Objects.isNull(tabPair)) {
             return;
         }
-        Pane box = FxUtils.loadFxml(tabPair.getValue());
+        Pane box = FxUtils.loadFxml(WeApplication.class, tabPair.getValue(), false);
         if (Objects.isNull(box)) {
             return;
         }

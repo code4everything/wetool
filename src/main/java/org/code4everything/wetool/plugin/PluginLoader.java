@@ -5,6 +5,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.JarClassLoader;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import javafx.scene.control.MenuItem;
@@ -73,9 +74,8 @@ public final class PluginLoader {
 
     private void preparePlugin(File file, boolean checkDisable) {
         if (file.exists() && file.isFile()) {
-            try {
-                // 包装成 JarFile
-                JarFile jar = new JarFile(file);
+            // 包装成 JarFile
+            try (JarFile jar = new JarFile(file)) {
                 // 读取插件信息
                 ZipEntry entry = jar.getEntry("plugin.json");
                 if (Objects.isNull(entry)) {
@@ -156,7 +156,7 @@ public final class PluginLoader {
                 // 加载插件类
                 ClassLoader loader = JarClassLoader.loadJarToSystemClassLoader(plugin.getJarFile());
                 Class<?> clazz = loader.loadClass(plugin.getPluginInfo().getSupportedClass());
-                WePluginSupporter supporter = (WePluginSupporter) clazz.newInstance();
+                WePluginSupporter supporter = (WePluginSupporter) ReflectUtil.newInstance(clazz);
                 // 添加插件菜单
                 registerPlugin(plugin.getPluginInfo(), supporter, false);
             } catch (Exception e) {
