@@ -5,8 +5,6 @@
 module org.code4everything.wetool {
     requires java.base;
 
-    requires org.mapstruct;
-
     requires hutool.core;
     requires hutool.system;
     requires hutool.crypto;
@@ -16,12 +14,14 @@ module org.code4everything.wetool {
     requires fastjson;
     requires com.google.common;
 
-    requires org.code4everything.wetool.plugin.support;
+    requires transitive org.code4everything.wetool.plugin.support;
 
     exports org.code4everything.wetool;
+    exports org.code4everything.wetool.plugin;
 
     opens views;
     opens images;
+    opens org.code4everything.wetool;
     opens org.code4everything.wetool.controller;
     opens org.code4everything.wetool.controller.converter;
     opens org.code4everything.wetool.controller.generator;
