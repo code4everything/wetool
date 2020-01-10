@@ -41,6 +41,8 @@ public final class PluginLoader {
 
     private static final Map<String, WePlugin> PREPARE_PLUGINS = new HashMap<>();
 
+    private static final JarClassLoader CLASS_LOADER = new JarClassLoader();
+
     public static void loadPlugins() {
         // 加载工作目录下的plugins目录
         File pluginParent = new File(FileConsts.PLUGIN_FOLDER);
@@ -151,14 +153,14 @@ public final class PluginLoader {
         Iterator<Map.Entry<String, WePlugin>> iterator = PREPARE_PLUGINS.entrySet().iterator();
         while (iterator.hasNext()) {
             WePlugin plugin = iterator.next().getValue();
-            LOADED_PLUGINS.add(plugin);
             try {
                 // 加载插件类
-                ClassLoader loader = JarClassLoader.loadJarToSystemClassLoader(plugin.getJarFile());
-                Class<?> clazz = loader.loadClass(plugin.getPluginInfo().getSupportedClass());
+                JarClassLoader.loadJar(CLASS_LOADER, plugin.getJarFile());
+                Class<?> clazz = CLASS_LOADER.loadClass(plugin.getPluginInfo().getSupportedClass());
                 WePluginSupporter supporter = (WePluginSupporter) ReflectUtil.newInstance(clazz);
                 // 添加插件菜单
                 registerPlugin(plugin.getPluginInfo(), supporter, false);
+                LOADED_PLUGINS.add(plugin);
             } catch (Exception e) {
                 FxDialogs.showException("plugin file load failed: " + plugin.getJarFile().getName(), e);
             }

@@ -138,6 +138,9 @@ public class CharsetConverterController extends AbstractConverter {
     }
 
     public void readByCharset() {
+        if (StrUtil.isEmpty(filePath.getText())) {
+            return;
+        }
         originalCharset.setValue(fileCharset.getText());
         openFile(new File(filePath.getText()));
     }
