@@ -2,7 +2,6 @@ package org.code4everything.wetool.controller.generator;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.extra.qrcode.QrCodeUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -16,6 +15,7 @@ import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.thirdparty.hutool.QrCodeUtil;
 import org.code4everything.wetool.util.FinalUtils;
 
 import java.io.ByteArrayInputStream;

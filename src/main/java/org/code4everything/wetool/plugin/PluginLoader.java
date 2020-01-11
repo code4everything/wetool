@@ -155,7 +155,7 @@ public final class PluginLoader {
             WePlugin plugin = iterator.next().getValue();
             try {
                 // 加载插件类
-                JarClassLoader.loadJar(CLASS_LOADER, plugin.getJarFile());
+                CLASS_LOADER.addJar(plugin.getJarFile());
                 Class<?> clazz = CLASS_LOADER.loadClass(plugin.getPluginInfo().getSupportedClass());
                 WePluginSupporter supporter = (WePluginSupporter) ReflectUtil.newInstance(clazz);
                 // 添加插件菜单
