@@ -40,7 +40,7 @@
 
 - 自行打包
 
-    ``` shell
+    ```shell
     git clone https://gitee.com/code4everything/wetool.git
     cd wetool
     mvn package [-D javafx.platform=[win|mac|linux]]
@@ -48,7 +48,7 @@
   
 - 运行
 
-    ``` shell
+    ```shell
     # windows平台
     javaw -jar ./wetool.jar
     # mac或linux平台
