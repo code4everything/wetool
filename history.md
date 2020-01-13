@@ -1,5 +1,9 @@
 ## 更新历史
 
+### [v1.1.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.0.zip)
+
+- 更新Java版本至JDK11
+
 #### [v1.0.2](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.2.zip)
 
 - 优化二维码生成器

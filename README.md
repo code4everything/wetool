@@ -4,10 +4,10 @@
 
 ### 开发环境
 
-- JDK 1.8
-- Maven 3.5
+- JDK 11.0.5
+- Maven 3.6
 - Scene Builder 2.0
-- IDEA 2019.2
+- IDEA 2019.3
 - Lombok
 - Git
 
@@ -34,7 +34,7 @@
 
 ### 下载与使用
 
-- [wetool-1.0.2.zip](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.2.zip)
+- [wetool-1.1.0.zip](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.0.zip)
 
 - [更新历史](history.md)
 
@@ -43,7 +43,7 @@
     ``` shell
     git clone https://gitee.com/code4everything/wetool.git
     cd wetool
-    mvn package
+    mvn package [-D javafx.platform=[win|mac|linux]]
     ```
   
 - 运行
