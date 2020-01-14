@@ -15,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
-import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
@@ -164,7 +163,7 @@ public class CharsetConverterController extends AbstractConverter {
 
     public void batchConvert() {
         if (StrUtil.isEmpty(targetCharset.getValue())) {
-            FxDialogs.showInformation(AppConsts.Title.APP_TITLE, "请选择目标编码！");
+            FxDialogs.showInformation(FinalUtils.getAppTitle(), "请选择目标编码！");
             return;
         }
         final Charset charset = Charset.forName(targetCharset.getValue());
