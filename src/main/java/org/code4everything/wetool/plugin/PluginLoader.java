@@ -112,29 +112,30 @@ public final class PluginLoader {
         }
     }
 
-    private static void registerPlugin(WePluginInfo info, WePluginSupporter supporter, boolean checkCompatible) {
+    private static boolean registerPlugin(WePluginInfo info, WePluginSupporter supporter, boolean checkCompatible) {
         if (checkCompatible && isIncompatible(info)) {
-            return;
+            return false;
         }
         // 初始化
         if (!supporter.initialize()) {
             log.info("plugin {}-{}-{} initialize failed", info.getAuthor(), info.getName(), info.getVersion());
-            return;
+            return false;
         }
+        // 注册托盘菜单
+        java.awt.MenuItem trayMenu = supporter.registerTrayMenu();
+        WeApplication.addIntoPluginMenu(trayMenu);
         // 注册主界面插件菜单
         MenuItem barMenu = supporter.registerBarMenu();
         if (ObjectUtil.isNotNull(barMenu)) {
             FxUtils.getPluginMenu().getItems().add(barMenu);
         }
-        // 注册托盘菜单
-        java.awt.MenuItem trayMenu = supporter.registerTrayMenu();
-        WeApplication.addIntoPluginMenu(trayMenu);
         log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
         // 注册成功回调
         supporter.registered(info, barMenu, trayMenu);
         if (BootConfig.isDebug()) {
             supporter.debugCall();
         }
+        return true;
     }
 
     private static void replaceIfNewer(WePlugin plugin) {
@@ -160,8 +161,9 @@ public final class PluginLoader {
                 Class<?> clazz = plugin.getClassLoader().loadClass(plugin.getPluginInfo().getSupportedClass());
                 WePluginSupporter supporter = (WePluginSupporter) ReflectUtil.newInstance(clazz);
                 // 添加插件菜单
-                registerPlugin(plugin.getPluginInfo(), supporter, false);
-                LOADED_PLUGINS.add(plugin);
+                if (registerPlugin(plugin.getPluginInfo(), supporter, false)) {
+                    LOADED_PLUGINS.add(plugin);
+                }
             } catch (Exception e) {
                 FxDialogs.showException("plugin file load failed: " + plugin.getJarFile().getName(), e);
             }
