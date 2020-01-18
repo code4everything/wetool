@@ -66,6 +66,12 @@
 
 ![wetool](images/wetool.png)
 
+![wetool_charset](images/wetool_charset.jpg)
+
+![wetool_random_generator](images/wetool_random_generator.jpg)
+
+![wetool_qrcode_generator](images/wetool_qrcode_generator.jpg)
+
 ### 插件开发
 
 没有你需要的功能？没关系，一分钟快速了解插件如何开发：[传送门](https://gitee.com/code4everything/wetool-plugin)
