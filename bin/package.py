@@ -14,7 +14,7 @@ with open('./pom.xml', 'r', encoding='utf-8') as fr:
 
 
 def package(os_name):
-    print('package %s plateform' % os_name)
+    print('package %s plateform\r\n' % os_name)
     print(os.popen('mvn clean package -D javafx.platform=%s' % os_name).read())
     filename = './wetool-%s.jar' % os_name
     if os.path.exists(filename):
