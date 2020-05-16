@@ -34,7 +34,7 @@
 
 ### 下载与使用
 
-- [wetool-1.1.0.zip](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.0.zip)
+- [wetool-1.1.1.zip](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.1.zip)
 
 - [更新历史](history.md)
 
@@ -66,11 +66,11 @@
 
 ![wetool](images/wetool.png)
 
-![wetool_charset](images/wetool_charset.jpg)
+### 二次开发
 
-![wetool_random_generator](images/wetool_random_generator.jpg)
-
-![wetool_qrcode_generator](images/wetool_qrcode_generator.jpg)
+开发调试过程中，建议运行[`WeApplicationTest`](src/test/java/org/code4everything/wetool/WeApplicationTest.java)主类，
+而不是运行主类[`WeApplication`](src/main/java/org/code4everything/wetool/WeApplication.java)，
+运行`WeApplication`类时产生的日志数据会被输出到文件中，而`WeApplicationTest`则只会输出到终端，方便开发调试
 
 ### 插件开发
 
