@@ -6,6 +6,8 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.system.OsInfo;
+import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
 import javafx.scene.control.MenuItem;
 import lombok.experimental.UtilityClass;
@@ -113,6 +115,17 @@ public final class PluginLoader {
     }
 
     private static boolean registerPlugin(WePluginInfo info, WePluginSupporter supporter, boolean checkCompatible) {
+        OsInfo osInfo = SystemUtil.getOsInfo();
+
+        // @formatter:off
+        boolean canRegister = (StrUtil.containsIgnoreCase(info.getSupportOs(), "windows") && osInfo.isWindows())
+                || (StrUtil.containsIgnoreCase(info.getSupportOs(), "mac") && osInfo.isMac())
+                || (StrUtil.containsIgnoreCase(info.getSupportOs(), "linux") && osInfo.isLinux());
+        // @formatter:on
+        if (!canRegister) {
+            log.info("plugin {}-{}-{} not support this os", info.getAuthor(), info.getName(), info.getVersion());
+            return false;
+        }
         if (checkCompatible && isIncompatible(info)) {
             return false;
         }
