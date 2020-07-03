@@ -23,7 +23,6 @@ import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
-import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
@@ -97,7 +96,7 @@ public class WeApplication extends Application {
         // 设置标题
         stage.setScene(new Scene(Objects.requireNonNull(root)));
         stage.getIcons().add(new Image(getClass().getResourceAsStream(ViewConsts.ICON)));
-        stage.setTitle(AppConsts.Title.APP_TITLE);
+        stage.setTitle(FinalUtils.getAppTitle());
         // 监听关闭事件
         stage.setOnCloseRequest((WindowEvent event) -> {
             hideStage();
@@ -191,9 +190,9 @@ public class WeApplication extends Application {
         try {
             SystemTray tray = SystemTray.getSystemTray();
             java.awt.Image image = ImageIO.read(getClass().getResourceAsStream(ViewConsts.ICON));
-            TrayIcon trayIcon = new TrayIcon(image, AppConsts.Title.APP_TITLE, popupMenu);
+            TrayIcon trayIcon = new TrayIcon(image, FinalUtils.getAppTitle(), popupMenu);
             trayIcon.setImageAutoSize(true);
-            trayIcon.setToolTip(AppConsts.Title.APP_TITLE);
+            trayIcon.setToolTip(FinalUtils.getAppTitle());
             trayIcon.addMouseListener(new TrayMouseListener());
             tray.add(trayIcon);
             isTraySuccess = true;

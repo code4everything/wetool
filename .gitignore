@@ -1,5 +1,7 @@
 # Custom
 /wetool/
+wetool-*.jar
+conf/
 
 # Compiled class file
 *.class

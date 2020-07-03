@@ -2,7 +2,6 @@ package org.code4everything.wetool.plugin;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.JarClassLoader;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -39,9 +38,7 @@ public final class PluginLoader {
 
     private static final Set<WePlugin> LOADED_PLUGINS = new HashSet<>();
 
-    private static final Map<String, WePlugin> PREPARE_PLUGINS = new HashMap<>();
-
-    private static final JarClassLoader CLASS_LOADER = new JarClassLoader();
+    private static final Map<String, WePlugin> PREPARED_PLUGINS = new HashMap<>();
 
     public static void loadPlugins() {
         // 加载工作目录下的plugins目录
@@ -104,6 +101,10 @@ public final class PluginLoader {
                     log.info("plugin {}-{} already loaded", info.getAuthor(), info.getName());
                     return;
                 }
+                if (info.getIsolated()) {
+                    // 隔离的插件使用单独的类加载器
+                    plugin.setClassLoader(new PluginClassLoader(info.getName()));
+                }
                 replaceIfNewer(plugin);
             } catch (Exception e) {
                 FxDialogs.showException("plugin file load failed: " + file.getName(), e);
@@ -111,56 +112,58 @@ public final class PluginLoader {
         }
     }
 
-    private static void registerPlugin(WePluginInfo info, WePluginSupporter supporter, boolean checkCompatible) {
+    private static boolean registerPlugin(WePluginInfo info, WePluginSupporter supporter, boolean checkCompatible) {
         if (checkCompatible && isIncompatible(info)) {
-            return;
+            return false;
         }
         // 初始化
         if (!supporter.initialize()) {
             log.info("plugin {}-{}-{} initialize failed", info.getAuthor(), info.getName(), info.getVersion());
-            return;
+            return false;
         }
+        // 注册托盘菜单
+        java.awt.MenuItem trayMenu = supporter.registerTrayMenu();
+        WeApplication.addIntoPluginMenu(trayMenu);
         // 注册主界面插件菜单
         MenuItem barMenu = supporter.registerBarMenu();
         if (ObjectUtil.isNotNull(barMenu)) {
             FxUtils.getPluginMenu().getItems().add(barMenu);
         }
-        // 注册托盘菜单
-        java.awt.MenuItem trayMenu = supporter.registerTrayMenu();
-        WeApplication.addIntoPluginMenu(trayMenu);
         log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
         // 注册成功回调
         supporter.registered(info, barMenu, trayMenu);
         if (BootConfig.isDebug()) {
             supporter.debugCall();
         }
+        return true;
     }
 
     private static void replaceIfNewer(WePlugin plugin) {
         String key = plugin.getPluginInfo().getAuthor() + plugin.getPluginInfo().getName();
-        if (PREPARE_PLUGINS.containsKey(key)) {
-            WePlugin another = PREPARE_PLUGINS.get(key);
+        if (PREPARED_PLUGINS.containsKey(key)) {
+            WePlugin another = PREPARED_PLUGINS.get(key);
             // 当前版本是否大于预加载的版本
             if (WeUtils.isRequiredVersion(plugin.getPluginInfo().getVersion(), another.getPluginInfo().getVersion())) {
-                PREPARE_PLUGINS.put(key, plugin);
+                PREPARED_PLUGINS.put(key, plugin);
             }
         } else {
-            PREPARE_PLUGINS.put(key, plugin);
+            PREPARED_PLUGINS.put(key, plugin);
         }
     }
 
     private static void loadPluginFromPrepared() {
-        Iterator<Map.Entry<String, WePlugin>> iterator = PREPARE_PLUGINS.entrySet().iterator();
+        Iterator<Map.Entry<String, WePlugin>> iterator = PREPARED_PLUGINS.entrySet().iterator();
         while (iterator.hasNext()) {
             WePlugin plugin = iterator.next().getValue();
             try {
                 // 加载插件类
-                CLASS_LOADER.addJar(plugin.getJarFile());
-                Class<?> clazz = CLASS_LOADER.loadClass(plugin.getPluginInfo().getSupportedClass());
+                plugin.getClassLoader().addJar(plugin.getJarFile());
+                Class<?> clazz = plugin.getClassLoader().loadClass(plugin.getPluginInfo().getSupportedClass());
                 WePluginSupporter supporter = (WePluginSupporter) ReflectUtil.newInstance(clazz);
                 // 添加插件菜单
-                registerPlugin(plugin.getPluginInfo(), supporter, false);
-                LOADED_PLUGINS.add(plugin);
+                if (registerPlugin(plugin.getPluginInfo(), supporter, false)) {
+                    LOADED_PLUGINS.add(plugin);
+                }
             } catch (Exception e) {
                 FxDialogs.showException("plugin file load failed: " + plugin.getJarFile().getName(), e);
             }
