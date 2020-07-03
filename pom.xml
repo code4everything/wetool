@@ -23,7 +23,7 @@
     <repositories>
         <repository>
             <id>ease-maven</id>
-            <url>https://code4everything.gitee.io/repository/maven</url>
+            <url>https://code4everything.github.io/repository/maven</url>
         </repository>
     </repositories>
 
