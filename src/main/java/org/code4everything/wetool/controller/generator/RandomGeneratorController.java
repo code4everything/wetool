@@ -82,7 +82,7 @@ public class RandomGeneratorController implements BaseViewController {
         FinalUtils.registerView(TitleConsts.RANDOM_GENERATOR, this);
     }
 
-    public void generateUUID() {
+    public void generateUuid() {
         uuidResult.setText(IdUtil.simpleUUID());
         log.info("generate random uuid: {}", uuidResult.getText());
     }
@@ -96,7 +96,7 @@ public class RandomGeneratorController implements BaseViewController {
             low = 0;
             high = 10;
             if (scale > 1) {
-                low = (int) Math.pow(10, scale - 1);
+                low = (int) Math.pow(10D, scale - 1D);
                 high = low * 10;
             }
             num += "." + RandomUtil.randomInt(low + 1, high);
