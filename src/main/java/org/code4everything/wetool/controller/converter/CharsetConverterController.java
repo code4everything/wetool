@@ -33,7 +33,7 @@ import java.util.List;
 @Slf4j
 public class CharsetConverterController extends AbstractConverter {
 
-    private final String BASE64 = "BASE64";
+    private static final String BASE64 = "BASE64";
 
     @FXML
     public TextArea originalContent;
@@ -57,7 +57,7 @@ public class CharsetConverterController extends AbstractConverter {
     public ComboBox<String> targetCharset;
 
     @FXML
-    public CheckBox chooseFolderCB;
+    public CheckBox chooseFolderCheckBox;
 
     @FXML
     private void initialize() {
@@ -167,7 +167,7 @@ public class CharsetConverterController extends AbstractConverter {
             return;
         }
         final Charset charset = Charset.forName(targetCharset.getValue());
-        if (chooseFolderCB.isSelected()) {
+        if (chooseFolderCheckBox.isSelected()) {
             FxUtils.chooseFolder(file -> {
                 batchConvert(Lists.newArrayList(file), charset);
                 FxDialogs.showSuccess();

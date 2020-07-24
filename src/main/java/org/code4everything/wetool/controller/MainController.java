@@ -49,6 +49,17 @@ public class MainController {
 
     private static final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
 
+    static {
+        TAB_MAP.put("FileManager", new Pair<>(TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER));
+        TAB_MAP.put("JsonParser", new Pair<>(TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER));
+        TAB_MAP.put("RandomGenerator", new Pair<>(TitleConsts.RANDOM_GENERATOR, ViewConsts.RANDOM_GENERATOR));
+        TAB_MAP.put("ClipboardHistory", new Pair<>(TitleConsts.CLIPBOARD_HISTORY, ViewConsts.CLIPBOARD_HISTORY));
+        TAB_MAP.put("QrCodeGenerator", new Pair<>(TitleConsts.QR_CODE_GENERATOR, ViewConsts.QR_CODE_GENERATOR));
+        TAB_MAP.put("CharsetConverter", new Pair<>(TitleConsts.CHARSET_CONVERTER, ViewConsts.CHARSET_CONVERTER));
+        TAB_MAP.put("NetworkTool", new Pair<>(TitleConsts.NETWORK_TOOL, ViewConsts.NETWORK_TOOL));
+        TAB_MAP.put("NaryConverter", new Pair<>(TitleConsts.NARY_CONVERTER, ViewConsts.NARY_CONVERTER));
+    }
+
     private final WeConfig config = WeUtils.getConfig();
 
     @FXML
@@ -62,17 +73,6 @@ public class MainController {
 
     @FXML
     public Menu pluginMenu;
-
-    {
-        TAB_MAP.put("FileManager", new Pair<>(TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER));
-        TAB_MAP.put("JsonParser", new Pair<>(TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER));
-        TAB_MAP.put("RandomGenerator", new Pair<>(TitleConsts.RANDOM_GENERATOR, ViewConsts.RANDOM_GENERATOR));
-        TAB_MAP.put("ClipboardHistory", new Pair<>(TitleConsts.CLIPBOARD_HISTORY, ViewConsts.CLIPBOARD_HISTORY));
-        TAB_MAP.put("QrCodeGenerator", new Pair<>(TitleConsts.QR_CODE_GENERATOR, ViewConsts.QR_CODE_GENERATOR));
-        TAB_MAP.put("CharsetConverter", new Pair<>(TitleConsts.CHARSET_CONVERTER, ViewConsts.CHARSET_CONVERTER));
-        TAB_MAP.put("NetworkTool", new Pair<>(TitleConsts.NETWORK_TOOL, ViewConsts.NETWORK_TOOL));
-        TAB_MAP.put("NaryConverter", new Pair<>(TitleConsts.NARY_CONVERTER, ViewConsts.NARY_CONVERTER));
-    }
 
     /**
      * 此对象暂时不注册到工厂
@@ -274,39 +274,40 @@ public class MainController {
     private String getAllJavaInfos() {
         StringBuilder builder = new StringBuilder();
         builder.append("JavaVirtualMachineSpecification信息：\r\n");
-        builder.append("=========================================================================================\r\n");
+        String lineSep = "========================================================================================\r\n";
+        builder.append(lineSep);
         builder.append(SystemUtil.getJvmSpecInfo());
 
         builder.append("\r\nJavaVirtualMachineImplementation信息：\r\n");
-        builder.append("=========================================================================================\r\n");
+        builder.append(lineSep);
         builder.append(SystemUtil.getJvmInfo());
 
         builder.append("\r\nJavaSpecification信息：\r\n");
-        builder.append("=========================================================================================\r\n");
+        builder.append(lineSep);
         builder.append(SystemUtil.getJavaSpecInfo());
 
         builder.append("\r\nJavaImplementation信息：\r\n");
-        builder.append("=========================================================================================\r\n");
+        builder.append(lineSep);
         builder.append(SystemUtil.getJavaInfo());
 
         builder.append("\r\nJava运行时信息：\r\n");
-        builder.append("=========================================================================================\r\n");
+        builder.append(lineSep);
         builder.append(SystemUtil.getJavaRuntimeInfo());
 
         builder.append("\r\n系统信息：\r\n");
-        builder.append("=========================================================================================\r\n");
+        builder.append(lineSep);
         builder.append(SystemUtil.getOsInfo());
 
         builder.append("\r\n用户信息：\r\n");
-        builder.append("=========================================================================================\r\n");
+        builder.append(lineSep);
         builder.append(SystemUtil.getUserInfo());
 
         builder.append("\r\n当前主机网络地址信息：\r\n");
-        builder.append("=========================================================================================\r\n");
+        builder.append(lineSep);
         builder.append(SystemUtil.getHostInfo());
 
         builder.append("\r\n运行时信息：\r\n");
-        builder.append("=========================================================================================\r\n");
+        builder.append(lineSep);
         builder.append(SystemUtil.getRuntimeInfo());
 
         return builder.toString();

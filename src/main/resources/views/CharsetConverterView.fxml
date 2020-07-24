@@ -49,7 +49,7 @@
                 <Insets right="10.0"/>
             </HBox.margin>
         </Button>
-        <CheckBox fx:id="chooseFolderCB" mnemonicParsing="false" selected="true" text="文件夹" HBox.hgrow="NEVER">
+        <CheckBox fx:id="chooseFolderCheckBox" mnemonicParsing="false" selected="true" text="文件夹" HBox.hgrow="NEVER">
             <HBox.margin>
                 <Insets right="10.0" top="4.0"/>
             </HBox.margin>
