@@ -32,7 +32,6 @@ import org.code4everything.wetool.util.FinalUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Objects;
@@ -200,14 +199,14 @@ public class WeApplication extends Application {
     }
 
     private void addQuickOpenMenu(Menu menu) {
-        menu.add(FxUtils.createMenuItem("配置文件", (ActionListener) e -> FinalUtils.openConfig()));
-        menu.add(FxUtils.createMenuItem("日志文件", (ActionListener) e -> FxUtils.openFile(FileConsts.LOG)));
+        menu.add(FxUtils.createTrayMenuItem("配置文件", e -> FinalUtils.openConfig()));
+        menu.add(FxUtils.createTrayMenuItem("日志文件", e -> FxUtils.openFile(FileConsts.LOG)));
         menu.addSeparator();
-        menu.add(FxUtils.createMenuItem("工作目录", (ActionListener) e -> FxUtils.openFile(FileUtils.currentWorkDir())));
-        menu.add(FxUtils.createMenuItem("插件目录", (ActionListener) e -> FinalUtils.openPluginFolder()));
-        menu.add(FxUtils.createMenuItem("日志目录", (ActionListener) e -> FxUtils.openFile(FileConsts.LOG_FOLDER)));
+        menu.add(FxUtils.createTrayMenuItem("工作目录", e -> FxUtils.openFile(FileUtils.currentWorkDir())));
+        menu.add(FxUtils.createTrayMenuItem("插件目录", e -> FinalUtils.openPluginFolder()));
+        menu.add(FxUtils.createTrayMenuItem("日志目录", e -> FxUtils.openFile(FileConsts.LOG_FOLDER)));
         menu.addSeparator();
-        menu.add(FxUtils.createMenuItem("插件仓库", (ActionListener) e -> FxUtils.openLink(TipConsts.REPO_LINK)));
+        menu.add(FxUtils.createTrayMenuItem("插件仓库", e -> FxUtils.openLink(TipConsts.REPO_LINK)));
     }
 
     private class TrayMouseListener implements MouseListener {

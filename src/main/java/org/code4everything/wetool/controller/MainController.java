@@ -43,11 +43,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MainController {
 
-    private final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).build();
+    private static final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).build();
 
-    private final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(1, FACTORY);
+    private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(1, FACTORY);
 
-    private final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
+    private static final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
 
     private final WeConfig config = WeUtils.getConfig();
 

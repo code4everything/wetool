@@ -21,9 +21,9 @@ import java.util.Date;
 @Slf4j
 public class ClipboardHistoryController implements BaseViewController {
 
-    private final String SEP = StrUtil.repeat("=", 100);
+    private static final String SEP = StrUtil.repeat("=", 100);
 
-    private final String TEMPLATE = SEP + "\r\n{}\r\n" + SEP + "\r\n\r\n{}\r\n\r\n";
+    private static final String TEMPLATE = SEP + "\r\n{}\r\n" + SEP + "\r\n\r\n{}\r\n\r\n";
 
     @FXML
     public TextArea clipboardHistory;
