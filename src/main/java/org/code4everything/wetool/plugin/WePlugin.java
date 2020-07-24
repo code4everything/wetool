@@ -18,6 +18,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @Accessors(chain = true)
+@RequiredArgsConstructor
 public class WePlugin implements BaseBean, Serializable {
 
     private static final long serialVersionUID = 8644286685582338724L;
