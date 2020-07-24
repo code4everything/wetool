@@ -15,7 +15,7 @@
                 <Insets top="5.0"/>
             </HBox.margin>
         </Label>
-        <Button mnemonicParsing="false" onAction="#generateUUID" text="生成" HBox.hgrow="NEVER">
+        <Button mnemonicParsing="false" onAction="#generateUuid" text="生成" HBox.hgrow="NEVER">
             <HBox.margin>
                 <Insets left="10.0"/>
             </HBox.margin>

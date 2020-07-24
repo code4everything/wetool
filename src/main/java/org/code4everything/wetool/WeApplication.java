@@ -2,6 +2,7 @@ package org.code4everything.wetool;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
@@ -44,7 +45,7 @@ import java.util.Set;
 @Slf4j
 public class WeApplication extends Application {
 
-    private static Menu pluginMenu;
+    private static Menu pluginMenu = new Menu(TitleConsts.PLUGIN);
 
     private Stage stage;
 
@@ -108,16 +109,14 @@ public class WeApplication extends Application {
         stage.setHeight(config.getInitialize().getHeight());
         stage.setFullScreen(config.getInitialize().getFullscreen());
 
-        if (WeUtils.getConfig().getInitialize().getHide()) {
+        if (BooleanUtil.isTrue(WeUtils.getConfig().getInitialize().getHide())) {
             hideStage();
         } else {
             stage.show();
         }
         log.info("wetool started");
         // 处理全局异常
-        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
-            FxDialogs.showException(TipConsts.APP_EXCEPTION, throwable);
-        });
+        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> FxDialogs.showException(TipConsts.APP_EXCEPTION, throwable));
     }
 
     private void hideStage() {
@@ -160,7 +159,6 @@ public class WeApplication extends Application {
             popupMenu.addSeparator();
         }
         // 插件菜单
-        pluginMenu = new Menu(TitleConsts.PLUGIN);
         popupMenu.add(pluginMenu);
         popupMenu.addSeparator();
         // 打开
