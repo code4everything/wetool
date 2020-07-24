@@ -17,19 +17,19 @@ import org.code4everything.wetool.util.FinalUtils;
 @Slf4j
 public class RandomGeneratorController implements BaseViewController {
 
-    private final String BASE_NUMBER = "0123456789";
+    private static final String BASE_NUMBER = "0123456789";
 
-    private final String BASE_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String BASE_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    private final String BASE_LOWER = "abcdefghijklmnopqrstuvwxyz";
+    private static final String BASE_LOWER = "abcdefghijklmnopqrstuvwxyz";
 
-    private final String BASE_LETTER = BASE_LOWER + BASE_UPPER;
+    private static final String BASE_LETTER = BASE_LOWER + BASE_UPPER;
 
-    private final String BASE_STRING = BASE_NUMBER + BASE_LETTER;
+    private static final String BASE_STRING = BASE_NUMBER + BASE_LETTER;
 
-    private final String BASE_CHAR = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+    private static final String BASE_CHAR = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 
-    private final String BASE_TEXT = BASE_CHAR + BASE_STRING;
+    private static final String BASE_TEXT = BASE_CHAR + BASE_STRING;
 
     @FXML
     public TextField uuidResult;

@@ -105,7 +105,7 @@ public final class PluginLoader {
                 }
                 if (info.getIsolated()) {
                     // 隔离的插件使用单独的类加载器
-                    plugin.setClassLoader(new PluginClassLoader(info.getName()));
+                    plugin.setLoaderName(info.getName());
                 }
                 replaceIfNewer(plugin);
             } catch (Exception e) {

@@ -1,8 +1,8 @@
 package org.code4everything.wetool.plugin;
 
-import cn.hutool.core.lang.JarClassLoader;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.code4everything.boot.base.bean.BaseBean;
 import org.code4everything.wetool.plugin.support.config.WePluginInfo;
 
@@ -17,7 +17,7 @@ import java.util.Objects;
 @Data
 @ToString
 @NoArgsConstructor
-@RequiredArgsConstructor
+@Accessors(chain = true)
 public class WePlugin implements BaseBean, Serializable {
 
     private static final long serialVersionUID = 8644286685582338724L;
@@ -30,11 +30,22 @@ public class WePlugin implements BaseBean, Serializable {
     @NonNull
     private File jarFile;
 
-    private PluginClassLoader classLoader;
+    private String loaderName;
+
+    private transient PluginClassLoader classLoader;
 
     @Generated
-    public JarClassLoader getClassLoader() {
-        return ObjectUtil.defaultIfNull(classLoader, CLASS_LOADER);
+    public PluginClassLoader getClassLoader() {
+        if (Objects.nonNull(classLoader)) {
+            return classLoader;
+        }
+        if (StrUtil.isBlank(loaderName) || CLASS_LOADER.getName().equals(loaderName)) {
+            classLoader = CLASS_LOADER;
+        }
+        if (Objects.isNull(classLoader)) {
+            classLoader = new PluginClassLoader(getLoaderName());
+        }
+        return classLoader;
     }
 
     @Override
