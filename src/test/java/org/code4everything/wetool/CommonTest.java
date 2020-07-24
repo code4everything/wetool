@@ -1,6 +1,8 @@
 package org.code4everything.wetool;
 
+import cn.hutool.core.util.StrUtil;
 import org.code4everything.wetool.constant.ViewConsts;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
@@ -21,13 +23,13 @@ public class CommonTest {
         map.put("a", "a");
         map.put("b", "b");
         map.put("c", "c");
-        assert !map.isEmpty();
+        Assert.assertFalse(map.isEmpty());
         Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
         while (iterator.hasNext()) {
             iterator.next();
             iterator.remove();
         }
-        assert map.isEmpty();
+        Assert.assertTrue(map.isEmpty());
     }
 
     @Test
@@ -35,12 +37,12 @@ public class CommonTest {
         String test1 = "parent\\child";
         String test2 = "parent/child";
         String ans = "parent" + File.separator + "child";
-        assert ans.equals(test1.replaceAll("[/\\\\]", Matcher.quoteReplacement(File.separator)));
-        assert ans.equals(test2.replaceAll("[/\\\\]", Matcher.quoteReplacement(File.separator)));
+        Assert.assertEquals(ans, test1.replaceAll("[/\\\\]", Matcher.quoteReplacement(File.separator)));
+        Assert.assertEquals(ans, test2.replaceAll("[/\\\\]", Matcher.quoteReplacement(File.separator)));
     }
 
     @Test
     public void testUrl() {
-        System.out.println(CommonTest.class.getResource(ViewConsts.MAIN));
+        Assert.assertTrue(StrUtil.isNotEmpty(CommonTest.class.getResource(ViewConsts.MAIN).toString()));
     }
 }
