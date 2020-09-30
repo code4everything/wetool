@@ -1,5 +1,9 @@
 ## 更新历史
 
+### [v1.1.2](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.2.zip)
+
+- 优化代码
+
 ### [v1.1.1](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.1.zip)
 
 - 新增对插件的隔离支持
