@@ -12,13 +12,13 @@
 
 - 更新Java版本至JDK11
 
-#### [v1.0.2](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.2.zip)
+#### [v1.0.2](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.0.2.zip)
 
 - 优化二维码生成器
 - 新增全局异常处理
 - 优化代码
 
-#### [v1.0.1](http://share.qiniu.segocat.com/tool/wetool/wetool-1.0.1.zip)
+#### [v1.0.1](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.0.1.zip)
 
 - 自定义重启脚本
 - 自定义插件文件路径，新版本自动覆盖旧版本，支持手动加载插件
@@ -29,7 +29,7 @@
 - 检测插件兼容性
 - 支持停用插件
 
-#### [v1.0.0](http://share.qiniu.segocat.com/tool/wetool/wetool.zip)
+#### [v1.0.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool.zip)
 
 - 批量重命名文件，复制文件，合并文件
 - 监听系统剪贴板，随时查看剪贴板历史（仅支持字符串）
