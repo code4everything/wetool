@@ -44,7 +44,7 @@ import java.util.Set;
 @Slf4j
 public class WeApplication extends Application {
 
-    private static Menu pluginMenu = new Menu(TitleConsts.PLUGIN);
+    private static final Menu PLUGIN_MENU = new Menu(TitleConsts.PLUGIN);
 
     private Stage stage;
 
@@ -57,8 +57,8 @@ public class WeApplication extends Application {
     }
 
     public static void addIntoPluginMenu(MenuItem menuItem) {
-        if (ObjectUtils.isNotNull(pluginMenu, menuItem)) {
-            pluginMenu.add(menuItem);
+        if (ObjectUtils.isNotNull(PLUGIN_MENU, menuItem)) {
+            PLUGIN_MENU.add(menuItem);
         }
     }
 
@@ -158,7 +158,7 @@ public class WeApplication extends Application {
             popupMenu.addSeparator();
         }
         // 插件菜单
-        popupMenu.add(pluginMenu);
+        popupMenu.add(PLUGIN_MENU);
         popupMenu.addSeparator();
         // 打开
         Menu menu = new Menu(TitleConsts.OPEN);
@@ -226,15 +226,17 @@ public class WeApplication extends Application {
         }
 
         @Override
-        public void mousePressed(MouseEvent e) {}
+        public void mousePressed(MouseEvent e) {
+            log.info("mouse pressed: {}", e);
+        }
 
         @Override
-        public void mouseReleased(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {log.info("mouse released: {}", e);}
 
         @Override
-        public void mouseEntered(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {log.info("mouse entered: {}", e);}
 
         @Override
-        public void mouseExited(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {log.info("mouse exited: {}", e);}
     }
 }

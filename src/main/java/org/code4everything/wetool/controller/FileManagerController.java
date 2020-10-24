@@ -101,8 +101,7 @@ public class FileManagerController implements BaseViewController {
         //设置可编辑
         destFilesOfTabRename.setCellFactory(TextFieldListCell.forListView());
         destFilesOfTabRename.setEditable(true);
-        srcFilesOfTabCopy.setCellFactory(UnmodifiableTextFieldListCell.forListView(new StringConverter<File>() {
-
+        srcFilesOfTabCopy.setCellFactory(UnmodifiableTextFieldListCell.forListView(new StringConverter<>() {
             @Override
             public String toString(File file) {
                 return file.getAbsolutePath();
