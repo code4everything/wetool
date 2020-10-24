@@ -148,11 +148,13 @@ public class FileManagerController implements BaseViewController {
         // 目标文件
         List<String> destFiles = destFilesOfTabRename.getItems();
         destFiles.clear();
+
+        int idxLen = String.valueOf(list.size()).length();
         for (File file : list) {
             if (StrUtil.isEmpty(postfix) || postfix.equals(StringConsts.Sign.DOT)) {
                 postfix = "." + FileUtil.extName(file);
             }
-            String fileName = prefix + (start++) + postfix;
+            String fileName = prefix + StrUtil.padPre(String.valueOf(start++), idxLen, '0') + postfix;
             destFiles.add(file.getParent() + File.separator + fileName);
         }
     }
