@@ -263,7 +263,7 @@ public class WeApplication extends Application {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            log.info("mouse pressed: {}", e);
+            log.debug("mouse pressed: {}", e);
         }
 
         @Override
