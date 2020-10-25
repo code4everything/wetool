@@ -1,6 +1,7 @@
 package org.code4everything.wetool.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -25,6 +26,7 @@ import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
+import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
@@ -114,7 +116,11 @@ public class MainController {
             if (CollUtil.isEmpty(start.getSubStarts())) {
                 // 添加子菜单
                 MenuItem item = new MenuItem(start.getAlias());
-                item.setOnAction(e -> FxUtils.openFile(start.getLocation()));
+                item.setOnAction(e -> {
+                    QuickStartEventMessage message = QuickStartEventMessage.of(start.getLocation());
+                    EventCenter.publishEvent(EventCenter.EVENT_QUICK_START_CLICKED, DateUtil.date(), message);
+                    FxUtils.openFile(start.getLocation());
+                });
                 menu.getItems().add(item);
             } else {
                 // 添加父级菜单
@@ -260,6 +266,7 @@ public class MainController {
     }
 
     public void clearAllCache() {
+        EventCenter.publishEvent(EventCenter.EVENT_CLEAR_FXML_CACHE, DateUtil.date());
         tabPane.getTabs().clear();
         BeanFactory.clearCache();
     }

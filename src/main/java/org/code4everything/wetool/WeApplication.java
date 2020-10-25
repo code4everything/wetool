@@ -1,6 +1,7 @@
 package org.code4everything.wetool;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.BooleanUtil;
@@ -64,6 +65,15 @@ public class WeApplication extends Application {
     public static void main(String[] args) {
         log.info("starting wetool on os: {}", SystemUtil.getOsInfo().getName());
         parseConfig();
+
+        // 注册事件
+        EventCenter.registerEvent(EventCenter.EVENT_QUICK_START_CLICKED, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_CLEAR_FXML_CACHE, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_WETOOL_RESTART, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_WETOOL_EXIT, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_WETOOL_SHOW, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_WETOOL_HIDDEN, EventMode.MULTI_SUB);
+
         launch(args);
     }
 
@@ -185,11 +195,17 @@ public class WeApplication extends Application {
         popupMenu.addSeparator();
         // 显示
         MenuItem item = new MenuItem(TitleConsts.SHOW);
-        item.addActionListener(e -> Platform.runLater(() -> stage.show()));
+        item.addActionListener(e -> {
+            EventCenter.publishEvent(EventCenter.EVENT_WETOOL_SHOW, DateUtil.date());
+            Platform.runLater(() -> stage.show());
+        });
         popupMenu.add(item);
         // 隐藏
         item = new MenuItem(TitleConsts.HIDE);
-        item.addActionListener(e -> Platform.runLater(() -> stage.hide()));
+        item.addActionListener(e -> {
+            EventCenter.publishEvent(EventCenter.EVENT_WETOOL_HIDDEN, DateUtil.date());
+            Platform.runLater(() -> stage.hide());
+        });
         popupMenu.add(item);
         // 重启
         popupMenu.addSeparator();
@@ -235,8 +251,10 @@ public class WeApplication extends Application {
                 // 双击图标
                 Platform.runLater(() -> {
                     if (stage.isShowing()) {
+                        EventCenter.publishEvent(EventCenter.EVENT_WETOOL_HIDDEN, DateUtil.date());
                         stage.hide();
                     } else {
+                        EventCenter.publishEvent(EventCenter.EVENT_WETOOL_SHOW, DateUtil.date());
                         stage.show();
                     }
                 });
@@ -249,12 +267,12 @@ public class WeApplication extends Application {
         }
 
         @Override
-        public void mouseReleased(MouseEvent e) {log.info("mouse released: {}", e);}
+        public void mouseReleased(MouseEvent e) {log.debug("mouse released: {}", e);}
 
         @Override
-        public void mouseEntered(MouseEvent e) {log.info("mouse entered: {}", e);}
+        public void mouseEntered(MouseEvent e) {log.debug("mouse entered: {}", e);}
 
         @Override
-        public void mouseExited(MouseEvent e) {log.info("mouse exited: {}", e);}
+        public void mouseExited(MouseEvent e) {log.debug("mouse exited: {}", e);}
     }
 }
