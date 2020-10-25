@@ -26,6 +26,7 @@ import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
+import org.code4everything.wetool.plugin.support.event.handler.BaseNoMessageEventHandler;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
@@ -94,7 +95,12 @@ public class MainController {
         loadTabs();
         // 监听剪贴板
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
-        EventCenter.subscribeEvent(EventCenter.EVENT_SECONDS_TIMER, (s, date, eventMessage) -> watchClipboard());
+        EventCenter.subscribeEvent(EventCenter.EVENT_SECONDS_TIMER, new BaseNoMessageEventHandler() {
+            @Override
+            public void handleEvent0(String s, Date date) {
+                watchClipboard(date);
+            }
+        });
     }
 
     public void loadPluginsHandy() {
@@ -131,7 +137,7 @@ public class MainController {
         });
     }
 
-    private void watchClipboard() {
+    private void watchClipboard(Date date) {
         String clipboard;
         String last;
         try {
@@ -148,7 +154,6 @@ public class MainController {
         // 剪贴板发生变化
         String compress = WeUtils.compressString(clipboard);
         log.info("clipboard changed: {}", compress);
-        Date date = new Date();
         config.appendClipboardHistory(date, clipboard);
         ClipboardHistoryController controller = FinalUtils.getView(TitleConsts.CLIPBOARD_HISTORY);
         if (ObjectUtil.isNotNull(controller)) {
