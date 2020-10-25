@@ -3,7 +3,6 @@ package org.code4everything.wetool.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
-import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
@@ -25,6 +24,7 @@ import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
+import org.code4everything.wetool.plugin.support.event.EventCenter;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
@@ -32,9 +32,6 @@ import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.util.FinalUtils;
 
 import java.util.*;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author pantao
@@ -43,9 +40,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MainController {
 
-    private static final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).build();
-
-    private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(1, FACTORY);
 
     private static final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
 
@@ -98,7 +92,7 @@ public class MainController {
         loadTabs();
         // 监听剪贴板
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
-        EXECUTOR.scheduleWithFixedDelay(this::watchClipboard, 0, 1000, TimeUnit.MILLISECONDS);
+        EventCenter.subscribeEvent(EventCenter.EVENT_SECONDS_TIMER, (s, date, eventMessage) -> watchClipboard());
     }
 
     public void loadPluginsHandy() {

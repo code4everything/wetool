@@ -1,5 +1,9 @@
 ## 更新历史
 
+### [v1.2.0]()
+
+- 新增事件中心，支持事件的发布与订阅
+
 ### [v1.1.2](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.2.zip)
 
 - 优化代码

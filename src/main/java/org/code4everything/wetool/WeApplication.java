@@ -2,6 +2,7 @@ package org.code4everything.wetool;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
@@ -24,6 +25,9 @@ import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
+import org.code4everything.wetool.plugin.support.event.EventCenter;
+import org.code4everything.wetool.plugin.support.event.EventMode;
+import org.code4everything.wetool.plugin.support.event.EventPublisher;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
@@ -36,6 +40,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author pantao
@@ -45,6 +52,10 @@ import java.util.Set;
 public class WeApplication extends Application {
 
     private static final Menu PLUGIN_MENU = new Menu(TitleConsts.PLUGIN);
+
+    private static final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).build();
+
+    private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(1, FACTORY);
 
     private Stage stage;
 
@@ -87,6 +98,13 @@ public class WeApplication extends Application {
         if (SystemUtil.getOsInfo().isWindows()) {
             enableTray();
         }
+
+        // 注册并发布秒钟定时器事件
+        String eventKey = EventCenter.EVENT_SECONDS_TIMER;
+        EventPublisher publisher = EventCenter.registerEvent(eventKey, EventMode.MULTI_SUB).orElse(null);
+        Objects.requireNonNull(publisher);
+        EXECUTOR.scheduleWithFixedDelay(publisher::publishEvent, 0, 1, TimeUnit.SECONDS);
+
         // 加载主界面
         Pane root = FxUtils.loadFxml(WeApplication.class, ViewConsts.MAIN, false);
         if (Objects.isNull(root)) {
