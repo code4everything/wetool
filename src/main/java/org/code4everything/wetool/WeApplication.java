@@ -29,6 +29,7 @@ import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
 import org.code4everything.wetool.plugin.support.event.EventMode;
 import org.code4everything.wetool.plugin.support.event.EventPublisher;
+import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
@@ -159,7 +160,11 @@ public class WeApplication extends Application {
             if (CollUtil.isEmpty(start.getSubStarts())) {
                 // 添加子菜单
                 MenuItem item = new MenuItem(start.getAlias());
-                item.addActionListener(e -> FxUtils.openFile(start.getLocation()));
+                item.addActionListener(e -> {
+                    QuickStartEventMessage message = QuickStartEventMessage.of(start.getLocation());
+                    EventCenter.publishEvent(EventCenter.EVENT_QUICK_START_CLICKED, DateUtil.date(), message);
+                    FxUtils.openFile(start.getLocation());
+                });
                 menu.add(item);
             } else {
                 // 添加父级菜单

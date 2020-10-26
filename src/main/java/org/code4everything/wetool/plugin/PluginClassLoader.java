@@ -11,7 +11,7 @@ import lombok.Getter;
 public class PluginClassLoader extends JarClassLoader {
 
     @Getter
-    private String name;
+    private final String name;
 
     public PluginClassLoader(String name) {
         this.name = name;
