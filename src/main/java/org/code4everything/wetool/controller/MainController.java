@@ -27,6 +27,7 @@ import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
 import org.code4everything.wetool.plugin.support.event.handler.BaseNoMessageEventHandler;
+import org.code4everything.wetool.plugin.support.event.message.ClipboardChangedEventMessage;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
@@ -42,7 +43,6 @@ import java.util.*;
  */
 @Slf4j
 public class MainController {
-
 
     private static final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
 
@@ -151,6 +151,7 @@ public class MainController {
         if (StrUtil.isEmpty(clipboard) || last.equals(clipboard)) {
             return;
         }
+
         // 剪贴板发生变化
         String compress = WeUtils.compressString(clipboard);
         log.info("clipboard changed: {}", compress);
@@ -161,6 +162,8 @@ public class MainController {
             final String clip = clipboard;
             Platform.runLater(() -> controller.insert(date, clip));
         }
+
+        EventCenter.publishEvent(EventCenter.EVENT_CLIPBOARD_CHANGED, date, ClipboardChangedEventMessage.of(clipboard));
     }
 
     private void loadTabs() {

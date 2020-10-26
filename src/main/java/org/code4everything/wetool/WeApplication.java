@@ -74,6 +74,7 @@ public class WeApplication extends Application {
         EventCenter.registerEvent(EventCenter.EVENT_WETOOL_EXIT, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_WETOOL_SHOW, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_WETOOL_HIDDEN, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_CLIPBOARD_CHANGED, EventMode.MULTI_SUB);
 
         launch(args);
     }
