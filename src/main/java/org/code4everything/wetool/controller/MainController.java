@@ -7,7 +7,6 @@ import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
@@ -156,13 +155,6 @@ public class MainController {
         String compress = WeUtils.compressString(clipboard);
         log.info("clipboard changed: {}", compress);
         config.appendClipboardHistory(date, clipboard);
-        ClipboardHistoryController controller = FinalUtils.getView(TitleConsts.CLIPBOARD_HISTORY);
-        if (ObjectUtil.isNotNull(controller)) {
-            // 显示到文本框
-            final String clip = clipboard;
-            Platform.runLater(() -> controller.insert(date, clip));
-        }
-
         EventCenter.publishEvent(EventCenter.EVENT_CLIPBOARD_CHANGED, date, ClipboardChangedEventMessage.of(clipboard));
     }
 
