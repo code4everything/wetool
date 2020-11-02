@@ -2,12 +2,17 @@ package org.code4everything.wetool.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.Pair;
+import cn.hutool.core.swing.ScreenUtil;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
 import javafx.fxml.FXML;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -25,8 +30,10 @@ import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
+import org.code4everything.wetool.plugin.support.event.handler.BaseMouseCornerEventHandler;
 import org.code4everything.wetool.plugin.support.event.handler.BaseNoMessageEventHandler;
 import org.code4everything.wetool.plugin.support.event.message.ClipboardChangedEventMessage;
+import org.code4everything.wetool.plugin.support.event.message.MouseCornerEventMessage;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
@@ -34,6 +41,8 @@ import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.util.FinalUtils;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.*;
 
 /**
@@ -100,10 +109,69 @@ public class MainController {
                 watchClipboard(date);
             }
         });
+        watchMouseLocation();
+        try {
+            Robot robot = new Robot();
+            EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, new BaseMouseCornerEventHandler() {
+                @Override
+                public void handleEvent0(String s, Date date, MouseCornerEventMessage message) {
+                    robot.keyPress(KeyEvent.VK_WINDOWS);
+                    robot.keyPress(KeyEvent.VK_TAB);
+                    robot.keyRelease(KeyEvent.VK_WINDOWS);
+                    robot.keyRelease(KeyEvent.VK_TAB);
+                }
+            });
+        } catch (AWTException e) {
+            // ignore
+        }
     }
 
     public void loadPluginsHandy() {
         FxUtils.chooseFiles(files -> PluginLoader.loadPlugins(files, false));
+    }
+
+    private void watchMouseLocation() {
+        int height = ScreenUtil.getHeight() - 2;
+        int width = ScreenUtil.getWidth() - 2;
+        Holder<Integer> lastPosX = Holder.of(0);
+        Holder<Integer> lastPosY = Holder.of(0);
+
+        // 鼠标位置
+        EventCenter.subscribeEvent(EventCenter.EVENT_100_MS_TIMER, new BaseNoMessageEventHandler() {
+            @Override
+            public void handleEvent0(String s, Date date) {
+                Point location = MouseInfo.getPointerInfo().getLocation();
+                int posX = (int) location.getX();
+                int posY = (int) location.getY();
+                log.debug("mouse location, x: {}, y: {}", posX, posY);
+
+                if (lastPosX.get() == posX && lastPosY.get() == posY) {
+                    return;
+                }
+
+                lastPosX.set(posX);
+                lastPosY.set(posY);
+
+                MouseCornerEventMessage message = null;
+                if (posX == 0 && posY == 0) {
+                    message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.LEFT_TOP, posX, posY);
+                    EventCenter.publishEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, date, message);
+                } else if (posX == 0 && posY >= height) {
+                    message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.LEFT_BOTTOM, posX,
+                            posY);
+                } else if (posY == 0 && posX >= width) {
+                    message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.RIGHT_TOP, posX,
+                            posY);
+                } else if (posX >= height && posY >= width) {
+                    message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.RIGHT_BOTTOM, posX,
+                            posY);
+                }
+
+                if (Objects.nonNull(message)) {
+                    EventCenter.publishEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, date, message);
+                }
+            }
+        });
     }
 
     private void loadToolMenus(Menu menu) {

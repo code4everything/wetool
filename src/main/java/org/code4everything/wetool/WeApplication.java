@@ -57,7 +57,7 @@ public class WeApplication extends Application {
 
     private static final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).build();
 
-    private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(1, FACTORY);
+    private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(2, FACTORY);
 
     private Stage stage;
 
@@ -75,6 +75,11 @@ public class WeApplication extends Application {
         EventCenter.registerEvent(EventCenter.EVENT_WETOOL_SHOW, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_WETOOL_HIDDEN, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_CLIPBOARD_CHANGED, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_100_MS_TIMER, EventMode.MULTI_SUB);
+
+        EXECUTOR.scheduleWithFixedDelay(() -> EventCenter.publishEvent(EventCenter.EVENT_100_MS_TIMER,
+                DateUtil.date()), 0, 100, TimeUnit.MILLISECONDS);
 
         launch(args);
     }
