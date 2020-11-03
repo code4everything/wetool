@@ -2,6 +2,7 @@ package org.code4everything.wetool.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.ScreenUtil;
@@ -109,20 +110,31 @@ public class MainController {
                 watchClipboard(date);
             }
         });
+        // 监听鼠标位置
         watchMouseLocation();
+        multiDesktopOnWindows();
+    }
+
+    private void multiDesktopOnWindows() {
+        if (!SystemUtil.getOsInfo().isWindows()) {
+            return;
+        }
         try {
             Robot robot = new Robot();
             EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, new BaseMouseCornerEventHandler() {
                 @Override
                 public void handleEvent0(String s, Date date, MouseCornerEventMessage message) {
-                    robot.keyPress(KeyEvent.VK_WINDOWS);
-                    robot.keyPress(KeyEvent.VK_TAB);
-                    robot.keyRelease(KeyEvent.VK_WINDOWS);
-                    robot.keyRelease(KeyEvent.VK_TAB);
+                    if (message.getType() == MouseCornerEventMessage.LocationTypeEnum.RIGHT_TOP) {
+                        robot.keyPress(KeyEvent.VK_WINDOWS);
+                        robot.keyPress(KeyEvent.VK_TAB);
+                        robot.keyRelease(KeyEvent.VK_WINDOWS);
+                        robot.keyRelease(KeyEvent.VK_TAB);
+                    }
                 }
             });
         } catch (AWTException e) {
             // ignore
+            log.error("create robot error on windows: " + ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE));
         }
     }
 
@@ -143,11 +155,11 @@ public class MainController {
                 Point location = MouseInfo.getPointerInfo().getLocation();
                 int posX = (int) location.getX();
                 int posY = (int) location.getY();
-                log.debug("mouse location, x: {}, y: {}", posX, posY);
 
                 if (lastPosX.get() == posX && lastPosY.get() == posY) {
                     return;
                 }
+                log.debug("mouse location, x: {}, y: {}", posX, posY);
 
                 lastPosX.set(posX);
                 lastPosY.set(posY);
@@ -162,7 +174,7 @@ public class MainController {
                 } else if (posY == 0 && posX >= width) {
                     message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.RIGHT_TOP, posX,
                             posY);
-                } else if (posX >= height && posY >= width) {
+                } else if (posX >= width && posY >= height) {
                     message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.RIGHT_BOTTOM, posX,
                             posY);
                 }
