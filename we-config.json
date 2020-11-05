@@ -66,5 +66,7 @@
     /*日志压缩的长度*/
     "logCompressLen": 64,
     /*自定义重启的脚本路径*/
-    "restartBatch": ""
+    "restartBatch": "",
+    /*windows虚拟桌面触发角*/
+    "winVirtualDesktopHotCorner": "LEFT_TOP"
 }

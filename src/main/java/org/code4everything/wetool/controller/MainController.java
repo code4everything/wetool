@@ -116,7 +116,7 @@ public class MainController {
     }
 
     private void multiDesktopOnWindows() {
-        if (!SystemUtil.getOsInfo().isWindows()) {
+        if (Objects.isNull(WeUtils.getConfig().getWinVirtualDesktopHotCorner()) || !SystemUtil.getOsInfo().isWindows()) {
             return;
         }
         try {
@@ -124,7 +124,7 @@ public class MainController {
             EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, new BaseMouseCornerEventHandler() {
                 @Override
                 public void handleEvent0(String s, Date date, MouseCornerEventMessage message) {
-                    if (message.getType() == MouseCornerEventMessage.LocationTypeEnum.RIGHT_TOP) {
+                    if (WeUtils.getConfig().getWinVirtualDesktopHotCorner() == message.getType()) {
                         robot.keyPress(KeyEvent.VK_WINDOWS);
                         robot.keyPress(KeyEvent.VK_TAB);
                         robot.keyRelease(KeyEvent.VK_WINDOWS);
@@ -167,7 +167,6 @@ public class MainController {
                 MouseCornerEventMessage message = null;
                 if (posX == 0 && posY == 0) {
                     message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.LEFT_TOP, posX, posY);
-                    EventCenter.publishEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, date, message);
                 } else if (posX == 0 && posY >= height) {
                     message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.LEFT_BOTTOM, posX,
                             posY);
