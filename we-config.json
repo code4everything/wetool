@@ -68,5 +68,5 @@
     /*自定义重启的脚本路径*/
     "restartBatch": "",
     /*windows虚拟桌面触发角*/
-    "winVirtualDesktopHotCorner": "LEFT_TOP"
+    "winVirtualDesktopHotCorner": "RIGHT_TOP"
 }
