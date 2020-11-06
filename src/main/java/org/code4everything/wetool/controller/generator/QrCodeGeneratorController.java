@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
+import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.thirdparty.hutool.QrCodeUtil;
@@ -80,5 +81,15 @@ public class QrCodeGeneratorController implements BaseViewController {
     @Override
     public void setFileContent(String content) {
         this.content.setText(content);
+    }
+
+    public void decode() {
+        FxUtils.chooseFile(file -> {
+            try {
+                content.setText(QrCodeUtil.decode(file));
+            } catch (Exception e) {
+                FxDialogs.showError("非法的二维码文件");
+            }
+        });
     }
 }
