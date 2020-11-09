@@ -319,8 +319,9 @@ public class MainController {
         FinalUtils.openConfig();
     }
 
-    public void seePluginRepo() {
-        FxUtils.openLink(TipConsts.REPO_LINK);
+    public void pluginPane() {
+        Pane pane = FxUtils.loadFxml("/views/PluginManagerView.fxml", false);
+        FxDialogs.showDialog("插件面板", pane, null);
     }
 
     public void openPluginFolder() {

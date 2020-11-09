@@ -36,9 +36,9 @@ import java.util.zip.ZipEntry;
 @UtilityClass
 public final class PluginLoader {
 
-    private static final WeConfig CONFIG = WeUtils.getConfig();
+    public static final Set<WePlugin> LOADED_PLUGINS = new HashSet<>();
 
-    private static final Set<WePlugin> LOADED_PLUGINS = new HashSet<>();
+    private static final WeConfig CONFIG = WeUtils.getConfig();
 
     private static final Map<String, WePlugin> PREPARED_PLUGINS = new HashMap<>();
 

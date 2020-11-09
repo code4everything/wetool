@@ -49,7 +49,7 @@
             <SeparatorMenuItem/>
             <MenuItem text="JAVA属性(_J)" onAction="#seeJavaInfo"/>
             <SeparatorMenuItem/>
-            <MenuItem text="插件仓库(_R)" onAction="#seePluginRepo"/>
+            <MenuItem text="插件面板(_R)" onAction="#pluginPane"/>
             <MenuItem onAction="#about" text="关于WeTool(_A)"/>
         </Menu>
     </MenuBar>
