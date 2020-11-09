@@ -22,7 +22,6 @@ module org.code4everything.wetool {
 
     opens views;
     opens images;
-    opens org.code4everything.wetool.plugin;
     opens org.code4everything.wetool.controller;
     opens org.code4everything.wetool.controller.converter;
     opens org.code4everything.wetool.controller.generator;
