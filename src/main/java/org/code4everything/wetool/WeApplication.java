@@ -4,10 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -26,6 +28,7 @@ import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
+import org.code4everything.wetool.plugin.support.druid.DruidSource;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
 import org.code4everything.wetool.plugin.support.event.EventMode;
 import org.code4everything.wetool.plugin.support.event.EventPublisher;
@@ -41,6 +44,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
@@ -81,7 +85,23 @@ public class WeApplication extends Application {
         EXECUTOR.scheduleWithFixedDelay(() -> EventCenter.publishEvent(EventCenter.EVENT_100_MS_TIMER,
                 DateUtil.date()), 0, 100, TimeUnit.MILLISECONDS);
 
+        connectDb();
         launch(args);
+    }
+
+    private static void connectDb() {
+        JSONArray jsonArray = WeUtils.getConfig().getDbConnections();
+        if (CollUtil.isEmpty(jsonArray)) {
+            return;
+        }
+        ThreadUtil.execute(() -> {
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                Properties properties = new Properties();
+                jsonObject.forEach((k, v) -> properties.put(StrUtil.addPrefixIfNot(k, "druid."), v));
+                DruidSource.configDataSource(properties);
+            }
+        });
     }
 
     public static void addIntoPluginMenu(MenuItem menuItem) {
