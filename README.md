@@ -24,6 +24,7 @@
 - 支持事件的发布与订阅（[查看内置事件](https://gitee.com/code4everything/wetool-plugin/blob/master/wetool-plugin-support/readme.md)）
 - 插件管理面板
 - Windows虚拟桌面触发角
+- 支持数据库连接（[查看配置属性](https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7%E5%88%97%E8%A1%A8)）
 
 ### 配置文件说明
 
