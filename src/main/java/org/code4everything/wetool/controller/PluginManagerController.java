@@ -1,6 +1,8 @@
 package org.code4everything.wetool.controller;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -9,12 +11,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.code4everything.boot.base.FileUtils;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.plugin.PluginLoader;
 import org.code4everything.wetool.plugin.WePlugin;
 import org.code4everything.wetool.plugin.support.control.cell.UnmodifiableTextFieldTableCell;
+import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.util.FinalUtils;
 
 import java.io.File;
 import java.util.List;
@@ -88,17 +92,34 @@ public class PluginManagerController {
 
     public void addPlugin() {
         FxUtils.chooseFile(file -> {
-            String workDir = FileUtils.currentWorkDir("plugins");
-            File pluginFolder = FileUtil.mkdir(workDir);
+            File pluginFolder = WeUtils.getPluginFolder();
             FileUtil.move(file, pluginFolder, true);
-            PluginLoader.loadPlugins(List.of(FileUtil.file(workDir, file.getName())), true);
+            loadPlugin(FileUtil.file(pluginFolder.getAbsolutePath(), file.getName()));
         });
+    }
+
+    public void seePluginRepo() {
+        FxUtils.openLink(TipConsts.REPO_LINK);
+    }
+
+    public void installPlugin() {
+        FxDialogs.showTextInput("插件下载", "插件地址", url -> {
+            if (StrUtil.isBlank(url)) {
+                return;
+            }
+            File plugin = HttpUtil.downloadFileFromUrl(url, WeUtils.getPluginFolder());
+            loadPlugin(plugin);
+        });
+    }
+
+    private void loadPlugin(File plugin) {
+        PluginLoader.loadPlugins(List.of(plugin), true);
         pluginTable.getItems().clear();
         pluginTable.getItems().addAll(PluginLoader.LOADED_PLUGINS);
         pluginTable.refresh();
     }
 
-    public void seePluginRepo() {
-        FxUtils.openLink(TipConsts.REPO_LINK);
+    public void openPluginFolder() {
+        FinalUtils.openPluginFolder();
     }
 }

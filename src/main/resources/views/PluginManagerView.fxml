@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/10.0.2-internal"
@@ -17,15 +17,25 @@
                 <Insets right="10.0"/>
             </HBox.margin>
         </Button>
+        <Button mnemonicParsing="false" onAction="#installPlugin" text="安装插件" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets right="10.0"/>
+            </HBox.margin>
+        </Button>
+        <Button mnemonicParsing="false" onAction="#openPluginFolder" text="插件目录" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets right="10.0"/>
+            </HBox.margin>
+        </Button>
         <Button mnemonicParsing="false" onAction="#addPlugin" text="新增插件" HBox.hgrow="NEVER"/>
     </HBox>
-    <TableView fx:id="pluginTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+    <TableView fx:id="pluginTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" editable="true">
         <columns>
             <TableColumn fx:id="name" editable="false" prefWidth="200.0" text="名称"/>
             <TableColumn fx:id="author" editable="false" prefWidth="85.0" text="作者"/>
             <TableColumn fx:id="version" editable="false" text="版本"/>
             <TableColumn fx:id="loaderName" editable="false" prefWidth="100.0" text="类加载器"/>
-            <TableColumn fx:id="path" editable="false" prefWidth="500.0" text="路径"/>
+            <TableColumn fx:id="path" prefWidth="500.0" text="路径"/>
         </columns>
     </TableView>
 </VBox>
