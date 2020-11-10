@@ -68,7 +68,7 @@
 
 ![wetool](images/wetool.png)
 
-### 二次开发
+### 开发说明
 
 开发调试过程中，建议运行[`WeApplicationTest`](src/test/java/org/code4everything/wetool/WeApplicationTest.java)主类，
 而不是运行主类[`WeApplication`](src/main/java/org/code4everything/wetool/WeApplication.java)，
@@ -76,11 +76,9 @@
 
 ### 插件开发
 
-没有你需要的功能？没关系，一分钟快速了解插件如何开发：[传送门](https://gitee.com/code4everything/wetool-plugin)
+没有你需要的功能？没关系，一分钟快速了解插件的开发过程：[传送门](https://gitee.com/code4everything/wetool-plugin)
 
 ### 结语
-
-本工具只是作者空闲时将自己常用的一些功能可视化了的这么一个工具，各位看官如有不适的地方，还望多多包涵，也可提出来让在下加以改正哦
 
 关于插件的支持，纯粹是为了减轻本工具包的负担，毕竟本工具的宗旨是轻量级、轻量级、轻量级，而某些只会在特定场景下使用的功能则以插件的方式加载进来，可以极大缩减本工具包的大小，而不至于臃肿
 
