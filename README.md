@@ -11,6 +11,20 @@
 - Lombok
 - Git
 
+### 主要功能
+
+- 文件批量重命名
+- 剪贴板历史
+- JSON路径语法测试
+- 识别文件编码，文件编码转换
+- 二维码的解码与生成
+- 随机字符生成器
+- 支持自定义插件路径，支持手动加载插件
+- 支持插件隔离加载
+- 支持事件的发布与订阅（[查看内置事件](https://gitee.com/code4everything/wetool-plugin/blob/master/wetool-plugin-support/readme.md)）
+- 插件管理面板
+- Windows虚拟桌面触发角
+
 ### 配置文件说明
 
 程序会在启动时根据当前的系统名称加载当前工作目录下与之对应的配置文件`we-config-{}.json`，
