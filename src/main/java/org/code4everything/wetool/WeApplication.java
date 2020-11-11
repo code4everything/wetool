@@ -70,7 +70,10 @@ public class WeApplication extends Application {
     public static void main(String[] args) {
         log.info("starting wetool on os: {}", SystemUtil.getOsInfo().getName());
         parseConfig();
+        initApp(args);
+    }
 
+    public static void initApp(String[] args) {
         // 注册事件
         EventCenter.registerEvent(EventCenter.EVENT_QUICK_START_CLICKED, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_CLEAR_FXML_CACHE, EventMode.MULTI_SUB);
