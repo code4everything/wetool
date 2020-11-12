@@ -1,6 +1,7 @@
 package org.code4everything.wetool.plugin;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -25,6 +26,7 @@ import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -36,11 +38,11 @@ import java.util.zip.ZipEntry;
 @UtilityClass
 public final class PluginLoader {
 
-    public static final Set<WePlugin> LOADED_PLUGINS = new HashSet<>();
+    public static final Set<WePlugin> LOADED_PLUGINS = new ConcurrentHashSet<>();
 
     private static final WeConfig CONFIG = WeUtils.getConfig();
 
-    private static final Map<String, WePlugin> PREPARED_PLUGINS = new HashMap<>();
+    private static final Map<String, WePlugin> PREPARED_PLUGINS = new ConcurrentHashMap<>();
 
     public static void loadPlugins() {
         // 加载工作目录下的plugins目录

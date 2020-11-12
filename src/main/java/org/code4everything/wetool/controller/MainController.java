@@ -7,6 +7,7 @@ import cn.hutool.core.lang.Holder;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.ScreenUtil;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
@@ -87,8 +88,6 @@ public class MainController {
     private void initialize() {
         BeanFactory.register(tabPane);
         BeanFactory.register(AppConsts.BeanKey.PLUGIN_MENU, pluginMenu);
-        // 加载插件
-        PluginLoader.loadPlugins();
 
         // 加载快速启动选项
         Set<WeStart> starts = WeUtils.getConfig().getQuickStarts();
@@ -98,6 +97,7 @@ public class MainController {
             fileMenu.getItems().add(0, new SeparatorMenuItem());
             fileMenu.getItems().add(0, menu);
         }
+
         // 加载工具选项卡
         loadToolMenus(toolMenu);
         // 加载默认选项卡
@@ -110,9 +110,12 @@ public class MainController {
                 watchClipboard(date);
             }
         });
+
         // 监听鼠标位置
         watchMouseLocation();
         multiDesktopOnWindows();
+
+        ThreadUtil.execute(PluginLoader::loadPlugins);
     }
 
     private void multiDesktopOnWindows() {
