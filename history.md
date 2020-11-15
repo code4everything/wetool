@@ -1,8 +1,11 @@
 ## 更新历史
 
-### [v1.2.0]()
+### [v1.2.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.2.0.zip)
 
 - 新增事件中心，支持事件的发布与订阅
+- 新增插件面板
+- Windows虚拟桌面触发角功能
+- 支持数据库连接
 
 ### [v1.1.2](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.2.zip)
 
