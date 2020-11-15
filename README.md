@@ -35,6 +35,33 @@
 - 配置内容可参考：[we-config.json](we-config.json)
 - 属性说明可参考：[WeConfig.Java](https://gitee.com/code4everything/wetool-plugin/blob/master/wetool-plugin-support/src/main/java/org/code4everything/wetool/plugin/support/config/WeConfig.java)
 
+数据库配置：在配置文件中新增 dbConnections 字段，如其名，该字段为数组类型，数组中每个元素的配置属性请参考Druid，建议把name字段填上，便于识别，示例如下：
+
+```json
+{
+    /*其他配置属性*/
+    /*................*/
+    "dbConnections": [
+        {
+            "name": "test",
+            "url": "jdbc:mysql://localserver:3306/test?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai",
+            "username": "root",
+            "password": "root",
+            "initialSize": "1",
+            "keepAlive": true
+        },
+        {
+            "name": "local_prod",
+            "url": "jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai",
+            "username": "test",
+            "password": "test",
+            "initialSize": "0",
+            "minEvictableIdleTimeMillis": 600000
+        }
+    ]
+}
+```
+
 ### 下载与使用
 
 - [wetool-1.1.2.zip](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.2.zip)
