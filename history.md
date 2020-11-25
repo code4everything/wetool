@@ -1,5 +1,9 @@
 ## 更新历史
 
+### [v1.3.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.3.0.zip)
+
+- 优化插件的安装与禁用
+
 ### [v1.2.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.2.0.zip)
 
 - 新增事件中心，支持事件的发布与订阅
