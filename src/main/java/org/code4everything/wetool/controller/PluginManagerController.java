@@ -1,7 +1,9 @@
 package org.code4everything.wetool.controller;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import cn.hutool.http.HttpUtil;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -21,7 +23,9 @@ import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.util.FinalUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.zip.ZipFile;
 
 /**
  * @author pantao
@@ -107,8 +111,21 @@ public class PluginManagerController {
             if (StrUtil.isBlank(url)) {
                 return;
             }
-            File plugin = HttpUtil.downloadFileFromUrl(url, WeUtils.getPluginFolder());
-            loadPlugin(plugin);
+            File pluginFolder = WeUtils.getPluginFolder();
+            File plugin = HttpUtil.downloadFileFromUrl(url, pluginFolder);
+            if (isZip(plugin.getName())) {
+                ZipUtil.unzip(plugin, pluginFolder);
+                try {
+                    ZipFile zipFile = new ZipFile(plugin);
+                    ZipUtil.listFileNames(zipFile, "").forEach(e -> loadPlugin(FileUtil.file(pluginFolder, e)));
+                    zipFile.close();
+                } catch (IOException e) {
+                    log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE));
+                }
+                FileUtil.del(plugin);
+            } else {
+                loadPlugin(plugin);
+            }
         });
     }
 
@@ -117,6 +134,10 @@ public class PluginManagerController {
         pluginTable.getItems().clear();
         pluginTable.getItems().addAll(PluginLoader.LOADED_PLUGINS);
         pluginTable.refresh();
+    }
+
+    private boolean isZip(String filename) {
+        return filename.endsWith(".zip");
     }
 
     public void openPluginFolder() {
