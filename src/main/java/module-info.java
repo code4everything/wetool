@@ -15,6 +15,7 @@ module org.code4everything.wetool {
     requires boot.surface;
     requires fastjson;
     requires com.google.common;
+    requires jnativehook;
 
     requires transitive org.code4everything.wetool.plugin.support;
 
