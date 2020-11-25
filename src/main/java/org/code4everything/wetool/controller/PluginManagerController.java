@@ -115,10 +115,8 @@ public class PluginManagerController {
             File plugin = HttpUtil.downloadFileFromUrl(url, pluginFolder);
             if (isZip(plugin.getName())) {
                 ZipUtil.unzip(plugin, pluginFolder);
-                try {
-                    ZipFile zipFile = new ZipFile(plugin);
+                try (ZipFile zipFile = new ZipFile(plugin)) {
                     ZipUtil.listFileNames(zipFile, "").forEach(e -> loadPlugin(FileUtil.file(pluginFolder, e)));
-                    zipFile.close();
                 } catch (IOException e) {
                     log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE));
                 }
