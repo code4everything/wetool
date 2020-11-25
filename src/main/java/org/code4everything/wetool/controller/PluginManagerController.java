@@ -1,6 +1,5 @@
 package org.code4everything.wetool.controller;
 
-import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
@@ -118,7 +117,7 @@ public class PluginManagerController {
                 try (ZipFile zipFile = new ZipFile(plugin)) {
                     ZipUtil.listFileNames(zipFile, "").forEach(e -> loadPlugin(FileUtil.file(pluginFolder, e)));
                 } catch (IOException e) {
-                    log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE));
+                    FxDialogs.showException("加载插件异常", e);
                 }
                 FileUtil.del(plugin);
             } else {
