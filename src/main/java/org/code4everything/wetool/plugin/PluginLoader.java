@@ -89,7 +89,7 @@ public final class PluginLoader {
                 String json = IoUtil.read(jar.getInputStream(entry), "utf-8");
                 WePluginInfo info = JSON.parseObject(json, WePluginInfo.class);
 
-                if (checkDisable && CONFIG.getPluginDisables().contains(info)) {
+                if (checkDisable && isDisabled(info)) {
                     // 插件被禁止加载
                     log.info("plugin {}-{}-{} disabled", info.getAuthor(), info.getName(), info.getVersion());
                     return;
@@ -199,6 +199,20 @@ public final class PluginLoader {
         if (!WeUtils.isRequiredVersion(reqVer, AppConsts.COMPATIBLE_LOWER_VERSION)) {
             log.error(errMsg + "the version of plugin supporter is lower than the required: " + AppConsts.COMPATIBLE_LOWER_VERSION);
             return true;
+        }
+        return false;
+    }
+
+    private static boolean isDisabled(WePluginInfo pluginInfo) {
+        for (WePluginInfo disableInfo : CONFIG.getPluginDisables()) {
+            // @formatter:off
+            boolean disabled = (StrUtil.isEmpty(disableInfo.getAuthor()) || disableInfo.getAuthor().equals(pluginInfo.getAuthor()))
+                    && (StrUtil.isEmpty(disableInfo.getName()) || disableInfo.getName().equals(pluginInfo.getName()))
+                    && (StrUtil.isEmpty(disableInfo.getVersion()) || disableInfo.getVersion().equals(pluginInfo.getVersion()));
+            // @formatter:on
+            if (disabled) {
+                return true;
+            }
         }
         return false;
     }
