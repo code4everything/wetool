@@ -8,6 +8,7 @@ import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.system.SystemUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -60,6 +61,8 @@ public class MainController {
 
     private static final Map<String, EventHandler<ActionEvent>> ACTION_MAP = new ConcurrentHashMap<>();
 
+    private static final Map<String, String> ACTION_NAME_PINYIN_MAP = new ConcurrentHashMap<>();
+
     static {
         addTabForSearch("FileManager", TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
         addTabForSearch("JsonParser", TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER);
@@ -98,6 +101,8 @@ public class MainController {
 
     public static void addTabForSearch(String name, EventHandler<ActionEvent> eventHandler) {
         ACTION_MAP.put(name, eventHandler);
+        String pinyin = PinyinUtil.getPinyin(name);
+        ACTION_NAME_PINYIN_MAP.put(name, StrUtil.cleanBlank(pinyin));
     }
 
     /**
@@ -398,7 +403,8 @@ public class MainController {
         toolSearchBox.getItems().clear();
         ACTION_MAP.forEach((k, v) -> {
             String[] tokenizer = StrUtil.splitTrim(keyword, " ").toArray(new String[0]);
-            if (StrUtil.containsAnyIgnoreCase(k, tokenizer)) {
+            String pinyin = ACTION_NAME_PINYIN_MAP.get(k);
+            if (StrUtil.containsAnyIgnoreCase(k, tokenizer) || StrUtil.containsAnyIgnoreCase(pinyin, tokenizer)) {
                 toolSearchBox.getItems().add(k);
             }
         });

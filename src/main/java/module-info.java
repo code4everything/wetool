@@ -16,6 +16,7 @@ module org.code4everything.wetool {
     requires fastjson;
     requires com.google.common;
     requires jnativehook;
+    requires hutool.extra;
 
     requires transitive org.code4everything.wetool.plugin.support;
 
