@@ -49,6 +49,8 @@ public final class PluginLoader {
 
     private static final Map<String, WePlugin> PREPARED_PLUGINS = new ConcurrentHashMap<>();
 
+    private static final Set<String> ALREADY_ADD_TAB_NAME = new ConcurrentHashSet<>();
+
     public static Set<WePlugin> getLoadedPlugins() {
         return Collections.unmodifiableSet(LOADED_PLUGINS);
     }
@@ -72,9 +74,10 @@ public final class PluginLoader {
         }
 
         loadPluginFromPrepared();
+        addPluginForSearch("", null);
     }
 
-    public static void addPluginForSearch(Menu menu) {
+    public static void addPluginForSearch(String prefix, Menu menu) {
         if (Objects.isNull(menu)) {
             menu = FxUtils.getPluginMenu();
         }
@@ -85,6 +88,18 @@ public final class PluginLoader {
         }
 
         menuItems.forEach(menuItem -> {
+            String name = prefix + menuItem.getText();
+            if (ALREADY_ADD_TAB_NAME.contains(name)) {
+                return;
+            }
+            EventHandler<ActionEvent> eventHandler = menuItem.getOnAction();
+            if (Objects.nonNull(eventHandler)) {
+                ALREADY_ADD_TAB_NAME.add(name);
+                MainController.addTabForSearch(name, eventHandler);
+            }
+            if (menuItem instanceof Menu) {
+                addPluginForSearch(name + "/", (Menu) menuItem);
+            }
         });
     }
 
@@ -167,6 +182,7 @@ public final class PluginLoader {
         // 注册主界面插件菜单
         MenuItem barMenu = supporter.registerBarMenu();
         if (ObjectUtil.isNotNull(barMenu)) {
+            ALREADY_ADD_TAB_NAME.add(barMenu.getText());
             String name = StrUtil.join("-", barMenu.getText(), info.getAuthor(), info.getName());
             EventHandler<ActionEvent> action = barMenu.getOnAction();
             MainController.addTabForSearch(name, action);
