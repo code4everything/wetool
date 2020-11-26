@@ -27,7 +27,6 @@ import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
-import org.code4everything.wetool.listener.KeyboardListener;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.druid.DruidSource;
@@ -36,6 +35,8 @@ import org.code4everything.wetool.plugin.support.event.EventMode;
 import org.code4everything.wetool.plugin.support.event.EventPublisher;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.listener.KeyboardListener;
+import org.code4everything.wetool.plugin.support.listener.MouseMotionListener;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
@@ -53,6 +54,8 @@ import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author pantao
@@ -94,9 +97,16 @@ public class WeApplication extends Application {
 
         EXECUTOR.scheduleWithFixedDelay(() -> EventCenter.publishEvent(EventCenter.EVENT_100_MS_TIMER,
                 DateUtil.date()), 0, 100, TimeUnit.MILLISECONDS);
+
+        // 关闭 jnative 日志
+        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+        logger.setLevel(Level.OFF);
+        logger.setUseParentHandlers(false);
+
         try {
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(new KeyboardListener());
+            GlobalScreen.addNativeMouseMotionListener(new MouseMotionListener());
         } catch (NativeHookException ex) {
             log.error("register keyboard listener failed: {}", ExceptionUtil.stacktraceToString(ex, Integer.MAX_VALUE));
         }
