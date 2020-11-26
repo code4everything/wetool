@@ -90,7 +90,7 @@ public class PluginManagerController {
             }
         });
 
-        pluginTable.getItems().addAll(PluginLoader.LOADED_PLUGINS);
+        pluginTable.getItems().addAll(PluginLoader.getLoadedPlugins());
     }
 
     public void addPlugin() {
@@ -129,7 +129,7 @@ public class PluginManagerController {
     private void loadPlugin(File plugin) {
         PluginLoader.loadPlugins(List.of(plugin), true);
         pluginTable.getItems().clear();
-        pluginTable.getItems().addAll(PluginLoader.LOADED_PLUGINS);
+        pluginTable.getItems().addAll(PluginLoader.getLoadedPlugins());
         pluginTable.refresh();
     }
 

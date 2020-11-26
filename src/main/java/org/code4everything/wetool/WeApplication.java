@@ -103,13 +103,13 @@ public class WeApplication extends Application {
         logger.setLevel(Level.OFF);
         logger.setUseParentHandlers(false);
 
-        try {
-            GlobalScreen.registerNativeHook();
-            GlobalScreen.addNativeKeyListener(new KeyboardListener());
-            GlobalScreen.addNativeMouseMotionListener(new MouseMotionListener());
-        } catch (NativeHookException ex) {
-            log.error("register keyboard listener failed: {}", ExceptionUtil.stacktraceToString(ex, Integer.MAX_VALUE));
-        }
+//        try {
+//            //GlobalScreen.registerNativeHook();
+//            //GlobalScreen.addNativeKeyListener(new KeyboardListener());
+//            //GlobalScreen.addNativeMouseMotionListener(new MouseMotionListener());
+//        } catch (NativeHookException ex) {
+//            log.error("register keyboard listener failed: {}", ExceptionUtil.stacktraceToString(ex, Integer.MAX_VALUE));
+//        }
 
         connectDb();
     }

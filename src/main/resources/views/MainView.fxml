@@ -1,72 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="600.0"
-      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.code4everything.wetool.controller.MainController">
     <HBox VBox.vgrow="NEVER">
-        <children>
-            <MenuBar HBox.hgrow="NEVER">
-                <Menu fx:id="fileMenu" text="文件(_F)">
-                    <MenuItem onAction="#openFile" text="打开(_O)"/>
-                    <MenuItem onAction="#openMultiFile" text="批量打开(_M)"/>
-                    <MenuItem onAction="#openFolder" text="打开文件夹(_D)"/>
-                    <MenuItem onAction="#saveFile" text="保存(_S)"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem onAction="#loadPluginsHandy" text="加载插件(_L)"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem onAction="#openAllTab" text="打开所有标签(_Z)"/>
-                    <MenuItem onAction="#closeAllTab" text="关闭所有标签(_C)"/>
-                    <MenuItem onAction="#clearAllCache" text="清除所有缓存(_I)"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem onAction="#restart" text="重启(_R)"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem onAction="#quit" text="退出(_Q)"/>
+        <MenuBar HBox.hgrow="NEVER">
+            <Menu fx:id="fileMenu" text="文件(_F)">
+                <MenuItem onAction="#openFile" text="打开(_O)"/>
+                <MenuItem onAction="#openMultiFile" text="批量打开(_M)"/>
+                <MenuItem onAction="#openFolder" text="打开文件夹(_D)"/>
+                <MenuItem onAction="#saveFile" text="保存(_S)"/>
+                <SeparatorMenuItem/>
+                <MenuItem onAction="#loadPluginsHandy" text="加载插件(_L)"/>
+                <SeparatorMenuItem/>
+                <MenuItem onAction="#openAllTab" text="打开所有标签(_Z)"/>
+                <MenuItem onAction="#closeAllTab" text="关闭所有标签(_C)"/>
+                <MenuItem onAction="#clearAllCache" text="清除所有缓存(_I)"/>
+                <SeparatorMenuItem/>
+                <MenuItem onAction="#restart" text="重启(_R)"/>
+                <SeparatorMenuItem/>
+                <MenuItem onAction="#quit" text="退出(_Q)"/>
+            </Menu>
+            <Menu fx:id="toolMenu" text="工具(_T)">
+                <MenuItem id="FileManager" text="文件批处理(_B)"/>
+                <MenuItem id="ClipboardHistory" text="剪贴板历史(_P)"/>
+                <MenuItem id="NetworkTool" text="网络工具(_N)"/>
+                <MenuItem id="JsonParser" text="JSON解析(_J)"/>
+                <SeparatorMenuItem/>
+                <Menu text="转换器(_C)">
+                    <MenuItem id="CharsetConverter" text="编码转换器(_V)"/>
+                    <MenuItem id="NaryConverter" text="进制转换器(_N)"/>
                 </Menu>
-                <Menu fx:id="toolMenu" text="工具(_T)">
-                    <MenuItem id="FileManager" text="文件批处理(_B)"/>
-                    <MenuItem id="ClipboardHistory" text="剪贴板历史(_P)"/>
-                    <MenuItem id="NetworkTool" text="网络工具(_N)"/>
-                    <MenuItem id="JsonParser" text="JSON解析(_J)"/>
-                    <SeparatorMenuItem/>
-                    <Menu text="转换器(_C)">
-                        <MenuItem id="CharsetConverter" text="编码转换器(_V)"/>
-                        <MenuItem id="NaryConverter" text="进制转换器(_N)"/>
-                    </Menu>
-                    <SeparatorMenuItem/>
-                    <Menu text="生成器(_G)">
-                        <MenuItem id="RandomGenerator" text="随机生成器(_R)"/>
-                        <MenuItem id="QrCodeGenerator" text="二维码生成器(_D)"/>
-                    </Menu>
+                <SeparatorMenuItem/>
+                <Menu text="生成器(_G)">
+                    <MenuItem id="RandomGenerator" text="随机生成器(_R)"/>
+                    <MenuItem id="QrCodeGenerator" text="二维码生成器(_D)"/>
                 </Menu>
-                <Menu fx:id="pluginMenu" text="插件(_P)"/>
-                <Menu text="帮助(_H)">
-                    <MenuItem onAction="#openConfig" text="打开配置文件(_C)"/>
-                    <MenuItem onAction="#openLog" text="打开日志文件(_L)"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem onAction="#openWorkFolder" text="打开工作目录(_W)"/>
-                    <MenuItem onAction="#openPluginFolder" text="打开插件目录(_I)"/>
-                    <MenuItem onAction="#openLogFolder" text="打开日志目录(_O)"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem onAction="#seeJavaInfo" text="JAVA属性(_J)"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem onAction="#pluginPane" text="插件面板(_R)"/>
-                    <MenuItem onAction="#about" text="关于WeTool(_A)"/>
-                </Menu>
-            </MenuBar>
-            <TextField fx:id="searchToolText" onKeyReleased="#searchToolEnter" HBox.hgrow="NEVER">
-                <HBox.margin>
-                    <Insets top="1.0"/>
-                </HBox.margin>
-            </TextField>
-            <Button mnemonicParsing="false" onAction="#searchTool" prefWidth="50.0" text="搜索" HBox.hgrow="NEVER">
-                <HBox.margin>
-                    <Insets top="1.0"/>
-                </HBox.margin>
-            </Button>
-        </children>
+            </Menu>
+            <Menu fx:id="pluginMenu" text="插件(_P)"/>
+            <Menu text="帮助(_H)">
+                <MenuItem onAction="#openConfig" text="打开配置文件(_C)"/>
+                <MenuItem onAction="#openLog" text="打开日志文件(_L)"/>
+                <SeparatorMenuItem/>
+                <MenuItem onAction="#openWorkFolder" text="打开工作目录(_W)"/>
+                <MenuItem onAction="#openPluginFolder" text="打开插件目录(_I)"/>
+                <MenuItem onAction="#openLogFolder" text="打开日志目录(_O)"/>
+                <SeparatorMenuItem/>
+                <MenuItem onAction="#seeJavaInfo" text="JAVA属性(_J)"/>
+                <SeparatorMenuItem/>
+                <MenuItem onAction="#pluginPane" text="插件面板(_R)"/>
+                <MenuItem onAction="#about" text="关于WeTool(_A)"/>
+            </Menu>
+        </MenuBar>
+        <ComboBox fx:id="toolSearchBox" editable="true" onKeyReleased="#toolBoxKeyReleased" prefWidth="300.0"
+                  promptText="搜索工具" HBox.hgrow="NEVER">
+        </ComboBox>
     </HBox>
     <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS"/>
 </VBox>

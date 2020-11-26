@@ -10,12 +10,17 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.FileConsts;
+import org.code4everything.wetool.controller.MainController;
 import org.code4everything.wetool.plugin.support.WePluginSupporter;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WePluginInfo;
@@ -38,11 +43,15 @@ import java.util.zip.ZipEntry;
 @UtilityClass
 public final class PluginLoader {
 
-    public static final Set<WePlugin> LOADED_PLUGINS = new ConcurrentHashSet<>();
+    private static final Set<WePlugin> LOADED_PLUGINS = new ConcurrentHashSet<>();
 
     private static final WeConfig CONFIG = WeUtils.getConfig();
 
     private static final Map<String, WePlugin> PREPARED_PLUGINS = new ConcurrentHashMap<>();
+
+    public static Set<WePlugin> getLoadedPlugins() {
+        return Collections.unmodifiableSet(LOADED_PLUGINS);
+    }
 
     public static void loadPlugins() {
         // 加载工作目录下的plugins目录
@@ -55,12 +64,28 @@ public final class PluginLoader {
                 }
             }
         }
+
         // 加载配置文件中的插件
         Set<String> paths = WeUtils.getConfig().getPluginPaths();
         if (CollUtil.isNotEmpty(paths)) {
             paths.forEach(path -> preparePlugin(new File(path), true));
         }
+
         loadPluginFromPrepared();
+    }
+
+    public static void addPluginForSearch(Menu menu) {
+        if (Objects.isNull(menu)) {
+            menu = FxUtils.getPluginMenu();
+        }
+
+        ObservableList<MenuItem> menuItems = menu.getItems();
+        if (CollUtil.isEmpty(menuItems)) {
+            return;
+        }
+
+        menuItems.forEach(menuItem -> {
+        });
     }
 
     public static void loadPlugins(Collection<File> plugins, final boolean checkDisable) {
@@ -142,6 +167,9 @@ public final class PluginLoader {
         // 注册主界面插件菜单
         MenuItem barMenu = supporter.registerBarMenu();
         if (ObjectUtil.isNotNull(barMenu)) {
+            String name = StrUtil.join("-", barMenu.getText(), info.getAuthor(), info.getName());
+            EventHandler<ActionEvent> action = barMenu.getOnAction();
+            MainController.addTabForSearch(name, action);
             FxUtils.getPluginMenu().getItems().add(barMenu);
         }
         log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());

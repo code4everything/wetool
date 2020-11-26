@@ -9,12 +9,14 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -45,6 +47,7 @@ import org.code4everything.wetool.util.FinalUtils;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author pantao
@@ -55,15 +58,17 @@ public class MainController {
 
     private static final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
 
+    private static final Map<String, EventHandler<ActionEvent>> ACTION_MAP = new ConcurrentHashMap<>();
+
     static {
-        TAB_MAP.put("FileManager", new Pair<>(TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER));
-        TAB_MAP.put("JsonParser", new Pair<>(TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER));
-        TAB_MAP.put("RandomGenerator", new Pair<>(TitleConsts.RANDOM_GENERATOR, ViewConsts.RANDOM_GENERATOR));
-        TAB_MAP.put("ClipboardHistory", new Pair<>(TitleConsts.CLIPBOARD_HISTORY, ViewConsts.CLIPBOARD_HISTORY));
-        TAB_MAP.put("QrCodeGenerator", new Pair<>(TitleConsts.QR_CODE_GENERATOR, ViewConsts.QR_CODE_GENERATOR));
-        TAB_MAP.put("CharsetConverter", new Pair<>(TitleConsts.CHARSET_CONVERTER, ViewConsts.CHARSET_CONVERTER));
-        TAB_MAP.put("NetworkTool", new Pair<>(TitleConsts.NETWORK_TOOL, ViewConsts.NETWORK_TOOL));
-        TAB_MAP.put("NaryConverter", new Pair<>(TitleConsts.NARY_CONVERTER, ViewConsts.NARY_CONVERTER));
+        addTabForSearch("FileManager", TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
+        addTabForSearch("JsonParser", TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER);
+        addTabForSearch("RandomGenerator", TitleConsts.RANDOM_GENERATOR, ViewConsts.RANDOM_GENERATOR);
+        addTabForSearch("ClipboardHistory", TitleConsts.CLIPBOARD_HISTORY, ViewConsts.CLIPBOARD_HISTORY);
+        addTabForSearch("QrCodeGenerator", TitleConsts.QR_CODE_GENERATOR, ViewConsts.QR_CODE_GENERATOR);
+        addTabForSearch("CharsetConverter", TitleConsts.CHARSET_CONVERTER, ViewConsts.CHARSET_CONVERTER);
+        addTabForSearch("NetworkTool", TitleConsts.NETWORK_TOOL, ViewConsts.NETWORK_TOOL);
+        addTabForSearch("NaryConverter", TitleConsts.NARY_CONVERTER, ViewConsts.NARY_CONVERTER);
     }
 
     private final WeConfig config = WeUtils.getConfig();
@@ -81,7 +86,19 @@ public class MainController {
     public Menu pluginMenu;
 
     @FXML
-    public TextField searchToolText;
+    public ComboBox<String> toolSearchBox;
+
+    private static void addTabForSearch(String name, String title, String viewUrl) {
+        TAB_MAP.put(name, new Pair<>(title, viewUrl));
+        addTabForSearch(title + "/" + name, actionEvent -> {
+            Pane box = FxUtils.loadFxml(WeApplication.class, viewUrl, true);
+            FinalUtils.openTab(box, title);
+        });
+    }
+
+    public static void addTabForSearch(String name, EventHandler<ActionEvent> eventHandler) {
+        ACTION_MAP.put(name, eventHandler);
+    }
 
     /**
      * 此对象暂时不注册到工厂
@@ -207,7 +224,7 @@ public class MainController {
         if (Objects.isNull(tabPair)) {
             return;
         }
-        Pane box = FxUtils.loadFxml(WeApplication.class, tabPair.getValue(), false);
+        Pane box = FxUtils.loadFxml(WeApplication.class, tabPair.getValue(), true);
         if (Objects.isNull(box)) {
             return;
         }
@@ -354,15 +371,50 @@ public class MainController {
         return builder.toString();
     }
 
-    public void searchToolEnter(javafx.scene.input.KeyEvent keyEvent) {
-        FxUtils.enterDo(keyEvent, this::searchTool);
-    }
-
-    public void searchTool() {
-        String tool = searchToolText.getText();
-        searchToolText.setText(StrUtil.EMPTY);
-        if (StrUtil.isBlank(tool)) {
+    public void toolBoxKeyReleased(javafx.scene.input.KeyEvent keyEvent) {
+        KeyCode keyCode = keyEvent.getCode();
+        if (!keyCode.isLetterKey() && !keyCode.isDigitKey() && !keyCode.isWhitespaceKey() && keyCode != KeyCode.ENTER) {
             return;
         }
+
+        endCaretPosition();
+        String keyword = toolSearchBox.getValue();
+        if (StrUtil.isBlank(keyword)) {
+            return;
+        }
+
+        if (keyCode == KeyCode.ENTER) {
+            toolSearchBox.getItems().clear();
+            toolSearchBox.setValue(StrUtil.EMPTY);
+            EventHandler<ActionEvent> eventHandler = ACTION_MAP.get(keyword);
+            if (Objects.isNull(eventHandler)) {
+                FxDialogs.showError("未找到工具！");
+            } else {
+                eventHandler.handle(new ActionEvent());
+            }
+            return;
+        }
+
+        toolSearchBox.getItems().clear();
+        ACTION_MAP.forEach((k, v) -> {
+            String[] tokenizer = StrUtil.splitTrim(keyword, " ").toArray(new String[0]);
+            if (StrUtil.containsAnyIgnoreCase(k, tokenizer)) {
+                toolSearchBox.getItems().add(k);
+            }
+        });
+
+        if (CollUtil.isNotEmpty(toolSearchBox.getItems())) {
+            toolSearchBox.show();
+        }
+    }
+
+    /**
+     * 将光标移到尾部
+     */
+    private void endCaretPosition() {
+        // 通过失去焦点，获取焦点，片刻获取变化后的值
+        tabPane.requestFocus();
+        toolSearchBox.requestFocus();
+        toolSearchBox.getEditor().positionCaret(Integer.MAX_VALUE);
     }
 }
