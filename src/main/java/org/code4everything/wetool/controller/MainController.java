@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -78,6 +79,9 @@ public class MainController {
 
     @FXML
     public Menu pluginMenu;
+
+    @FXML
+    public TextField searchToolText;
 
     /**
      * 此对象暂时不注册到工厂
@@ -348,5 +352,17 @@ public class MainController {
         builder.append(SystemUtil.getRuntimeInfo());
 
         return builder.toString();
+    }
+
+    public void searchToolEnter(javafx.scene.input.KeyEvent keyEvent) {
+        FxUtils.enterDo(keyEvent, this::searchTool);
+    }
+
+    public void searchTool() {
+        String tool = searchToolText.getText();
+        searchToolText.setText(StrUtil.EMPTY);
+        if (StrUtil.isBlank(tool)) {
+            return;
+        }
     }
 }
