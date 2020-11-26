@@ -2,6 +2,7 @@ package org.code4everything.wetool;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.thread.ThreadUtil;
@@ -26,6 +27,7 @@ import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
+import org.code4everything.wetool.listener.KeyboardListener;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.druid.DruidSource;
@@ -38,6 +40,8 @@ import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.util.FinalUtils;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -85,9 +89,17 @@ public class WeApplication extends Application {
         EventCenter.registerEvent(EventCenter.EVENT_CLIPBOARD_CHANGED, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_100_MS_TIMER, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_KEYBOARD_PRESSED, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_KEYBOARD_RELEASED, EventMode.MULTI_SUB);
 
         EXECUTOR.scheduleWithFixedDelay(() -> EventCenter.publishEvent(EventCenter.EVENT_100_MS_TIMER,
                 DateUtil.date()), 0, 100, TimeUnit.MILLISECONDS);
+        try {
+            GlobalScreen.registerNativeHook();
+            GlobalScreen.addNativeKeyListener(new KeyboardListener());
+        } catch (NativeHookException ex) {
+            log.error("register keyboard listener failed: {}", ExceptionUtil.stacktraceToString(ex, Integer.MAX_VALUE));
+        }
 
         connectDb();
     }
