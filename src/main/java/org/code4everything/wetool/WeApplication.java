@@ -251,17 +251,11 @@ public class WeApplication extends Application {
         popupMenu.addSeparator();
         // 显示
         MenuItem item = new MenuItem(TitleConsts.SHOW);
-        item.addActionListener(e -> {
-            EventCenter.publishEvent(EventCenter.EVENT_WETOOL_SHOW, DateUtil.date());
-            Platform.runLater(() -> stage.show());
-        });
+        item.addActionListener(e -> FxUtils.showStage());
         popupMenu.add(item);
         // 隐藏
         item = new MenuItem(TitleConsts.HIDE);
-        item.addActionListener(e -> {
-            EventCenter.publishEvent(EventCenter.EVENT_WETOOL_HIDDEN, DateUtil.date());
-            Platform.runLater(() -> stage.hide());
-        });
+        item.addActionListener(e -> FxUtils.hideStage());
         popupMenu.add(item);
         // 重启
         popupMenu.addSeparator();
@@ -307,11 +301,9 @@ public class WeApplication extends Application {
                 // 双击图标
                 Platform.runLater(() -> {
                     if (stage.isShowing()) {
-                        EventCenter.publishEvent(EventCenter.EVENT_WETOOL_HIDDEN, DateUtil.date());
-                        stage.hide();
+                        FxUtils.hideStage();
                     } else {
-                        EventCenter.publishEvent(EventCenter.EVENT_WETOOL_SHOW, DateUtil.date());
-                        stage.show();
+                        FxUtils.showStage();
                     }
                 });
             }
@@ -319,16 +311,16 @@ public class WeApplication extends Application {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            log.debug("mouse pressed: {}", e);
+            log.debug("mouse pressed: {}", e.getPoint());
         }
 
         @Override
-        public void mouseReleased(MouseEvent e) {log.debug("mouse released: {}", e);}
+        public void mouseReleased(MouseEvent e) {log.debug("mouse released: {}", e.getPoint());}
 
         @Override
-        public void mouseEntered(MouseEvent e) {log.debug("mouse entered: {}", e);}
+        public void mouseEntered(MouseEvent e) {log.debug("mouse entered: {}", e.getPoint());}
 
         @Override
-        public void mouseExited(MouseEvent e) {log.debug("mouse exited: {}", e);}
+        public void mouseExited(MouseEvent e) {log.debug("mouse exited: {}", e.getPoint());}
     }
 }
