@@ -5,7 +5,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -138,7 +137,7 @@ public class MainController {
 
         // 监听鼠标位置
         multiDesktopOnWindows();
-        ThreadUtil.execute(PluginLoader::loadPlugins);
+        WeUtils.execute(PluginLoader::loadPlugins);
     }
 
     private void multiDesktopOnWindows() {

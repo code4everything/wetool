@@ -53,7 +53,7 @@ public class JsonParserController implements BaseViewController {
             parsedJsonContent.setText(json);
             return;
         }
-        ThreadUtil.execute(() -> {
+        WeUtils.execute(() -> {
             try {
                 log.info("parse json use path: {}", path);
                 String parsedJson = JSON.toJSONString(JSONPath.extract(json, path), true);
