@@ -6,6 +6,7 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
@@ -401,10 +402,10 @@ public class MainController {
         }
 
         toolSearchBox.getItems().clear();
+        String[] tokenizer = StrUtil.splitTrim(keyword, " ").toArray(new String[0]);
         ACTION_MAP.forEach((k, v) -> {
-            String[] tokenizer = StrUtil.splitTrim(keyword, " ").toArray(new String[0]);
             String pinyin = ACTION_NAME_PINYIN_MAP.get(k);
-            if (StrUtil.containsAnyIgnoreCase(k, tokenizer) || StrUtil.containsAnyIgnoreCase(pinyin, tokenizer)) {
+            if (containsAllIgnoreCase(pinyin, tokenizer) || containsAllIgnoreCase(k, tokenizer)) {
                 toolSearchBox.getItems().add(k);
             }
         });
@@ -412,6 +413,18 @@ public class MainController {
         if (CollUtil.isNotEmpty(toolSearchBox.getItems())) {
             toolSearchBox.show();
         }
+    }
+
+    public boolean containsAllIgnoreCase(String str, String[] keys) {
+        if (StrUtil.isEmpty(str) || ArrayUtil.isEmpty(keys)) {
+            return false;
+        }
+        for (String key : keys) {
+            if (!StrUtil.containsIgnoreCase(str, key)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
