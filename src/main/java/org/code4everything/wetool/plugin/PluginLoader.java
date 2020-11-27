@@ -88,17 +88,17 @@ public final class PluginLoader {
         }
 
         menuItems.forEach(menuItem -> {
-            String name = prefix + menuItem.getText();
-            if (ALREADY_ADD_TAB_NAME.contains(name)) {
+            String menuName = prefix + menuItem.getText();
+            if (ALREADY_ADD_TAB_NAME.contains(menuName)) {
                 return;
             }
             EventHandler<ActionEvent> eventHandler = menuItem.getOnAction();
             if (Objects.nonNull(eventHandler)) {
-                ALREADY_ADD_TAB_NAME.add(name);
-                MainController.addTabForSearch(name, eventHandler);
+                ALREADY_ADD_TAB_NAME.add(menuName);
+                MainController.addTabForSearch(menuName, eventHandler);
             }
             if (menuItem instanceof Menu) {
-                addPluginForSearch(name + "/", (Menu) menuItem);
+                addPluginForSearch(menuName + "/", (Menu) menuItem);
             }
         });
     }
@@ -182,11 +182,8 @@ public final class PluginLoader {
         // 注册主界面插件菜单
         MenuItem barMenu = supporter.registerBarMenu();
         if (ObjectUtil.isNotNull(barMenu)) {
-            ALREADY_ADD_TAB_NAME.add(barMenu.getText());
-            String name = StrUtil.join("-", barMenu.getText(), info.getAuthor(), info.getName());
-            EventHandler<ActionEvent> action = barMenu.getOnAction();
-            MainController.addTabForSearch(name, action);
             FxUtils.getPluginMenu().getItems().add(barMenu);
+            addTabForSearch("", barMenu, info);
         }
         log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
         // 注册成功回调
@@ -195,6 +192,19 @@ public final class PluginLoader {
             supporter.debugCall();
         }
         return true;
+    }
+
+    private static void addTabForSearch(String prefix, MenuItem menuItem, WePluginInfo info) {
+        String menuName = prefix + menuItem.getText();
+        EventHandler<ActionEvent> action = menuItem.getOnAction();
+        if (Objects.nonNull(action)) {
+            ALREADY_ADD_TAB_NAME.add(menuName);
+            String name = StrUtil.join("-", menuName, info.getAuthor(), info.getName());
+            MainController.addTabForSearch(name, action);
+        }
+        if (menuItem instanceof Menu) {
+            ((Menu) menuItem).getItems().forEach(item -> addTabForSearch(menuName + "/", item, info));
+        }
     }
 
     private static void replaceIfNewer(WePlugin plugin) {
