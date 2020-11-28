@@ -19,42 +19,6 @@
 - 支持监听鼠标键盘
 - [更多功能来插件库查看哦](https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository)
 
-### 配置文件说明
-
-程序会在启动时根据当前的系统名称加载当前工作目录下与之对应的配置文件`we-config-{}.json`，
-其中`{}`可以为`win`、`mac`和`lin`分别对应`Windows`、`Mac`以及`Linux`平台，如上述文件不存在，那么将加载默认的配置文件`we-config.json`，
-如果配置文件加载失败，程序将放弃运行，直接退出。
-
-- 配置内容可参考：[we-config.json](we-config.json)
-- 属性说明可参考：[WeConfig.Java](https://gitee.com/code4everything/wetool-plugin/blob/master/wetool-plugin-support/src/main/java/org/code4everything/wetool/plugin/support/config/WeConfig.java)
-
-数据库配置：在配置文件中新增 dbConnections 字段，如其名，该字段为数组类型，数组中每个元素的配置属性请参考Druid，建议把name字段填上，便于识别，示例如下：
-
-```json
-{
-    /*其他配置属性*/
-    /*................*/
-    "dbConnections": [
-        {
-            "name": "test",
-            "url": "jdbc:mysql://localserver:3306/test?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai",
-            "username": "root",
-            "password": "root",
-            "initialSize": "1",
-            "keepAlive": true
-        },
-        {
-            "name": "local_prod",
-            "url": "jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai",
-            "username": "test",
-            "password": "test",
-            "initialSize": "0",
-            "minEvictableIdleTimeMillis": 600000
-        }
-    ]
-}
-```
-
 ### 下载与使用
 
 ##### [下载WETOOL-1.3.0.ZIP](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.3.0.zip)
@@ -102,13 +66,45 @@ java -jar ./wetool.jar &
 
 ![wetool](images/wetool_2.png)
 
+### 配置文件说明
+
+程序会在启动时根据当前的系统名称加载当前工作目录下与之对应的配置文件`we-config-{}.json`，
+其中`{}`可以为`win`、`mac`和`lin`分别对应`Windows`、`Mac`以及`Linux`平台，如上述文件不存在，那么将加载默认的配置文件`we-config.json`，
+如果配置文件加载失败，程序将放弃运行，直接退出。
+
+- 配置内容可参考：[we-config.json](we-config.json)
+- 属性说明可参考：[WeConfig.Java](https://gitee.com/code4everything/wetool-plugin/blob/master/wetool-plugin-support/src/main/java/org/code4everything/wetool/plugin/support/config/WeConfig.java)
+
+数据库配置：在配置文件中新增 dbConnections 字段，如其名，该字段为数组类型，数组中每个元素的配置属性请参考Druid，建议把name字段填上，便于识别，示例如下：
+
+```json
+{
+    /*其他配置属性*/
+    /*................*/
+    "dbConnections": [
+        {
+            "name": "test",
+            "url": "jdbc:mysql://localserver:3306/test?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai",
+            "username": "root",
+            "password": "root",
+            "initialSize": "1",
+            "keepAlive": true
+        },
+        {
+            "name": "local_prod",
+            "url": "jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai",
+            "username": "test",
+            "password": "test",
+            "initialSize": "0",
+            "minEvictableIdleTimeMillis": 600000
+        }
+    ]
+}
+```
+
 ### 开发说明
 
-开发调试过程中，建议运行[`WeApplicationTest`](src/test/java/org/code4everything/wetool/WeApplicationTest.java)主类，
-而不是运行主类[`WeApplication`](src/main/java/org/code4everything/wetool/WeApplication.java)，
-运行`WeApplication`类时产生的日志数据会被输出到文件中，而`WeApplicationTest`则只会输出到终端，方便开发调试。
-
-### 开发环境
+所需环境
 
 - JDK 11.0.5
 - Maven 3.6
@@ -116,6 +112,10 @@ java -jar ./wetool.jar &
 - IDEA 2019.3
 - Lombok
 - Git
+
+开发调试过程中，建议运行[`WeApplicationTest`](src/test/java/org/code4everything/wetool/WeApplicationTest.java)主类，
+而不是运行主类[`WeApplication`](src/main/java/org/code4everything/wetool/WeApplication.java)，
+运行`WeApplication`类时产生的日志数据会被输出到文件中，而`WeApplicationTest`则只会输出到终端，方便开发调试。
 
 ### 插件开发
 
