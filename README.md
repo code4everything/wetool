@@ -45,9 +45,15 @@ java -jar ./wetool.jar &
   
 ##### 插件的安装（使用`Ctrl+Shift+P`打开插件面板即可安装插件）
  
-将插件放到当前工作目录的`plugins`目录下后，并将插件需要的配置信息写到配置文件中，重启程序即可
+如果是自己手动下载的插件，那么将插件放到当前工作目录的`plugins`目录下，重启程序即可
 
 > [插件库](https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository)
+    
+### 运行截图
+
+![wetool](images/wetool.png)
+
+![wetool](images/wetool_2.png)
 
 ### 使用小技巧
 
@@ -59,12 +65,6 @@ java -jar ./wetool.jar &
 - 关闭所有未选中选项卡：`Ctrl+Shift+F4`
 - 隐藏主界面：按 `Esc` 取消窗体内控件的焦点，再按 `Esc` 隐藏窗体
 - 快捷键 `Ctrl+P` 搜索应用内工具，不支持输入中文，但是可以用拼音代替
-    
-### 运行截图
-
-![wetool](images/wetool.png)
-
-![wetool](images/wetool_2.png)
 
 ### 配置文件说明
 
