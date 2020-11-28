@@ -110,7 +110,7 @@ public class WeApplication extends Application {
         try {
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(new WeKeyboardListener());
-            GlobalScreen.addNativeMouseMotionListener(new WeMouseListener());
+            GlobalScreen.addNativeMouseListener(new WeMouseListener());
         } catch (NativeHookException ex) {
             log.error("register keyboard listener failed: {}", ExceptionUtil.stacktraceToString(ex, Integer.MAX_VALUE));
         }
