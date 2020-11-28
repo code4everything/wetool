@@ -148,7 +148,12 @@ public class MainController {
         FxUtils.registerShortcuts(shortcuts, () -> toolSearchBox.requestFocus());
 
         shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_F4);
-        FxUtils.registerShortcuts(shortcuts, () -> tabPane.getSelectionModel().clearSelection());
+        FxUtils.registerShortcuts(shortcuts, () -> {
+            Tab tab = tabPane.getSelectionModel().getSelectedItem();
+            if (Objects.nonNull(tab)) {
+                tabPane.getTabs().remove(tab);
+            }
+        });
 
         shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_9);
         FxUtils.registerShortcuts(shortcuts, () -> tabPane.getSelectionModel().selectLast());
