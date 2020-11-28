@@ -178,6 +178,16 @@ public class MainController {
         shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_F4);
         FxUtils.registerShortcuts(shortcuts, this::closeSelectedTab);
 
+        // ctrl+shift+f4 关闭选中的选项卡
+        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_SHIFT, NativeKeyEvent.VC_F4);
+        FxUtils.registerShortcuts(shortcuts, () -> {
+            Tab tab = tabPane.getSelectionModel().getSelectedItem();
+            tabPane.getTabs().clear();
+            if (Objects.nonNull(tab)) {
+                tabPane.getTabs().add(tab);
+            }
+        });
+
         // ctrl+o 打开文件
         shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_O);
         FxUtils.registerShortcuts(shortcuts, this::openFile);
@@ -217,6 +227,24 @@ public class MainController {
                 tabPane.getSelectionModel().select(Math.min(maxIdx, idx));
             });
         }
+
+        // alt+1...9 关闭指定选项卡
+        shortcuts = List.of(NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_9);
+        FxUtils.registerShortcuts(shortcuts, () -> closeTab(tabPane.getTabs().size() - 1));
+        for (int i = 1; i < 9; i++) {
+            int idx = i - 1;
+            shortcuts = List.of(NativeKeyEvent.VC_ALT, i + 1);
+            FxUtils.registerShortcuts(shortcuts, () -> closeTab(idx));
+        }
+    }
+
+    private void closeTab(int idx) {
+        int maxIdx = tabPane.getTabs().size() - 1;
+        if (maxIdx < 0) {
+            return;
+        }
+        idx = Math.min(idx, maxIdx);
+        tabPane.getTabs().remove(idx);
     }
 
     private void multiDesktopOnWindows() {
