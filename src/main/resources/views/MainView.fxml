@@ -2,61 +2,60 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="600.0"
-      xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.code4everything.wetool.controller.MainController">
+
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.code4everything.wetool.controller.MainController">
     <HBox VBox.vgrow="NEVER">
         <MenuBar HBox.hgrow="NEVER">
-            <Menu fx:id="fileMenu" text="文件(_F)">
-                <MenuItem onAction="#openFile" text="打开(_O)"/>
-                <MenuItem onAction="#openMultiFile" text="批量打开(_M)"/>
-                <MenuItem onAction="#openFolder" text="打开文件夹(_D)"/>
-                <MenuItem onAction="#saveFile" text="保存(_S)"/>
-                <SeparatorMenuItem/>
-                <MenuItem onAction="#loadPluginsHandy" text="加载插件(_L)"/>
-                <SeparatorMenuItem/>
-                <MenuItem onAction="#openAllTab" text="打开所有标签(_Z)"/>
-                <MenuItem onAction="#closeAllTab" text="关闭所有标签(_C)"/>
-                <MenuItem onAction="#clearAllCache" text="清除所有缓存(_I)"/>
-                <SeparatorMenuItem/>
-                <MenuItem onAction="#restart" text="重启(_R)"/>
-                <SeparatorMenuItem/>
-                <MenuItem onAction="#quit" text="退出(_Q)"/>
+            <Menu fx:id="fileMenu" mnemonicParsing="false" text="文件">
+                <MenuItem mnemonicParsing="false" onAction="#openFile" text="打开 Ctrl+O" />
+                <MenuItem mnemonicParsing="false" onAction="#openMultiFile" text="批量打开 Ctrl+Shift+O" />
+                <MenuItem mnemonicParsing="false" onAction="#openFolder" text="打开文件夹 Ctrl+D" />
+                <MenuItem mnemonicParsing="false" onAction="#saveFile" text="保存 Ctrl+S" />
+                <SeparatorMenuItem />
+                <MenuItem mnemonicParsing="false" onAction="#loadPluginsHandy" text="加载插件" />
+                <SeparatorMenuItem />
+                <MenuItem mnemonicParsing="false" onAction="#openAllTab" text="打开所有标签" />
+                <MenuItem mnemonicParsing="false" onAction="#closeAllTab" text="关闭所有标签" />
+                <MenuItem mnemonicParsing="false" onAction="#clearAllCache" text="清除所有缓存" />
+                <SeparatorMenuItem />
+                <MenuItem mnemonicParsing="false" onAction="#restart" text="重启 Ctrl+Alt+Shift+R" />
+                <SeparatorMenuItem />
+                <MenuItem mnemonicParsing="false" onAction="#quit" text="退出" />
             </Menu>
-            <Menu fx:id="toolMenu" text="工具(_T)">
-                <MenuItem id="FileManager" text="文件批处理(_B)"/>
-                <MenuItem id="ClipboardHistory" text="剪贴板历史(_P)"/>
-                <MenuItem id="NetworkTool" text="网络工具(_N)"/>
-                <MenuItem id="JsonParser" text="JSON解析(_J)"/>
-                <SeparatorMenuItem/>
-                <Menu text="转换器(_C)">
-                    <MenuItem id="CharsetConverter" text="编码转换器(_V)"/>
-                    <MenuItem id="NaryConverter" text="进制转换器(_N)"/>
+            <Menu fx:id="toolMenu" mnemonicParsing="false" text="工具">
+                <MenuItem id="FileManager" mnemonicParsing="false" text="文件批处理" />
+                <MenuItem id="ClipboardHistory" mnemonicParsing="false" text="剪贴板历史" />
+                <MenuItem id="NetworkTool" mnemonicParsing="false" text="网络工具" />
+                <MenuItem id="JsonParser" mnemonicParsing="false" text="JSON解析" />
+                <SeparatorMenuItem />
+                <Menu mnemonicParsing="false" text="转换器">
+                    <MenuItem id="CharsetConverter" mnemonicParsing="false" text="编码转换器" />
+                    <MenuItem id="NaryConverter" mnemonicParsing="false" text="进制转换器" />
                 </Menu>
-                <SeparatorMenuItem/>
-                <Menu text="生成器(_G)">
-                    <MenuItem id="RandomGenerator" text="随机生成器(_R)"/>
-                    <MenuItem id="QrCodeGenerator" text="二维码生成器(_D)"/>
+                <SeparatorMenuItem />
+                <Menu mnemonicParsing="false" text="生成器">
+                    <MenuItem id="RandomGenerator" mnemonicParsing="false" text="随机生成器" />
+                    <MenuItem id="QrCodeGenerator" mnemonicParsing="false" text="二维码生成器" />
                 </Menu>
             </Menu>
-            <Menu fx:id="pluginMenu" text="插件(_P)"/>
-            <Menu text="帮助(_H)">
-                <MenuItem onAction="#openConfig" text="打开配置文件(_C)"/>
-                <MenuItem onAction="#openLog" text="打开日志文件(_L)"/>
-                <SeparatorMenuItem/>
-                <MenuItem onAction="#openWorkFolder" text="打开工作目录(_W)"/>
-                <MenuItem onAction="#openPluginFolder" text="打开插件目录(_I)"/>
-                <MenuItem onAction="#openLogFolder" text="打开日志目录(_O)"/>
-                <SeparatorMenuItem/>
-                <MenuItem onAction="#seeJavaInfo" text="JAVA属性(_J)"/>
-                <SeparatorMenuItem/>
-                <MenuItem onAction="#pluginPane" text="插件面板(_R)"/>
-                <MenuItem onAction="#about" text="关于WeTool(_A)"/>
+            <Menu fx:id="pluginMenu" mnemonicParsing="false" text="插件" />
+            <Menu mnemonicParsing="false" text="帮助">
+                <MenuItem mnemonicParsing="false" onAction="#openConfig" text="打开配置文件" />
+                <MenuItem mnemonicParsing="false" onAction="#openLog" text="打开日志文件" />
+                <SeparatorMenuItem />
+                <MenuItem mnemonicParsing="false" onAction="#openWorkFolder" text="打开工作目录" />
+                <MenuItem mnemonicParsing="false" onAction="#openPluginFolder" text="打开插件目录" />
+                <MenuItem mnemonicParsing="false" onAction="#openLogFolder" text="打开日志目录" />
+                <SeparatorMenuItem />
+                <MenuItem mnemonicParsing="false" onAction="#seeJavaInfo" text="JAVA属性" />
+                <SeparatorMenuItem />
+                <MenuItem mnemonicParsing="false" onAction="#pluginPane" text="插件面板 Ctrl+Shift+P" />
+                <MenuItem mnemonicParsing="false" onAction="#about" text="关于WeTool" />
             </Menu>
         </MenuBar>
-        <ComboBox fx:id="toolSearchBox" editable="true" onKeyReleased="#toolBoxKeyReleased" prefWidth="300.0"
-                  promptText="搜索工具 Ctrl+P" HBox.hgrow="NEVER">
+        <ComboBox fx:id="toolSearchBox" editable="true" onKeyReleased="#toolBoxKeyReleased" prefWidth="300.0" promptText="搜索工具 Ctrl+P" HBox.hgrow="NEVER">
         </ComboBox>
+        <Button fx:id="hiddenControl" mnemonicParsing="false" opacity="0.0" text="Button" HBox.hgrow="NEVER" />
     </HBox>
-    <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS"/>
+    <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS" />
 </VBox>

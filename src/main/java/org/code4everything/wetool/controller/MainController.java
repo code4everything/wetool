@@ -13,6 +13,7 @@ import cn.hutool.system.SystemUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
@@ -93,6 +94,9 @@ public class MainController {
     @FXML
     public ComboBox<String> toolSearchBox;
 
+    @FXML
+    public Button hiddenControl;
+
     private static void addTabForSearch(String name, String title, String viewUrl) {
         TAB_MAP.put(name, new Pair<>(title, viewUrl));
         addTabForSearch(title + "/" + name, actionEvent -> {
@@ -144,9 +148,15 @@ public class MainController {
     }
 
     private void registerShortcuts() {
+        // ctrl+p 聚焦到工具搜索
         List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_P);
         FxUtils.registerShortcuts(shortcuts, () -> toolSearchBox.requestFocus());
 
+        // escape 取消控件聚焦
+        shortcuts = List.of(NativeKeyEvent.VC_ESCAPE);
+        FxUtils.registerShortcuts(shortcuts, () -> hiddenControl.requestFocus());
+
+        // ctrl+f4 关闭选中的选项卡
         shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_F4);
         FxUtils.registerShortcuts(shortcuts, () -> {
             Tab tab = tabPane.getSelectionModel().getSelectedItem();
@@ -155,9 +165,34 @@ public class MainController {
             }
         });
 
+        // ctrl+o 打开文件
+        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_O);
+        FxUtils.registerShortcuts(shortcuts, this::openFile);
+
+        // ctrl+shift+o 打开多个文件
+        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_SHIFT, NativeKeyEvent.VC_O);
+        FxUtils.registerShortcuts(shortcuts, this::openMultiFile);
+
+        // ctrl+d 打开文件夹
+        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_D);
+        FxUtils.registerShortcuts(shortcuts, this::openFolder);
+
+        // ctrl+s 保存文件
+        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_S);
+        FxUtils.registerShortcuts(shortcuts, this::saveFile);
+
+        // ctrl+alt+shift+r 重启
+        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_SHIFT,
+                NativeKeyEvent.VC_R);
+        FxUtils.registerShortcuts(shortcuts, this::restart);
+
+        // ctrl+shift+p 打开插件面板
+        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_SHIFT, NativeKeyEvent.VC_P);
+        FxUtils.registerShortcuts(shortcuts, this::pluginPane);
+
+        // ctrl+1...9 打开指定选项卡
         shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_9);
         FxUtils.registerShortcuts(shortcuts, () -> tabPane.getSelectionModel().selectLast());
-
         for (int i = 1; i < 9; i++) {
             int idx = i - 1;
             shortcuts = List.of(NativeKeyEvent.VC_CONTROL, i + 1);
