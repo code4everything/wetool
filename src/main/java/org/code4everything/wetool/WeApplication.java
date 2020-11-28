@@ -42,11 +42,13 @@ import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.util.FinalUtils;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
@@ -111,6 +113,9 @@ public class WeApplication extends Application {
         }
 
         FxUtils.listenKeyEvent();
+        List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_ENTER);
+        FxUtils.registerGlobalShortcuts(shortcuts, FxUtils::toggleStage);
+
         connectDb();
     }
 
@@ -293,19 +298,13 @@ public class WeApplication extends Application {
         menu.add(FxUtils.createTrayMenuItem("插件仓库", e -> FxUtils.openLink(TipConsts.REPO_LINK)));
     }
 
-    private class TrayMouseListener implements MouseListener {
+    private static class TrayMouseListener implements MouseListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
             if (e.getClickCount() == IntegerConsts.TWO) {
                 // 双击图标
-                Platform.runLater(() -> {
-                    if (stage.isShowing()) {
-                        FxUtils.hideStage();
-                    } else {
-                        FxUtils.showStage();
-                    }
-                });
+                Platform.runLater(FxUtils::toggleStage);
             }
         }
 

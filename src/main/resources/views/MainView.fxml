@@ -55,7 +55,7 @@
             </Menu>
         </MenuBar>
         <ComboBox fx:id="toolSearchBox" editable="true" onKeyReleased="#toolBoxKeyReleased" prefWidth="300.0"
-                  promptText="搜索工具" HBox.hgrow="NEVER">
+                  promptText="搜索工具 Ctrl+P" HBox.hgrow="NEVER">
         </ComboBox>
     </HBox>
     <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS"/>

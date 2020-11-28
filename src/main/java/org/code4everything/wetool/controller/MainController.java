@@ -114,6 +114,7 @@ public class MainController {
     private void initialize() {
         BeanFactory.register(tabPane);
         BeanFactory.register(AppConsts.BeanKey.PLUGIN_MENU, pluginMenu);
+        registerShortcuts();
 
         // 加载快速启动选项
         Set<WeStart> starts = WeUtils.getConfig().getQuickStarts();
@@ -139,9 +140,30 @@ public class MainController {
 
         // 监听鼠标位置
         multiDesktopOnWindows();
-        FxUtils.registerShortcuts(List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_P),
-                () -> toolSearchBox.requestFocus());
         WeUtils.execute(PluginLoader::loadPlugins);
+    }
+
+    private void registerShortcuts() {
+        List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_P);
+        FxUtils.registerShortcuts(shortcuts, () -> toolSearchBox.requestFocus());
+
+        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_F4);
+        FxUtils.registerShortcuts(shortcuts, () -> tabPane.getSelectionModel().clearSelection());
+
+        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_9);
+        FxUtils.registerShortcuts(shortcuts, () -> tabPane.getSelectionModel().selectLast());
+
+        for (int i = 1; i < 9; i++) {
+            int idx = i - 1;
+            shortcuts = List.of(NativeKeyEvent.VC_CONTROL, i + 1);
+            FxUtils.registerShortcuts(shortcuts, () -> {
+                if (tabPane.getTabs().isEmpty()) {
+                    return;
+                }
+                int maxIdx = tabPane.getTabs().size() - 1;
+                tabPane.getSelectionModel().select(Math.min(maxIdx, idx));
+            });
+        }
     }
 
     private void multiDesktopOnWindows() {
