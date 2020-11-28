@@ -1,15 +1,6 @@
 ## WeTool 工具箱
 
-`WeTool`是一款基于`JavaFX`开发的轻量级、简洁、可插件式扩展的通用工具箱
-
-### 开发环境
-
-- JDK 11.0.5
-- Maven 3.6
-- Scene Builder 2.0
-- IDEA 2019.3
-- Lombok
-- Git
+`WeTool`是一款基于`JavaFX`开发的轻量级、简洁、可插件式扩展的通用工具箱。
 
 ### 主要功能
 
@@ -26,17 +17,7 @@
 - Windows虚拟桌面触发角
 - 支持数据库连接（[查看配置属性](https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7%E5%88%97%E8%A1%A8)）
 - 支持监听鼠标键盘
-
-### 使用小技巧
-
-- 使用全局快捷键 `Ctrl+Alt+Enter` 显示或隐藏主界面
-- 应用内使用快捷键 `Ctrl+数字` 选中指定位置的选项卡，数字 `9` 表示选中最后一个
-- 快速聚焦到指定控件：1. 按 `Esc` 取消窗体内控件的焦点，2. 输入要聚焦控件的大概位置（如：`6`），3. 按 `Enter` 快速聚焦到该位置的控件
-- 关闭指定位置的选项卡：`Alt+数字`，数字 `9` 表示关闭最后一个
-- 关闭选中的选项卡：方法一，使用快捷键 `Ctrl+F4`；方法二，按 `Esc` 取消窗体内控件的焦点，按 `X` 键关闭TAB
-- 关闭所有未选中选项卡：`Ctrl+Shift+F4`
-- 隐藏主界面：按 `Esc` 取消窗体内控件的焦点，再按 `Esc` 隐藏窗体
-- 快捷键 `Ctrl+P` 搜索应用内工具，不支持输入中文，但是可以用拼音代替
+- [更多功能来插件库查看哦](https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository)
 
 ### 配置文件说明
 
@@ -76,33 +57,44 @@
 
 ### 下载与使用
 
-- [wetool-1.3.0.zip](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.3.0.zip)
+##### [下载WETOOL-1.3.0.ZIP](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.3.0.zip)
 
-- [更新历史](history.md)
+##### [查看更新历史](history.md)
 
-- 自行打包
+##### 自己打包（或者下载上面的ZIP包）
 
-    ```shell
-    git clone https://gitee.com/code4everything/wetool.git
-    cd wetool
-    mvn package [-D javafx.platform=[win|mac|linux]]
-    ```
+```shell
+git clone https://gitee.com/code4everything/wetool.git
+cd wetool
+mvn package [-D javafx.platform=[win|mac|linux]]
+```
   
-- 运行
+##### 运行（windows和mac平台双击对应jar包即可运行）
 
-    ```shell
-    # windows平台
-    javaw -jar ./wetool.jar
-    # mac或linux平台
-    java -jar ./wetool.jar &
-    ```
-    > 日志路径：`${user.home}/logs/wetool/wetool.log`
+```shell
+# windows平台
+javaw -jar ./wetool.jar
+# mac或linux平台
+java -jar ./wetool.jar &
+```
+> 说明运行软件需安装有Java11及以上版本，另外日志保存在路径：`${user.home}/logs/wetool/wetool.log`。
   
-- 插件的安装
+##### 插件的安装（使用`Ctrl+Shift+P`打开插件面板即可安装插件）
  
-    将插件放到当前工作目录的`plugins`目录下后，并将插件需要的配置信息写到配置文件中，重启程序即可
-    
-    > [插件库](https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository)
+将插件放到当前工作目录的`plugins`目录下后，并将插件需要的配置信息写到配置文件中，重启程序即可
+
+> [插件库](https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository)
+
+### 使用小技巧
+
+- 使用全局快捷键 `Ctrl+Alt+Enter` 显示或隐藏主界面
+- 应用内使用快捷键 `Ctrl+数字` 选中指定位置的选项卡，数字 `9` 表示选中最后一个
+- 快速聚焦到指定控件：1. 按 `Esc` 取消窗体内控件的焦点，2. 输入要聚焦控件的大概位置（如：`6`），3. 按 `Enter` 快速聚焦到该位置的控件
+- 关闭指定位置的选项卡：`Alt+数字`，数字 `9` 表示关闭最后一个
+- 关闭选中的选项卡：方法一，使用快捷键 `Ctrl+F4`；方法二，按 `Esc` 取消窗体内控件的焦点，按 `X` 键关闭TAB
+- 关闭所有未选中选项卡：`Ctrl+Shift+F4`
+- 隐藏主界面：按 `Esc` 取消窗体内控件的焦点，再按 `Esc` 隐藏窗体
+- 快捷键 `Ctrl+P` 搜索应用内工具，不支持输入中文，但是可以用拼音代替
     
 ### 运行截图
 
@@ -112,7 +104,16 @@
 
 开发调试过程中，建议运行[`WeApplicationTest`](src/test/java/org/code4everything/wetool/WeApplicationTest.java)主类，
 而不是运行主类[`WeApplication`](src/main/java/org/code4everything/wetool/WeApplication.java)，
-运行`WeApplication`类时产生的日志数据会被输出到文件中，而`WeApplicationTest`则只会输出到终端，方便开发调试
+运行`WeApplication`类时产生的日志数据会被输出到文件中，而`WeApplicationTest`则只会输出到终端，方便开发调试。
+
+### 开发环境
+
+- JDK 11.0.5
+- Maven 3.6
+- Scene Builder 2.0
+- IDEA 2019.3
+- Lombok
+- Git
 
 ### 插件开发
 
@@ -120,8 +121,8 @@
 
 ### 结语
 
-关于插件的支持，纯粹是为了减轻本工具包的负担，毕竟本工具的宗旨是轻量级、轻量级、轻量级，而某些只会在特定场景下使用的功能则以插件的方式加载进来，可以极大缩减本工具包的大小，而不至于臃肿
+关于插件的支持，纯粹是为了减轻本工具包的负担，毕竟本工具的宗旨是轻量级、轻量级、轻量级，而某些只会在特定场景下使用的功能则以插件的方式加载进来，可以极大缩减本工具包的大小，而不至于臃肿。
 
 如果你觉得这个项目还不错，可将鼠标移动至`Star`处，轻轻点一下，以示支持哦^_^
 
-欢迎提Issue，Pull Request，大家一起交流学习
+欢迎提Issue，Pull Request，大家一起交流学习。
