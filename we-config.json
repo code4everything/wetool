@@ -67,7 +67,7 @@
     "logCompressLen": 64,
     /*自定义重启的脚本路径*/
     "restartBatch": "",
-    /*windows虚拟桌面触发角*/
+    /*windows虚拟桌面触发角：LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM*/
     "winVirtualDesktopHotCorner": "RIGHT_TOP",
     /*数据库连接配置*/
     "dbConnections": []
