@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.code4everything.wetool.controller.MainController">
     <HBox VBox.vgrow="NEVER">
         <MenuBar HBox.hgrow="NEVER">
@@ -55,7 +54,7 @@
         </MenuBar>
         <ComboBox fx:id="toolSearchBox" editable="true" onKeyReleased="#toolBoxKeyReleased" prefWidth="300.0" promptText="搜索工具 Ctrl+P" HBox.hgrow="NEVER">
         </ComboBox>
-        <Button fx:id="hiddenControl" mnemonicParsing="false" opacity="0.0" text="Button" HBox.hgrow="NEVER" />
+        <TextField fx:id="hiddenControl" opacity="0.0" HBox.hgrow="NEVER" onKeyReleased="#locateControl" prefWidth="1"/>
     </HBox>
     <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS" />
 </VBox>

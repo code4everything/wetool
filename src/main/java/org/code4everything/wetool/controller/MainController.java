@@ -6,6 +6,7 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
@@ -13,12 +14,15 @@ import cn.hutool.system.SystemUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.Node;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -48,7 +52,6 @@ import org.code4everything.wetool.util.FinalUtils;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -95,7 +98,7 @@ public class MainController {
     public ComboBox<String> toolSearchBox;
 
     @FXML
-    public Button hiddenControl;
+    public TextField hiddenControl;
 
     private static void addTabForSearch(String name, String title, String viewUrl) {
         TAB_MAP.put(name, new Pair<>(title, viewUrl));
@@ -118,6 +121,7 @@ public class MainController {
     private void initialize() {
         BeanFactory.register(tabPane);
         BeanFactory.register(AppConsts.BeanKey.PLUGIN_MENU, pluginMenu);
+        hiddenControl.focusedProperty().addListener((observableValue, aBoolean, t1) -> hiddenControl.setText(StrUtil.EMPTY));
         registerShortcuts();
 
         // 加载快速启动选项
@@ -147,6 +151,13 @@ public class MainController {
         WeUtils.execute(PluginLoader::loadPlugins);
     }
 
+    private void closeSelectedTab() {
+        Tab tab = tabPane.getSelectionModel().getSelectedItem();
+        if (Objects.nonNull(tab)) {
+            tabPane.getTabs().remove(tab);
+        }
+    }
+
     private void registerShortcuts() {
         // ctrl+p 聚焦到工具搜索
         List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_P);
@@ -158,12 +169,7 @@ public class MainController {
 
         // ctrl+f4 关闭选中的选项卡
         shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_F4);
-        FxUtils.registerShortcuts(shortcuts, () -> {
-            Tab tab = tabPane.getSelectionModel().getSelectedItem();
-            if (Objects.nonNull(tab)) {
-                tabPane.getTabs().remove(tab);
-            }
-        });
+        FxUtils.registerShortcuts(shortcuts, this::closeSelectedTab);
 
         // ctrl+o 打开文件
         shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_O);
@@ -216,10 +222,10 @@ public class MainController {
                 @Override
                 public void handleEvent0(String s, Date date, MouseCornerEventMessage message) {
                     if (WeUtils.getConfig().getWinVirtualDesktopHotCorner() == message.getType()) {
-                        robot.keyPress(KeyEvent.VK_WINDOWS);
-                        robot.keyPress(KeyEvent.VK_TAB);
-                        robot.keyRelease(KeyEvent.VK_WINDOWS);
-                        robot.keyRelease(KeyEvent.VK_TAB);
+                        robot.keyPress(java.awt.event.KeyEvent.VK_WINDOWS);
+                        robot.keyPress(java.awt.event.KeyEvent.VK_TAB);
+                        robot.keyRelease(java.awt.event.KeyEvent.VK_WINDOWS);
+                        robot.keyRelease(java.awt.event.KeyEvent.VK_TAB);
                     }
                 }
             });
@@ -442,7 +448,7 @@ public class MainController {
         return builder.toString();
     }
 
-    public void toolBoxKeyReleased(javafx.scene.input.KeyEvent keyEvent) {
+    public void toolBoxKeyReleased(KeyEvent keyEvent) {
         KeyCode keyCode = keyEvent.getCode();
         if (!keyCode.isLetterKey() && !keyCode.isDigitKey() && !keyCode.isWhitespaceKey() && keyCode != KeyCode.ENTER) {
             return;
@@ -500,5 +506,59 @@ public class MainController {
         tabPane.requestFocus();
         toolSearchBox.requestFocus();
         toolSearchBox.getEditor().positionCaret(Integer.MAX_VALUE);
+    }
+
+    public void locateControl(KeyEvent keyEvent) {
+        FxUtils.enterDo(keyEvent, () -> {
+            int idx = 0;
+            String text = hiddenControl.getText();
+            hiddenControl.setText(StrUtil.EMPTY);
+            try {
+                idx = NumberUtil.parseInt(text);
+            } catch (Exception e) {
+                // ignore
+            }
+
+            Tab tab = tabPane.getSelectionModel().getSelectedItem();
+            if (Objects.isNull(tab)) {
+                return;
+            }
+
+            List<Control> list = new ArrayList<>();
+            parseTabControl(list, tab.getContent());
+
+            if (CollUtil.isEmpty(list)) {
+                return;
+            }
+            idx = Math.max(0, idx - 1);
+            list.get(Math.min(list.size() - 1, idx)).requestFocus();
+        });
+    }
+
+    private void parseTabControl(List<Control> list, Node node) {
+        if (node instanceof Pane) {
+            Pane pane = (Pane) node;
+            pane.getChildren().forEach(e -> parseTabControl(list, e));
+        } else if (node instanceof ScrollPane) {
+            ScrollPane pane = (ScrollPane) node;
+            parseTabControl(list, pane.getContent());
+        } else if (node instanceof SplitPane) {
+            SplitPane pane = (SplitPane) node;
+            pane.getItems().forEach(e -> parseTabControl(list, e));
+        } else if (node instanceof TitledPane) {
+            TitledPane pane = (TitledPane) node;
+            parseTabControl(list, pane.getContent());
+        } else if (node instanceof TabPane) {
+            TabPane pane = (TabPane) node;
+            Tab tab = pane.getSelectionModel().getSelectedItem();
+            if (Objects.nonNull(tab)) {
+                parseTabControl(list, tab.getContent());
+            }
+        } else if (node instanceof Control) {
+            Control control = (Control) node;
+            if (control.isVisible() && !control.isDisable()) {
+                list.add(control);
+            }
+        }
     }
 }
