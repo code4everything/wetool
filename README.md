@@ -100,6 +100,8 @@ java -jar ./wetool.jar &
 
 ![wetool](images/wetool.png)
 
+![wetool](images/wetool_2.png)
+
 ### 开发说明
 
 开发调试过程中，建议运行[`WeApplicationTest`](src/test/java/org/code4everything/wetool/WeApplicationTest.java)主类，
