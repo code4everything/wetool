@@ -165,7 +165,14 @@ public class MainController {
 
         // escape 取消控件聚焦
         shortcuts = List.of(NativeKeyEvent.VC_ESCAPE);
-        FxUtils.registerShortcuts(shortcuts, () -> hiddenControl.requestFocus());
+        FxUtils.registerShortcuts(shortcuts, () -> {
+            if (hiddenControl.isFocused()) {
+                hiddenControl.setText(StrUtil.EMPTY);
+                FxUtils.hideStage();
+            } else {
+                hiddenControl.requestFocus();
+            }
+        });
 
         // ctrl+f4 关闭选中的选项卡
         shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_F4);
@@ -509,6 +516,12 @@ public class MainController {
     }
 
     public void locateControl(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.X) {
+            closeSelectedTab();
+            hiddenControl.setText(StrUtil.EMPTY);
+            return;
+        }
+
         FxUtils.enterDo(keyEvent, () -> {
             int idx = 0;
             String text = hiddenControl.getText();
