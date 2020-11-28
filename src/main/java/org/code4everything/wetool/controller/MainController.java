@@ -33,6 +33,7 @@ import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
+import org.code4everything.wetool.handler.MouseMotionEventHandler;
 import org.code4everything.wetool.plugin.PluginLoader;
 import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
@@ -147,6 +148,7 @@ public class MainController {
         });
 
         // 监听鼠标位置
+        EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_MOTION, new MouseMotionEventHandler());
         multiDesktopOnWindows();
         WeUtils.execute(PluginLoader::loadPlugins);
     }

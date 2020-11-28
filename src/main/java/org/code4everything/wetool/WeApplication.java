@@ -34,8 +34,8 @@ import org.code4everything.wetool.plugin.support.event.EventMode;
 import org.code4everything.wetool.plugin.support.event.EventPublisher;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
-import org.code4everything.wetool.plugin.support.listener.KeyboardListener;
-import org.code4everything.wetool.plugin.support.listener.MouseMotionListener;
+import org.code4everything.wetool.plugin.support.listener.WeKeyboardListener;
+import org.code4everything.wetool.plugin.support.listener.WeMouseListener;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
@@ -95,6 +95,9 @@ public class WeApplication extends Application {
         EventCenter.registerEvent(EventCenter.EVENT_100_MS_TIMER, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_KEYBOARD_PRESSED, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_KEYBOARD_RELEASED, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_MOUSE_MOTION, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_MOUSE_RELEASED, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_MOUSE_PRESSED, EventMode.MULTI_SUB);
 
         EXECUTOR.scheduleWithFixedDelay(() -> EventCenter.publishEvent(EventCenter.EVENT_100_MS_TIMER,
                 DateUtil.date()), 0, 100, TimeUnit.MILLISECONDS);
@@ -106,8 +109,8 @@ public class WeApplication extends Application {
 
         try {
             GlobalScreen.registerNativeHook();
-            GlobalScreen.addNativeKeyListener(new KeyboardListener());
-            GlobalScreen.addNativeMouseMotionListener(new MouseMotionListener());
+            GlobalScreen.addNativeKeyListener(new WeKeyboardListener());
+            GlobalScreen.addNativeMouseMotionListener(new WeMouseListener());
         } catch (NativeHookException ex) {
             log.error("register keyboard listener failed: {}", ExceptionUtil.stacktraceToString(ex, Integer.MAX_VALUE));
         }
