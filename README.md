@@ -47,8 +47,6 @@ java -jar ./wetool.jar &
  
 如果是自己手动下载的插件，那么将插件放到当前工作目录的`plugins`目录下，重启程序即可
 
-> [插件库](https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository)
-    
 ### 运行截图
 
 ![wetool](images/wetool.png)
@@ -59,12 +57,12 @@ java -jar ./wetool.jar &
 
 - 使用全局快捷键 `Ctrl+Alt+Enter` 显示或隐藏主界面
 - 应用内使用快捷键 `Ctrl+数字` 选中指定位置的选项卡，数字 `9` 表示选中最后一个
-- 快速聚焦到指定控件：1. 按 `Esc` 取消窗体内控件的焦点，2. 输入要聚焦控件的大概位置（如：`6`），3. 按 `Enter` 快速聚焦到该位置的控件
 - 关闭指定位置的选项卡：`Alt+数字`，数字 `9` 表示关闭最后一个
-- 关闭选中的选项卡：方法一，使用快捷键 `Ctrl+F4`；方法二，按 `Esc` 取消窗体内控件的焦点，按 `X` 键关闭TAB
 - 关闭所有未选中选项卡：`Ctrl+Shift+F4`
-- 隐藏主界面：按 `Esc` 取消窗体内控件的焦点，再按 `Esc` 隐藏窗体
 - 快捷键 `Ctrl+P` 搜索应用内工具，不支持输入中文，但是可以用拼音代替
+- 隐藏主界面：按 `Esc` 取消窗体内控件的焦点，再按 `Esc` 隐藏窗体
+- 关闭选中的选项卡：方法一，使用快捷键 `Ctrl+F4`；方法二，按 `Esc` 取消窗体内控件的焦点，按 `X` 键关闭TAB
+- 快速聚焦到指定控件：1. 按 `Esc` 取消窗体内控件的焦点，2. 输入要聚焦控件的大概位置（如：`6`），3. 按 `Enter` 快速聚焦到该位置的控件
 
 ### 配置文件说明
 
@@ -115,7 +113,7 @@ java -jar ./wetool.jar &
 
 开发调试过程中，建议运行[`WeApplicationTest`](src/test/java/org/code4everything/wetool/WeApplicationTest.java)主类，
 而不是运行主类[`WeApplication`](src/main/java/org/code4everything/wetool/WeApplication.java)，
-运行`WeApplication`类时产生的日志数据会被输出到文件中，而`WeApplicationTest`则只会输出到终端，方便开发调试。
+运行`WeApplication`类时产生的日志数据会被输出到文件中，而`WeApplicationTest`则只会输出到终端，并且会输出debug日志，方便开发调试。
 
 ### 插件开发
 
