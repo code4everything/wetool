@@ -110,6 +110,7 @@ public class WeApplication extends Application {
             log.error("register keyboard listener failed: {}", ExceptionUtil.stacktraceToString(ex, Integer.MAX_VALUE));
         }
 
+        FxUtils.listenKeyEvent();
         connectDb();
     }
 

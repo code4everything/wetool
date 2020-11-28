@@ -44,9 +44,11 @@ import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
 import org.code4everything.wetool.util.FinalUtils;
+import org.jnativehook.keyboard.NativeKeyEvent;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -137,6 +139,8 @@ public class MainController {
 
         // 监听鼠标位置
         multiDesktopOnWindows();
+        FxUtils.registerShortcuts(List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_P),
+                () -> toolSearchBox.requestFocus());
         WeUtils.execute(PluginLoader::loadPlugins);
     }
 

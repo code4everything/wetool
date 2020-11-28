@@ -5,6 +5,7 @@
 - 优化插件的安装与禁用
 - 支持搜索应用内工具
 - 新增对鼠标键盘监听的支持
+- 支持注册快捷键
 - 修复了一些已知问题
 
 ### [v1.2.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.2.0.zip)
