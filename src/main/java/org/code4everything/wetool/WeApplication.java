@@ -67,7 +67,8 @@ public class WeApplication extends Application {
 
     private static final Menu PLUGIN_MENU = new Menu(TitleConsts.PLUGIN);
 
-    private static final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).build();
+    private static final ThreadFactory FACTORY =
+            ThreadFactoryBuilder.create().setDaemon(true).setUncaughtExceptionHandler((t, e) -> log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE))).build();
 
     private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(2, FACTORY);
 
