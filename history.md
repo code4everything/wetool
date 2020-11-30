@@ -7,6 +7,7 @@
 - 新增对鼠标键盘监听的支持
 - 支持注册快捷键
 - 修复了一些已知问题
+- 支持一键更新
 
 #### [v1.2.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.2.0.zip)
 
