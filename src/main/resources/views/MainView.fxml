@@ -49,6 +49,7 @@
                 <MenuItem mnemonicParsing="false" onAction="#seeJavaInfo" text="JAVA属性" />
                 <SeparatorMenuItem />
                 <MenuItem mnemonicParsing="false" onAction="#pluginPane" text="插件面板 Ctrl+Shift+P" />
+                <MenuItem mnemonicParsing="false" onAction="#checkUpdate" text="检查更新" />
                 <MenuItem mnemonicParsing="false" onAction="#about" text="关于WeTool" />
             </Menu>
         </MenuBar>

@@ -49,6 +49,7 @@ import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.service.UpdateService;
 import org.code4everything.wetool.util.FinalUtils;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
@@ -603,5 +604,9 @@ public class MainController {
                 list.add(control);
             }
         }
+    }
+
+    public void checkUpdate() {
+        new UpdateService().checkUpdate();
     }
 }

@@ -1,6 +1,6 @@
 ## 更新历史
 
-### [v1.3.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.3.0.zip)
+#### [v1.3.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.3.0.zip)
 
 - 优化插件的安装与禁用
 - 支持搜索应用内工具
@@ -8,22 +8,22 @@
 - 支持注册快捷键
 - 修复了一些已知问题
 
-### [v1.2.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.2.0.zip)
+#### [v1.2.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.2.0.zip)
 
 - 新增事件中心，支持事件的发布与订阅
 - 新增插件面板
 - Windows虚拟桌面触发角功能
 - 支持数据库连接
 
-### [v1.1.2](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.2.zip)
+#### [v1.1.2](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.2.zip)
 
 - 优化代码
 
-### [v1.1.1](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.1.zip)
+#### [v1.1.1](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.1.zip)
 
 - 新增对插件的隔离支持
 
-### [v1.1.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.0.zip)
+#### [v1.1.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.1.0.zip)
 
 - 更新Java版本至JDK11
 
