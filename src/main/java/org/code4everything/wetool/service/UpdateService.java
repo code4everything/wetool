@@ -84,7 +84,7 @@ public class UpdateService {
 
         if (osInfo.isWindows()) {
             jarName = "wetool-win.jar";
-            // TODO: 2020/12/03 解决文件占用问题
+            // TODO: 2020/12/03 使用脚本解决文件占用问题
         }
 
         if (osInfo.isMac()) {
