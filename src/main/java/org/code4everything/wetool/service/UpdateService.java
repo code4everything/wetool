@@ -2,6 +2,7 @@ package org.code4everything.wetool.service;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.http.HttpUtil;
@@ -19,6 +20,7 @@ import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.util.DialogWinnable;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 import java.io.File;
 import java.util.List;
@@ -84,15 +86,13 @@ public class UpdateService {
 
         if (osInfo.isWindows()) {
             jarName = "wetool-win.jar";
-            // TODO: 2020/12/03 使用脚本解决文件占用问题
-        }
-
-        if (osInfo.isMac()) {
+            String newJar = FileUtil.file(wetool.getAbsolutePath(), jarName).getAbsolutePath();
+            RuntimeUtil.exec("./update-wetool.bat", newJar, FxUtils.getWetoolJarName());
+            WeUtils.exitSystem();
+        } else if (osInfo.isMac()) {
             jarName = "wetool-mac.jar";
             FileUtil.move(FileUtil.file(wetool.getAbsolutePath(), jarName), currWorkDir, true);
-        }
-
-        if (osInfo.isLinux()) {
+        } else if (osInfo.isLinux()) {
             jarName = "wetool-linux.jar";
             FileUtil.move(FileUtil.file(wetool.getAbsolutePath(), jarName), currWorkDir, true);
         }
