@@ -8,6 +8,7 @@
 - 支持注册快捷键
 - 修复了一些已知问题
 - 支持一键更新
+- 支持暴露HTTP服务
 
 #### [v1.2.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.2.0.zip)
 
