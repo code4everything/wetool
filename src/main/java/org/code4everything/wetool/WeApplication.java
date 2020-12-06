@@ -26,6 +26,7 @@ import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
+import org.code4everything.wetool.handler.ExitHttpApiHandler;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.druid.DruidSource;
@@ -34,6 +35,7 @@ import org.code4everything.wetool.plugin.support.event.EventMode;
 import org.code4everything.wetool.plugin.support.event.EventPublisher;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.http.HttpService;
 import org.code4everything.wetool.plugin.support.listener.WeKeyboardListener;
 import org.code4everything.wetool.plugin.support.listener.WeMouseListener;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
@@ -123,6 +125,8 @@ public class WeApplication extends Application {
         FxUtils.registerGlobalShortcuts(shortcuts, FxUtils::toggleStage);
 
         connectDb();
+
+        HttpService.exportHttp(HttpService.DEFAULT_PORT, "get /wetool/exit", new ExitHttpApiHandler());
     }
 
     private static void connectDb() {

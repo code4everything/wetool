@@ -17,6 +17,7 @@ module org.code4everything.wetool {
     requires com.google.common;
     requires jnativehook;
     requires hutool.extra;
+    requires io.netty.codec.http;
 
     requires transitive org.code4everything.wetool.plugin.support;
 
