@@ -126,7 +126,7 @@ public class WeApplication extends Application {
 
         connectDb();
 
-        HttpService.exportHttp(HttpService.DEFAULT_PORT, "get /wetool/exit", new ExitHttpApiHandler());
+        HttpService.exportHttp(HttpService.DEFAULT_PORT, "get/wetool/exit", new ExitHttpApiHandler());
     }
 
     private static void connectDb() {
