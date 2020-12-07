@@ -1,6 +1,7 @@
 package org.code4everything.wetool;
 
 import org.code4everything.boot.config.BootConfig;
+import org.code4everything.wetool.plugin.support.http.HttpService;
 
 /**
  * @author pantao
@@ -9,6 +10,7 @@ import org.code4everything.boot.config.BootConfig;
 public class WeApplicationTest {
 
     public static void main(String[] args) {
+        HttpService.setDefaultPort(58189);
         BootConfig.setDebug(true);
         WeApplication.main(args);
     }
