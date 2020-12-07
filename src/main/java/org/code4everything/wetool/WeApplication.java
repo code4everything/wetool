@@ -125,8 +125,17 @@ public class WeApplication extends Application {
         FxUtils.registerGlobalShortcuts(shortcuts, FxUtils::toggleStage);
 
         connectDb();
+        exportHttpService();
+    }
 
-        HttpService.exportHttp(HttpService.DEFAULT_PORT, "get/wetool/exit", new ExitHttpApiHandler());
+    private static void exportHttpService() {
+        WeUtils.execute(() -> {
+            try {
+                HttpService.exportHttp("get/wetool/exit", new ExitHttpApiHandler());
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        });
     }
 
     private static void connectDb() {
