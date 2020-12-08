@@ -36,6 +36,7 @@ import org.code4everything.wetool.plugin.support.event.EventPublisher;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.http.HttpService;
+import org.code4everything.wetool.plugin.support.http.ObjectResp;
 import org.code4everything.wetool.plugin.support.listener.WeKeyboardListener;
 import org.code4everything.wetool.plugin.support.listener.WeMouseListener;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
@@ -50,6 +51,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -80,6 +82,7 @@ public class WeApplication extends Application {
 
     public static void main(String[] args) {
         log.info("starting wetool on os: {}", SystemUtil.getOsInfo().getName());
+        log.info("default charset: {}", Charset.defaultCharset().name());
         parseConfig();
         initApp();
         launch(args);
@@ -131,6 +134,7 @@ public class WeApplication extends Application {
     private static void exportHttpService() {
         WeUtils.execute(() -> {
             try {
+                HttpService.exportHttp("get/wetool/hello", (req, resp, param, body) -> ObjectResp.of(param, body));
                 HttpService.exportHttp("get/wetool/exit", new ExitHttpApiHandler());
             } catch (Exception e) {
                 log.error(e.getMessage());
