@@ -437,7 +437,7 @@ public class MainController {
         FxDialogs.showDialog(null, box);
     }
 
-    public void clearAllCache() {
+    public void clearAllFxmlCache() {
         EventCenter.publishEvent(EventCenter.EVENT_CLEAR_FXML_CACHE, DateUtil.date());
         tabPane.getTabs().clear();
         BeanFactory.clearCache();

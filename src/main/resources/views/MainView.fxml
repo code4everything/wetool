@@ -15,7 +15,7 @@
                 <SeparatorMenuItem />
                 <MenuItem mnemonicParsing="false" onAction="#openAllTab" text="打开所有标签" />
                 <MenuItem mnemonicParsing="false" onAction="#closeAllTab" text="关闭所有标签" />
-                <MenuItem mnemonicParsing="false" onAction="#clearAllCache" text="清除所有缓存" />
+                <MenuItem mnemonicParsing="false" onAction="#clearAllFxmlCache" text="清除所有视图缓存"/>
                 <SeparatorMenuItem />
                 <MenuItem mnemonicParsing="false" onAction="#restart" text="重启 Ctrl+Alt+Shift+R" />
                 <SeparatorMenuItem />
