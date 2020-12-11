@@ -124,7 +124,8 @@ public class WeApplication extends Application {
         }
 
         FxUtils.listenKeyEvent();
-        List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_ENTER);
+        List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_SHIFT,
+                NativeKeyEvent.VC_ENTER);
         FxUtils.registerGlobalShortcuts(shortcuts, FxUtils::toggleStage);
 
         connectDb();

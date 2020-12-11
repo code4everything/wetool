@@ -56,7 +56,7 @@ java -jar ./wetool.jar &
 
 ### 使用小技巧
 
-- 使用全局快捷键 `Ctrl+Alt+Enter` 显示或隐藏主界面
+- 使用全局快捷键 `Ctrl+Alt+Shift+Enter` 显示或隐藏主界面
 - 应用内使用快捷键 `Ctrl+数字` 选中指定位置的选项卡，数字 `9` 表示选中最后一个
 - 关闭指定位置的选项卡：`Alt+数字`，数字 `9` 表示关闭最后一个
 - 关闭所有未选中选项卡：`Ctrl+Shift+F4`
@@ -100,6 +100,35 @@ java -jar ./wetool.jar &
     ]
 }
 ```
+
+### 使用开发版本
+
+下载项目源代码
+
+```shell
+git clone https://gitee.com/code4everything/wetool.git
+git clone https://gitee.com/code4everything/wetool-plugin.git
+```
+
+安装依赖库
+
+```shell
+cd /your_path/wetool-plugin
+git checkout develop
+cd wetool-plugin-support
+mvn clean install
+```
+
+打包可执行jar包
+
+```shell
+cd /your_path/wetool
+git checkout develop
+cd bin
+python package.py
+```
+
+> 可执行jar包会打包到项目的根目录下。
 
 ### 开发说明
 
