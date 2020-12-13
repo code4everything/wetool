@@ -22,6 +22,8 @@
 
 ### 下载与使用
 
+> 运行环境：需安装有Java11及以上版本
+
 ##### [下载WETOOL-1.3.0.ZIP](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.3.0.zip)
 
 ##### [查看更新历史](history.md)
