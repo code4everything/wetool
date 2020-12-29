@@ -69,6 +69,8 @@
     "restartBatch": "",
     /*windows虚拟桌面触发角：LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM*/
     "winVirtualDesktopHotCorner": "RIGHT_TOP",
+    /*是否关闭鼠标键盘监听器*/
+    "disableKeyboardMouseListener": false,
     /*数据库连接配置*/
     "dbConnections": []
 }

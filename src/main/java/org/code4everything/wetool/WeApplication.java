@@ -108,6 +108,16 @@ public class WeApplication extends Application {
         EXECUTOR.scheduleWithFixedDelay(() -> EventCenter.publishEvent(EventCenter.EVENT_100_MS_TIMER,
                 DateUtil.date()), 0, 100, TimeUnit.MILLISECONDS);
 
+        initKeyboardMouseListener();
+        connectDb();
+        exportHttpService();
+    }
+
+    private static void initKeyboardMouseListener() {
+        if (BooleanUtil.isTrue(WeUtils.getConfig().getDisableKeyboardMouseListener())) {
+            return;
+        }
+
         // 关闭 jnative 日志
         Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
         logger.setLevel(Level.OFF);
@@ -127,9 +137,6 @@ public class WeApplication extends Application {
         List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_SHIFT,
                 NativeKeyEvent.VC_ENTER);
         FxUtils.registerGlobalShortcuts(shortcuts, FxUtils::toggleStage);
-
-        connectDb();
-        exportHttpService();
     }
 
     private static void exportHttpService() {
