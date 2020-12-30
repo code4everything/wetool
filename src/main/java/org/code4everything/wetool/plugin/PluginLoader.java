@@ -2,6 +2,7 @@ package org.code4everything.wetool.plugin;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ConcurrentHashSet;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -25,6 +26,7 @@ import org.code4everything.wetool.plugin.support.WePluginSupporter;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WePluginInfo;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
+import org.code4everything.wetool.plugin.support.event.EventCenter;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
@@ -74,6 +76,7 @@ public final class PluginLoader {
         }
 
         loadPluginFromPrepared();
+        EventCenter.publishEvent(EventCenter.EVENT_ALL_PLUGIN_LOADED, DateUtil.date());
         addPluginForSearch("", null);
     }
 

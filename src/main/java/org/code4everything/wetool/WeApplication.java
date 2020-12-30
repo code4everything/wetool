@@ -104,6 +104,7 @@ public class WeApplication extends Application {
         EventCenter.registerEvent(EventCenter.EVENT_MOUSE_MOTION, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_MOUSE_RELEASED, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_MOUSE_PRESSED, EventMode.MULTI_SUB);
+        EventCenter.registerEvent(EventCenter.EVENT_ALL_PLUGIN_LOADED, EventMode.MULTI_SUB);
 
         EXECUTOR.scheduleWithFixedDelay(() -> EventCenter.publishEvent(EventCenter.EVENT_100_MS_TIMER,
                 DateUtil.date()), 0, 100, TimeUnit.MILLISECONDS);
