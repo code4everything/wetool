@@ -211,6 +211,7 @@ public class WeApplication extends Application {
         }
         // 设置标题
         stage.setScene(new Scene(Objects.requireNonNull(root)));
+        WeUtils.getConfig().darkIfEnabled(stage.getScene().getStylesheets()::add);
         stage.getIcons().add(new Image(getClass().getResourceAsStream(ViewConsts.ICON)));
         stage.setTitle(FinalUtils.getAppTitle());
         // 监听关闭事件

@@ -71,6 +71,8 @@
     "winVirtualDesktopHotCorner": "RIGHT_TOP",
     /*是否关闭鼠标键盘监听器*/
     "disableKeyboardMouseListener": false,
+    /*是否关闭暗黑模式*/
+    "disableDarkMode": false,
     /*数据库连接配置*/
     "dbConnections": []
 }
