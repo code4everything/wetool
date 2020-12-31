@@ -96,13 +96,14 @@ public class NetworkToolController implements BaseViewController {
             return;
         }
 
+        availablePort.setText("");
         scanBtn.setDisable(true);
         List<Future<Integer>> futureList = ListUtil.split(POST_LIST, 10000).stream().map(ports -> WeUtils.executeAsync(() -> {
             ports.forEach(port -> {
                 try {
                     Socket socket = new Socket();
                     SocketAddress socketAddress = new InetSocketAddress(ip, port);
-                    socket.connect(socketAddress, 1000);
+                    socket.connect(socketAddress, 200);
                     socket.close();
                     Platform.runLater(() -> availablePort.setText(port + "," + availablePort.getText()));
                 } catch (Exception e) {
