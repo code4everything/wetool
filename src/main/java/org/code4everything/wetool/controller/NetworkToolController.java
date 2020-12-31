@@ -51,7 +51,7 @@ public class NetworkToolController implements BaseViewController {
     private static final List<Integer> POST_LIST = new ArrayList<>();
 
     static {
-        for (int i = 0; i <= 65535; i++) {
+        for (int i = 1; i <= 65535; i++) {
             POST_LIST.add(i);
         }
     }
@@ -97,15 +97,14 @@ public class NetworkToolController implements BaseViewController {
         }
 
         scanBtn.setDisable(true);
-        List<Future<Integer>> futureList =
-                ListUtil.split(POST_LIST, 1000).stream().map(ports -> WeUtils.executeAsync(() -> {
+        List<Future<Integer>> futureList = ListUtil.split(POST_LIST, 10000).stream().map(ports -> WeUtils.executeAsync(() -> {
             ports.forEach(port -> {
                 try {
                     Socket socket = new Socket();
                     SocketAddress socketAddress = new InetSocketAddress(ip, port);
                     socket.connect(socketAddress, 1000);
                     socket.close();
-                    Platform.runLater(() -> availablePort.setText(availablePort.getText() + port + ","));
+                    Platform.runLater(() -> availablePort.setText(port + "," + availablePort.getText()));
                 } catch (Exception e) {
                     // ignore
                 }
