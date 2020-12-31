@@ -73,6 +73,8 @@
     "disableKeyboardMouseListener": false,
     /*是否关闭暗黑模式*/
     "disableDarkMode": false,
+    /*自动移除未加载的插件*/
+    "autoRemoveUnloadedPlugin": true,
     /*数据库连接配置*/
     "dbConnections": []
 }

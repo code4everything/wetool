@@ -3,6 +3,7 @@ package org.code4everything.wetool.plugin;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -217,6 +218,9 @@ public final class PluginLoader {
             // 当前版本是否大于预加载的版本
             if (WeUtils.isRequiredVersion(plugin.getPluginInfo().getVersion(), another.getPluginInfo().getVersion())) {
                 PREPARED_PLUGINS.put(key, plugin);
+                FileUtil.del(another.getJarFile());
+            } else {
+                FileUtil.del(plugin.getJarFile());
             }
         } else {
             PREPARED_PLUGINS.put(key, plugin);
