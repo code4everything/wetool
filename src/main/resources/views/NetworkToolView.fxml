@@ -3,8 +3,8 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.code4everything.wetool.controller.NetworkToolController">
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.code4everything.wetool.controller.NetworkToolController">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
@@ -77,26 +77,31 @@
             </HBox.margin>
         </TextField>
     </HBox>
-    <!--公网IP、公网IP归属地、IP归属地查询-->
-    <!--</VBox>-->
-    <!--</TitledPane>-->
-    <!--<TitledPane animated="false" text="端口扫描">-->
-    <!--<VBox/>-->
-    <!--</TitledPane>-->
-    <!--<TitledPane animated="false" text="网络抓包">-->
-    <!--<VBox/>-->
-    <!--</TitledPane>-->
-    <!--<TitledPane animated="false" text="接口测试">-->
-    <!--<VBox/>-->
-    <!--</TitledPane>-->
-    <!--<TitledPane animated="false" text="网络文件下载">-->
-    <!--<VBox/>-->
-    <!--</TitledPane>-->
-    <!--<TitledPane animated="false" text="WHOIS查询">-->
-    <!--<VBox/>-->
-    <!--</TitledPane>-->
-    <!--</panes>-->
-    <!--</Accordion>-->
+    <HBox layoutX="20.0" layoutY="86.0" VBox.vgrow="NEVER">
+        <VBox.margin>
+            <Insets top="10.0"/>
+        </VBox.margin>
+        <Label alignment="CENTER_RIGHT" prefWidth="80.0" text="端口扫描:" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets top="5.0"/>
+            </HBox.margin>
+        </Label>
+        <TextField fx:id="ipOfPortScan" maxWidth="300.0" promptText="ip" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets left="10.0"/>
+            </HBox.margin>
+        </TextField>
+        <Button mnemonicParsing="false" fx:id="scanBtn" onAction="#scanPort" text="扫描" HBox.hgrow="NEVER">
+            <HBox.margin>
+                <Insets left="10.0"/>
+            </HBox.margin>
+        </Button>
+        <TextField fx:id="availablePort" promptText="可用端口" HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets left="10.0"/>
+            </HBox.margin>
+        </TextField>
+    </HBox>
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
