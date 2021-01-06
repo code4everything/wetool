@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.code4everything.wetool.controller.MainController">
-    <HBox VBox.vgrow="NEVER">
+    <HBox VBox.vgrow="NEVER" fx:id="titleBar">
         <MenuBar HBox.hgrow="NEVER">
             <Menu fx:id="fileMenu" mnemonicParsing="false" text="文件">
                 <MenuItem mnemonicParsing="false" onAction="#openFile" text="打开 Ctrl+O" />

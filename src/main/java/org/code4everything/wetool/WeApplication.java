@@ -314,6 +314,7 @@ public class WeApplication extends Application {
             trayIcon.setToolTip(FinalUtils.getAppTitle());
             trayIcon.addMouseListener(new TrayMouseListener());
             tray.add(trayIcon);
+            BeanFactory.register(trayIcon);
             isTraySuccess = true;
         } catch (Exception e) {
             FxDialogs.showException(TipConsts.TRAY_ERROR, e);

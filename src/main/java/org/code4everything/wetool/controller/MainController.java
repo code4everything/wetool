@@ -23,6 +23,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -102,6 +103,9 @@ public class MainController {
     @FXML
     public TextField hiddenControl;
 
+    @FXML
+    public HBox titleBar;
+
     private static void addTabForSearch(String name, String title, String viewUrl) {
         TAB_MAP.put(name, new Pair<>(title, viewUrl));
         addTabForSearch(title + "/" + name, actionEvent -> {
@@ -123,6 +127,7 @@ public class MainController {
     private void initialize() {
         BeanFactory.register(tabPane);
         BeanFactory.register(AppConsts.BeanKey.PLUGIN_MENU, pluginMenu);
+        BeanFactory.register(AppConsts.BeanKey.TITLE_BAR, titleBar);
         hiddenControl.focusedProperty().addListener((observableValue, aBoolean, t1) -> hiddenControl.setText(StrUtil.EMPTY));
         registerShortcuts();
 
