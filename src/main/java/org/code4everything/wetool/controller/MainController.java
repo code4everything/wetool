@@ -72,6 +72,8 @@ public class MainController {
 
     private static final Map<String, String> ACTION_NAME_PINYIN_MAP = new ConcurrentHashMap<>();
 
+    private static final ActionEvent EMPTY_EVENT = new ActionEvent();
+
     static {
         addTabForSearch("FileManager", TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
         addTabForSearch("JsonParser", TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER);
@@ -504,13 +506,18 @@ public class MainController {
         }
 
         if (keyCode == KeyCode.ENTER) {
+            String firstName = CollUtil.getFirst(toolSearchBox.getItems());
             toolSearchBox.getItems().clear();
             toolSearchBox.setValue(StrUtil.EMPTY);
             EventHandler<ActionEvent> eventHandler = ACTION_MAP.get(keyword);
+            if (Objects.isNull(eventHandler) && StrUtil.isNotBlank(firstName)) {
+                eventHandler = ACTION_MAP.get(firstName);
+            }
+
             if (Objects.isNull(eventHandler)) {
                 FxDialogs.showError("未找到工具！");
             } else {
-                eventHandler.handle(new ActionEvent());
+                eventHandler.handle(EMPTY_EVENT);
             }
             return;
         }
