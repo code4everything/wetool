@@ -182,11 +182,15 @@ public class MainController {
         // escape 取消控件聚焦
         shortcuts = List.of(NativeKeyEvent.VC_ESCAPE);
         FxUtils.registerShortcuts(shortcuts, () -> {
-            if (hiddenControl.isFocused()) {
-                hiddenControl.setText(StrUtil.EMPTY);
-                FxUtils.hideStage();
+            if (FxUtils.getStage().getScene().getRoot().equals(WeApplication.getRootPane())) {
+                if (hiddenControl.isFocused()) {
+                    hiddenControl.setText(StrUtil.EMPTY);
+                    FxUtils.hideStage();
+                } else {
+                    hiddenControl.requestFocus();
+                }
             } else {
-                hiddenControl.requestFocus();
+                FxUtils.getStage().getScene().setRoot(WeApplication.getRootPane());
             }
         });
 

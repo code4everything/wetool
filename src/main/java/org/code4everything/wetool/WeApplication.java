@@ -76,9 +76,19 @@ public class WeApplication extends Application {
 
     private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(2, FACTORY);
 
+    private static Pane rootPane;
+
     private Stage stage;
 
     private boolean isTraySuccess = false;
+
+    public static Pane getRootPane() {
+        return rootPane;
+    }
+
+    private static void setRootPane(Pane rootPane) {
+        WeApplication.rootPane = rootPane;
+    }
 
     public static void main(String[] args) {
         log.info("starting wetool on os: {}", SystemUtil.getOsInfo().getName());
@@ -211,13 +221,18 @@ public class WeApplication extends Application {
             WeUtils.exitSystem();
         }
         // 设置标题
+        setRootPane(root);
         stage.setScene(new Scene(Objects.requireNonNull(root)));
         WeUtils.getConfig().darkIfEnabled(stage.getScene().getStylesheets()::add);
         stage.getIcons().add(new Image(getClass().getResourceAsStream(ViewConsts.ICON)));
         stage.setTitle(FinalUtils.getAppTitle());
         // 监听关闭事件
         stage.setOnCloseRequest((WindowEvent event) -> {
-            hideStage();
+            if (stage.getScene().getRoot().equals(WeApplication.getRootPane())) {
+                hideStage();
+            } else {
+                stage.getScene().setRoot(WeApplication.getRootPane());
+            }
             event.consume();
         });
         // 设置大小
@@ -238,7 +253,7 @@ public class WeApplication extends Application {
 
     private void hideStage() {
         if (isTraySuccess) {
-            stage.hide();
+            FxUtils.hideStage();
         } else {
             stage.setIconified(true);
         }

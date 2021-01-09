@@ -45,4 +45,8 @@ public class FinalUtils {
     public static String getAppTitle() {
         return AppConsts.Title.APP_TITLE + (BootConfig.isDebug() ? "Dev" : "");
     }
+
+    public static void escapeStage() {
+        FxUtils.hideStage();
+    }
 }
