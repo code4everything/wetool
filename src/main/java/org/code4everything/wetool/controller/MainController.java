@@ -122,6 +122,12 @@ public class MainController {
         ACTION_NAME_PINYIN_MAP.put(name, StrUtil.cleanBlank(pinyin));
     }
 
+    public static void unregisterAction(String name) {
+        ACTION_MAP.remove(name);
+        String pinyin = PinyinUtil.getPinyin(name);
+        ACTION_NAME_PINYIN_MAP.remove(pinyin);
+    }
+
     /**
      * 此对象暂时不注册到工厂
      */
