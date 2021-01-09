@@ -126,6 +126,7 @@ public class WeApplication extends Application {
 
     private static void initKeyboardMouseListener() {
         if (BooleanUtil.isTrue(WeUtils.getConfig().getDisableKeyboardMouseListener())) {
+            log.info("keyboard mouse listener disabled");
             return;
         }
 
