@@ -99,7 +99,7 @@ public final class PluginLoader {
             EventHandler<ActionEvent> eventHandler = menuItem.getOnAction();
             if (Objects.nonNull(eventHandler)) {
                 ALREADY_ADD_TAB_NAME.add(menuName);
-                MainController.addTabForSearch(menuName, eventHandler);
+                MainController.registerAction(menuName, eventHandler);
             }
             if (menuItem instanceof Menu) {
                 addPluginForSearch(menuName + "/", (Menu) menuItem);
@@ -204,7 +204,7 @@ public final class PluginLoader {
         if (Objects.nonNull(action)) {
             ALREADY_ADD_TAB_NAME.add(menuName);
             String name = StrUtil.join("-", menuName, info.getAuthor(), info.getName());
-            MainController.addTabForSearch(name, action);
+            MainController.registerAction(name, action);
         }
         if (menuItem instanceof Menu) {
             ((Menu) menuItem).getItems().forEach(item -> addTabForSearch(menuName + "/", item, info));

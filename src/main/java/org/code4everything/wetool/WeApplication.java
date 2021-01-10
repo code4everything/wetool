@@ -232,6 +232,7 @@ public class WeApplication extends Application {
             if (stage.getScene().getRoot().equals(WeApplication.getRootPane())) {
                 hideStage();
             } else {
+                stage.setTitle(FinalUtils.getAppTitle());
                 stage.getScene().setRoot(WeApplication.getRootPane());
             }
             event.consume();

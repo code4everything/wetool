@@ -75,14 +75,14 @@ public class MainController {
     private static final ActionEvent EMPTY_EVENT = new ActionEvent();
 
     static {
-        addTabForSearch("FileManager", TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
-        addTabForSearch("JsonParser", TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER);
-        addTabForSearch("RandomGenerator", TitleConsts.RANDOM_GENERATOR, ViewConsts.RANDOM_GENERATOR);
-        addTabForSearch("ClipboardHistory", TitleConsts.CLIPBOARD_HISTORY, ViewConsts.CLIPBOARD_HISTORY);
-        addTabForSearch("QrCodeGenerator", TitleConsts.QR_CODE_GENERATOR, ViewConsts.QR_CODE_GENERATOR);
-        addTabForSearch("CharsetConverter", TitleConsts.CHARSET_CONVERTER, ViewConsts.CHARSET_CONVERTER);
-        addTabForSearch("NetworkTool", TitleConsts.NETWORK_TOOL, ViewConsts.NETWORK_TOOL);
-        addTabForSearch("NaryConverter", TitleConsts.NARY_CONVERTER, ViewConsts.NARY_CONVERTER);
+        registerAction("FileManager", TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
+        registerAction("JsonParser", TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER);
+        registerAction("RandomGenerator", TitleConsts.RANDOM_GENERATOR, ViewConsts.RANDOM_GENERATOR);
+        registerAction("ClipboardHistory", TitleConsts.CLIPBOARD_HISTORY, ViewConsts.CLIPBOARD_HISTORY);
+        registerAction("QrCodeGenerator", TitleConsts.QR_CODE_GENERATOR, ViewConsts.QR_CODE_GENERATOR);
+        registerAction("CharsetConverter", TitleConsts.CHARSET_CONVERTER, ViewConsts.CHARSET_CONVERTER);
+        registerAction("NetworkTool", TitleConsts.NETWORK_TOOL, ViewConsts.NETWORK_TOOL);
+        registerAction("NaryConverter", TitleConsts.NARY_CONVERTER, ViewConsts.NARY_CONVERTER);
     }
 
     private final WeConfig config = WeUtils.getConfig();
@@ -108,15 +108,15 @@ public class MainController {
     @FXML
     public HBox titleBar;
 
-    private static void addTabForSearch(String name, String title, String viewUrl) {
+    private static void registerAction(String name, String title, String viewUrl) {
         TAB_MAP.put(name, new Pair<>(title, viewUrl));
-        addTabForSearch(title + "/" + name, actionEvent -> {
+        registerAction(title + "/" + name, actionEvent -> {
             Pane box = FxUtils.loadFxml(WeApplication.class, viewUrl, true);
             FinalUtils.openTab(box, title);
         });
     }
 
-    public static void addTabForSearch(String name, EventHandler<ActionEvent> eventHandler) {
+    public static void registerAction(String name, EventHandler<ActionEvent> eventHandler) {
         ACTION_MAP.put(name, eventHandler);
         String pinyin = PinyinUtil.getPinyin(name);
         ACTION_NAME_PINYIN_MAP.put(name, StrUtil.cleanBlank(pinyin));
@@ -165,6 +165,16 @@ public class MainController {
         EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_MOTION, new MouseMotionEventHandler());
         multiDesktopOnWindows();
         WeUtils.execute(PluginLoader::loadPlugins);
+
+        // 注册搜索动作
+        registerAction("exit", actionEvent -> WeUtils.exitSystem());
+        registerAction("restart", actionEvent -> FxUtils.restart());
+        registerAction("openconfig", actionEvent -> openConfig());
+        registerAction("openlogfolder", actionEvent -> openLogFolder());
+        registerAction("openworkfolder", actionEvent -> openWorkFolder());
+        registerAction("javaproperties", actionEvent -> seeJavaInfo());
+        registerAction("pluginpane", actionEvent -> pluginPane());
+        registerAction("checkforupdate", actionEvent -> checkUpdate());
     }
 
     private void closeSelectedTab() {
@@ -190,6 +200,7 @@ public class MainController {
                     hiddenControl.requestFocus();
                 }
             } else {
+                FxUtils.getStage().setTitle(FinalUtils.getAppTitle());
                 FxUtils.getStage().getScene().setRoot(WeApplication.getRootPane());
             }
         });
