@@ -78,16 +78,22 @@ public class WeApplication extends Application {
 
     private static Pane rootPane;
 
+    private static Scene rootScene;
+
     private Stage stage;
 
     private boolean isTraySuccess = false;
 
-    public static Pane getRootPane() {
-        return rootPane;
+    private static Scene getRootScene() {
+        return rootScene;
     }
 
-    private static void setRootPane(Pane rootPane) {
-        WeApplication.rootPane = rootPane;
+    private static void setRootScene(Scene rootScene) {
+        WeApplication.rootScene = rootScene;
+    }
+
+    private static Pane getRootPane() {
+        return rootPane;
     }
 
     public static void main(String[] args) {
@@ -201,6 +207,21 @@ public class WeApplication extends Application {
         config.init();
     }
 
+    public static boolean isRootPane() {
+        Scene scene = FxUtils.getStage().getScene();
+        return Objects.equals(scene, getRootScene()) && Objects.equals(scene.getRoot(), getRootPane());
+    }
+
+    private static void setRootPane(Pane rootPane) {
+        WeApplication.rootPane = rootPane;
+    }
+
+    public static void recoverRootPane() {
+        FxUtils.getStage().setTitle(FinalUtils.getAppTitle());
+        getRootScene().setRoot(getRootPane());
+        FxUtils.getStage().setScene(getRootScene());
+    }
+
     @Override
     public void start(Stage stage) {
         this.stage = stage;
@@ -223,17 +244,17 @@ public class WeApplication extends Application {
         }
         // 设置标题
         setRootPane(root);
-        stage.setScene(new Scene(Objects.requireNonNull(root)));
+        setRootScene(new Scene(Objects.requireNonNull(root)));
+        stage.setScene(getRootScene());
         WeUtils.getConfig().darkIfEnabled(stage.getScene().getStylesheets()::add);
         stage.getIcons().add(new Image(getClass().getResourceAsStream(ViewConsts.ICON)));
         stage.setTitle(FinalUtils.getAppTitle());
         // 监听关闭事件
         stage.setOnCloseRequest((WindowEvent event) -> {
-            if (stage.getScene().getRoot().equals(WeApplication.getRootPane())) {
+            if (isRootPane()) {
                 hideStage();
             } else {
-                stage.setTitle(FinalUtils.getAppTitle());
-                stage.getScene().setRoot(WeApplication.getRootPane());
+                recoverRootPane();
             }
             event.consume();
         });
