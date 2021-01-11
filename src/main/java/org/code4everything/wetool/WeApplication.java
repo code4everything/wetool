@@ -13,8 +13,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventType;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.ObjectUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
+import org.code4everything.wetool.adapter.NativeKeyEventAdapter;
 import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
@@ -33,6 +36,7 @@ import org.code4everything.wetool.plugin.support.druid.DruidSource;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
 import org.code4everything.wetool.plugin.support.event.EventMode;
 import org.code4everything.wetool.plugin.support.event.EventPublisher;
+import org.code4everything.wetool.plugin.support.event.message.KeyboardListenerEventMessage;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.http.HttpService;
@@ -131,6 +135,7 @@ public class WeApplication extends Application {
     }
 
     private static void initKeyboardMouseListener() {
+        FxUtils.listenKeyEvent();
         if (BooleanUtil.isTrue(WeUtils.getConfig().getDisableKeyboardMouseListener())) {
             log.info("keyboard mouse listener disabled");
             return;
@@ -151,7 +156,6 @@ public class WeApplication extends Application {
             log.error("register keyboard listener failed: {}", ExceptionUtil.stacktraceToString(ex, Integer.MAX_VALUE));
         }
 
-        FxUtils.listenKeyEvent();
         List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_SHIFT,
                 NativeKeyEvent.VC_ENTER);
         FxUtils.registerGlobalShortcuts(shortcuts, FxUtils::toggleStage);
@@ -264,14 +268,45 @@ public class WeApplication extends Application {
         stage.setHeight(config.getInitialize().getHeight());
         stage.setFullScreen(config.getInitialize().getFullscreen());
 
+        if (BooleanUtil.isTrue(WeUtils.getConfig().getDisableKeyboardMouseListener())) {
+            // 禁用了jnativehook，使用javafx窗体键盘事件
+            stage.getScene().addEventFilter(EventType.ROOT, event -> {
+                if (event instanceof KeyEvent) {
+                    String eventType = event.getEventType().toString();
+                    if (eventType.equals("KEY_PRESSED")) {
+                        int id = NativeKeyEvent.NATIVE_KEY_PRESSED;
+                        NativeKeyEventAdapter adapter = NativeKeyEventAdapter.of(id, (KeyEvent) event);
+                        if (FxUtils.getPressingKeyCodes().contains(adapter.getKeyCode())) {
+                            return;
+                        }
+                        KeyboardListenerEventMessage message = KeyboardListenerEventMessage.of(adapter);
+                        EventCenter.publishEvent(EventCenter.EVENT_KEYBOARD_PRESSED, DateUtil.date(), message);
+                    }
+                    if (eventType.equals("KEY_RELEASED")) {
+                        int id = NativeKeyEvent.NATIVE_KEY_RELEASED;
+                        NativeKeyEventAdapter adapter = NativeKeyEventAdapter.of(id, (KeyEvent) event);
+                        KeyboardListenerEventMessage message = KeyboardListenerEventMessage.of(adapter);
+                        EventCenter.publishEvent(EventCenter.EVENT_KEYBOARD_RELEASED, DateUtil.date(), message);
+                    }
+                }
+            });
+        }
+
+        stage.setOnShown(windowEvent -> {
+            FxUtils.getStage().getScene().getRoot().requestFocus();
+            EventCenter.publishEvent(EventCenter.EVENT_WETOOL_SHOW, DateUtil.date());
+        });
+        stage.setOnHidden(windowEvent -> EventCenter.publishEvent(EventCenter.EVENT_WETOOL_HIDDEN, DateUtil.date()));
+
         if (BooleanUtil.isTrue(WeUtils.getConfig().getInitialize().getHide())) {
             hideStage();
         } else {
             stage.show();
         }
-        log.info("wetool started");
+
         // 处理全局异常
         Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> FxDialogs.showException(TipConsts.APP_EXCEPTION, throwable));
+        log.info("wetool started");
     }
 
     private void hideStage() {
