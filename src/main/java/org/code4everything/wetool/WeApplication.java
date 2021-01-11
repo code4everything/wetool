@@ -139,7 +139,10 @@ public class WeApplication extends Application {
         FxUtils.listenKeyEvent();
         if (BooleanUtil.isTrue(WeUtils.getConfig().getDisableKeyboardMouseListener())) {
             log.info("jnative keyboard mouse listener disabled");
-            listenMouseLocation();
+            if (!SystemUtil.getOsInfo().isMac()) {
+                // 已知Mac平台下不能正常工作
+                listenMouseLocation();
+            }
             return;
         }
 
