@@ -515,12 +515,12 @@ public class MainController {
 
     public void toolBoxKeyReleased(KeyEvent keyEvent) {
         KeyCode keyCode = keyEvent.getCode();
-        if (!keyCode.isLetterKey() && !keyCode.isDigitKey() && !keyCode.isWhitespaceKey() && keyCode != KeyCode.ENTER) {
+        if (!keyCode.isWhitespaceKey() && keyCode != KeyCode.ENTER) {
             return;
         }
 
         endCaretPosition();
-        String keyword = toolSearchBox.getValue();
+        String keyword = StrUtil.trim(toolSearchBox.getValue());
         if (StrUtil.isBlank(keyword)) {
             return;
         }
