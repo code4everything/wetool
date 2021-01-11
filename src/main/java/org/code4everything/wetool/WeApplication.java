@@ -255,6 +255,29 @@ public class WeApplication extends Application {
         });
     }
 
+    private void listenKeyboard() {
+        FxUtils.getStage().getScene().addEventFilter(EventType.ROOT, event -> {
+            if (event instanceof KeyEvent) {
+                String eventType = event.getEventType().toString();
+                if (eventType.equals("KEY_PRESSED")) {
+                    int id = NativeKeyEvent.NATIVE_KEY_PRESSED;
+                    NativeKeyEventAdapter adapter = NativeKeyEventAdapter.of(id, (KeyEvent) event);
+                    if (FxUtils.getPressingKeyCodes().contains(adapter.getKeyCode())) {
+                        return;
+                    }
+                    KeyboardListenerEventMessage message = KeyboardListenerEventMessage.of(adapter);
+                    EventCenter.publishEvent(EventCenter.EVENT_KEYBOARD_PRESSED, DateUtil.date(), message);
+                }
+                if (eventType.equals("KEY_RELEASED")) {
+                    int id = NativeKeyEvent.NATIVE_KEY_RELEASED;
+                    NativeKeyEventAdapter adapter = NativeKeyEventAdapter.of(id, (KeyEvent) event);
+                    KeyboardListenerEventMessage message = KeyboardListenerEventMessage.of(adapter);
+                    EventCenter.publishEvent(EventCenter.EVENT_KEYBOARD_RELEASED, DateUtil.date(), message);
+                }
+            }
+        });
+    }
+
     @Override
     public void start(Stage stage) {
         this.stage = stage;
@@ -299,26 +322,7 @@ public class WeApplication extends Application {
 
         if (BooleanUtil.isTrue(WeUtils.getConfig().getDisableKeyboardMouseListener())) {
             // 禁用了jnativehook，使用javafx窗体键盘事件
-            stage.getScene().addEventFilter(EventType.ROOT, event -> {
-                if (event instanceof KeyEvent) {
-                    String eventType = event.getEventType().toString();
-                    if (eventType.equals("KEY_PRESSED")) {
-                        int id = NativeKeyEvent.NATIVE_KEY_PRESSED;
-                        NativeKeyEventAdapter adapter = NativeKeyEventAdapter.of(id, (KeyEvent) event);
-                        if (FxUtils.getPressingKeyCodes().contains(adapter.getKeyCode())) {
-                            return;
-                        }
-                        KeyboardListenerEventMessage message = KeyboardListenerEventMessage.of(adapter);
-                        EventCenter.publishEvent(EventCenter.EVENT_KEYBOARD_PRESSED, DateUtil.date(), message);
-                    }
-                    if (eventType.equals("KEY_RELEASED")) {
-                        int id = NativeKeyEvent.NATIVE_KEY_RELEASED;
-                        NativeKeyEventAdapter adapter = NativeKeyEventAdapter.of(id, (KeyEvent) event);
-                        KeyboardListenerEventMessage message = KeyboardListenerEventMessage.of(adapter);
-                        EventCenter.publishEvent(EventCenter.EVENT_KEYBOARD_RELEASED, DateUtil.date(), message);
-                    }
-                }
-            });
+            listenKeyboard();
         }
 
         stage.setOnShown(windowEvent -> {
