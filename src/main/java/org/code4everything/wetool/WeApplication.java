@@ -29,16 +29,14 @@ import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
-import org.code4everything.wetool.handler.ExitHttpApiHandler;
+import org.code4everything.wetool.handler.MouseLocationListenerEventHandler;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.druid.DruidSource;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
 import org.code4everything.wetool.plugin.support.event.EventMode;
 import org.code4everything.wetool.plugin.support.event.EventPublisher;
-import org.code4everything.wetool.plugin.support.event.handler.BaseNoMessageEventHandler;
 import org.code4everything.wetool.plugin.support.event.message.KeyboardListenerEventMessage;
-import org.code4everything.wetool.plugin.support.event.message.MouseListenerEventMessage;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.http.HttpService;
@@ -52,7 +50,6 @@ import org.code4everything.wetool.util.FinalUtils;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.mouse.NativeMouseEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -60,7 +57,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.*;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -141,7 +140,7 @@ public class WeApplication extends Application {
             log.info("jnative keyboard mouse listener disabled");
             if (!SystemUtil.getOsInfo().isMac()) {
                 // 已知Mac平台下不能正常工作
-                listenMouseLocation();
+                EventCenter.subscribeEvent(EventCenter.EVENT_100_MS_TIMER, new MouseLocationListenerEventHandler());
             }
             return;
         }
@@ -170,7 +169,14 @@ public class WeApplication extends Application {
         WeUtils.execute(() -> {
             try {
                 HttpService.exportHttp("get/wetool/hello", (req, resp, param, body) -> ObjectResp.of(param, body));
-                HttpService.exportHttp("get/wetool/exit", new ExitHttpApiHandler());
+                HttpService.exportHttp("get/wetool/exit", (req, resp, param, body) -> {
+                    Platform.runLater(WeUtils::exitSystem);
+                    return ObjectResp.of("status", "success");
+                });
+                HttpService.exportHttp("get/wetool/show", (req, resp, param, body) -> {
+                    FxUtils.showStage();
+                    return ObjectResp.of("status", "success");
+                });
             } catch (Exception e) {
                 log.error(e.getMessage());
             }
@@ -231,33 +237,6 @@ public class WeApplication extends Application {
         FxUtils.getStage().setScene(getRootScene());
     }
 
-    private static void listenMouseLocation() {
-        EventCenter.subscribeEvent(EventCenter.EVENT_100_MS_TIMER, new BaseNoMessageEventHandler() {
-
-            private int lastPosX = 0;
-
-            private int lastPosY = 0;
-
-            @Override
-            public void handleEvent0(String s, Date date) {
-                Point location = MouseInfo.getPointerInfo().getLocation();
-                int posX = (int) location.getX();
-                int posY = (int) location.getY();
-
-                if (lastPosX == posX && lastPosY == posY) {
-                    return;
-                }
-
-                lastPosX = posX;
-                lastPosY = posY;
-
-                NativeMouseEvent event = new NativeMouseEvent(NativeMouseEvent.NATIVE_MOUSE_MOVED, 0, posX, posY, 1);
-                MouseListenerEventMessage message = MouseListenerEventMessage.of(event);
-                EventCenter.publishEvent(EventCenter.EVENT_MOUSE_MOTION, date, message);
-            }
-        });
-    }
-
     private void listenKeyboard() {
         FxUtils.getStage().getScene().addEventFilter(EventType.ROOT, event -> {
             if (event instanceof KeyEvent) {
@@ -311,7 +290,7 @@ public class WeApplication extends Application {
         // 监听关闭事件
         stage.setOnCloseRequest((WindowEvent event) -> {
             if (isRootPane()) {
-                hideStage();
+                FxUtils.hideStage();
             } else {
                 recoverRootPane();
             }
@@ -335,7 +314,7 @@ public class WeApplication extends Application {
         stage.setOnHidden(windowEvent -> EventCenter.publishEvent(EventCenter.EVENT_WETOOL_HIDDEN, DateUtil.date()));
 
         if (BooleanUtil.isTrue(WeUtils.getConfig().getInitialize().getHide())) {
-            hideStage();
+            FxUtils.hideStage();
         } else {
             stage.show();
         }
@@ -343,14 +322,6 @@ public class WeApplication extends Application {
         // 处理全局异常
         Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> FxDialogs.showException(TipConsts.APP_EXCEPTION, throwable));
         log.info("wetool started");
-    }
-
-    private void hideStage() {
-        if (isTraySuccess) {
-            FxUtils.hideStage();
-        } else {
-            stage.setIconified(true);
-        }
     }
 
     private void setQuickStartMenu(Menu menu, Set<WeStart> starts) {
@@ -425,6 +396,7 @@ public class WeApplication extends Application {
             tray.add(trayIcon);
             BeanFactory.register(trayIcon);
             isTraySuccess = true;
+            BeanFactory.register("isTraySuccess", true);
         } catch (Exception e) {
             FxDialogs.showException(TipConsts.TRAY_ERROR, e);
         }
