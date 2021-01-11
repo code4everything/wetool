@@ -33,6 +33,8 @@ import org.code4everything.wetool.plugin.support.druid.DruidSource;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
 import org.code4everything.wetool.plugin.support.event.EventMode;
 import org.code4everything.wetool.plugin.support.event.EventPublisher;
+import org.code4everything.wetool.plugin.support.event.handler.BaseNoMessageEventHandler;
+import org.code4everything.wetool.plugin.support.event.message.MouseListenerEventMessage;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.http.HttpService;
@@ -46,6 +48,7 @@ import org.code4everything.wetool.util.FinalUtils;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.mouse.NativeMouseEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -53,9 +56,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -272,6 +273,18 @@ public class WeApplication extends Application {
         log.info("wetool started");
         // 处理全局异常
         Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> FxDialogs.showException(TipConsts.APP_EXCEPTION, throwable));
+    }
+
+    private void listenMouseLocation() {
+        EventCenter.subscribeEvent(EventCenter.EVENT_100_MS_TIMER, new BaseNoMessageEventHandler() {
+            @Override
+            public void handleEvent0(String s, Date date) {
+                Point location = MouseInfo.getPointerInfo().getLocation();
+                NativeMouseEvent event = new NativeMouseEvent(0, 0, (int) location.getX(), (int) location.getY(), 1);
+                MouseListenerEventMessage message = MouseListenerEventMessage.of(event);
+                EventCenter.publishEvent(EventCenter.EVENT_MOUSE_MOTION, date, message);
+            }
+        });
     }
 
     private void hideStage() {

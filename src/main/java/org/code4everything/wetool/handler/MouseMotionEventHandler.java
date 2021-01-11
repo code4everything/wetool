@@ -35,7 +35,7 @@ public class MouseMotionEventHandler extends BaseMouseEventHandler {
         DateTime now = DateUtil.date();
         long timestamp = now.getTime();
         if (timestamp - lastEventTimestamp < SECOND) {
-            // 一秒钟之内不重复发布时间
+            // 一秒钟之内不重复发布事件
             return;
         }
 
