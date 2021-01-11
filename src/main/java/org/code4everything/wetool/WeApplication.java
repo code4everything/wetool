@@ -133,7 +133,8 @@ public class WeApplication extends Application {
 
     private static void initKeyboardMouseListener() {
         if (BooleanUtil.isTrue(WeUtils.getConfig().getDisableKeyboardMouseListener())) {
-            log.info("keyboard mouse listener disabled");
+            log.info("jnative keyboard mouse listener disabled");
+            listenMouseLocation();
             return;
         }
 
@@ -275,12 +276,28 @@ public class WeApplication extends Application {
         Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> FxDialogs.showException(TipConsts.APP_EXCEPTION, throwable));
     }
 
-    private void listenMouseLocation() {
+    private static void listenMouseLocation() {
         EventCenter.subscribeEvent(EventCenter.EVENT_100_MS_TIMER, new BaseNoMessageEventHandler() {
+
+            private int lastPosX = 0;
+
+            private int lastPosY = 0;
+
             @Override
             public void handleEvent0(String s, Date date) {
                 Point location = MouseInfo.getPointerInfo().getLocation();
-                NativeMouseEvent event = new NativeMouseEvent(0, 0, (int) location.getX(), (int) location.getY(), 1);
+                int posX = (int) location.getX();
+                int posY = (int) location.getY();
+
+                if (lastPosX == posX && lastPosY == posY) {
+                    return;
+                }
+
+                lastPosX = posX;
+                lastPosY = posY;
+                log.debug("mouse location, x: {}, y: {}", posX, posY);
+
+                NativeMouseEvent event = new NativeMouseEvent(0, 0, posX, posY, 1);
                 MouseListenerEventMessage message = MouseListenerEventMessage.of(event);
                 EventCenter.publishEvent(EventCenter.EVENT_MOUSE_MOTION, date, message);
             }
