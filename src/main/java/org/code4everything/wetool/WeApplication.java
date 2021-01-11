@@ -297,7 +297,7 @@ public class WeApplication extends Application {
                 lastPosY = posY;
                 log.debug("mouse location, x: {}, y: {}", posX, posY);
 
-                NativeMouseEvent event = new NativeMouseEvent(0, 0, posX, posY, 1);
+                NativeMouseEvent event = new NativeMouseEvent(NativeMouseEvent.NATIVE_MOUSE_MOVED, 0, posX, posY, 1);
                 MouseListenerEventMessage message = MouseListenerEventMessage.of(event);
                 EventCenter.publishEvent(EventCenter.EVENT_MOUSE_MOTION, date, message);
             }
