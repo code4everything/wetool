@@ -167,14 +167,14 @@ public class MainController {
         WeUtils.execute(PluginLoader::loadPlugins);
 
         // 注册搜索动作
-        registerAction("exit", actionEvent -> WeUtils.exitSystem());
-        registerAction("restart", actionEvent -> FxUtils.restart());
-        registerAction("openconfig", actionEvent -> openConfig());
-        registerAction("openlogfolder", actionEvent -> openLogFolder());
-        registerAction("openworkfolder", actionEvent -> openWorkFolder());
+        registerAction("退出-exit", actionEvent -> WeUtils.exitSystem());
+        registerAction("重启-restart", actionEvent -> FxUtils.restart());
+        registerAction("打开配置文件-openconfig", actionEvent -> openConfig());
+        registerAction("打开日志目录-openlogfolder", actionEvent -> openLogFolder());
+        registerAction("打开工作目录-openworkfolder", actionEvent -> openWorkFolder());
         registerAction("javaproperties", actionEvent -> seeJavaInfo());
-        registerAction("pluginpane", actionEvent -> pluginPane());
-        registerAction("checkforupdate", actionEvent -> checkUpdate());
+        registerAction("插件面板-pluginpane", actionEvent -> pluginPane());
+        registerAction("检查更新-checkforupdate", actionEvent -> checkUpdate());
     }
 
     private void closeSelectedTab() {
@@ -515,12 +515,12 @@ public class MainController {
 
     public void toolBoxKeyReleased(KeyEvent keyEvent) {
         KeyCode keyCode = keyEvent.getCode();
-        if (!keyCode.isLetterKey() && !keyCode.isDigitKey() && !keyCode.isWhitespaceKey() && keyCode != KeyCode.ENTER) {
+        if (!keyCode.isWhitespaceKey() && keyCode != KeyCode.ENTER) {
             return;
         }
 
         endCaretPosition();
-        String keyword = toolSearchBox.getValue();
+        String keyword = StrUtil.trim(toolSearchBox.getValue());
         if (StrUtil.isBlank(keyword)) {
             return;
         }
