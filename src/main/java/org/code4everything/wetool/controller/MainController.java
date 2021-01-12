@@ -175,6 +175,8 @@ public class MainController {
         registerAction("javaproperties", actionEvent -> seeJavaInfo());
         registerAction("插件面板-pluginpane", actionEvent -> pluginPane());
         registerAction("检查更新-checkforupdate", actionEvent -> checkUpdate());
+        registerAction("隐藏-hide", actionEvent -> FxUtils.hideStage());
+        registerAction("插件仓库-pluginrepository", actionEvent -> FxUtils.openLink(TipConsts.REPO_LINK));
     }
 
     private void closeSelectedTab() {
