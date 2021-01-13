@@ -11,6 +11,7 @@ import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.Feature;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventType;
@@ -213,7 +214,7 @@ public class WeApplication extends Application {
         }
         log.info("load config file: {}", path);
         // 解析JSON配置
-        JSONObject json = JSON.parseObject(FileUtil.readUtf8String(path));
+        JSONObject json = JSON.parseObject(FileUtil.readUtf8String(path), Feature.OrderedField);
         WeConfig config = json.toJavaObject(WeConfig.class);
         config.setConfigJson(json);
         config.setCurrentPath(path);
