@@ -18,13 +18,14 @@
 - 支持数据库连接（[查看配置属性](https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7%E5%88%97%E8%A1%A8)）
 - 支持监听鼠标键盘
 - 支持暴露HTTP服务
+- 支持暗黑模式
 - [更多功能来插件库查看哦](https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository)
 
 ### 下载与使用
 
 > 运行环境：需安装有Java11及以上版本
 
-##### [下载WETOOL-1.3.0.ZIP](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.3.0.zip)
+##### [下载WETOOL-1.5.0.ZIP](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.5.0.zip)
 
 ##### [查看更新历史](history.md)
 
