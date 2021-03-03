@@ -85,10 +85,6 @@ public class WeApplication extends Application {
 
     private static Scene rootScene;
 
-    private Stage stage;
-
-    private boolean isTraySuccess = false;
-
     private static Scene getRootScene() {
         return rootScene;
     }
@@ -263,7 +259,6 @@ public class WeApplication extends Application {
 
     @Override
     public void start(Stage stage) {
-        this.stage = stage;
         BeanFactory.register(stage);
         if (SystemUtil.getOsInfo().isWindows()) {
             enableTray();
@@ -396,7 +391,6 @@ public class WeApplication extends Application {
             trayIcon.addMouseListener(new TrayMouseListener());
             tray.add(trayIcon);
             BeanFactory.register(trayIcon);
-            isTraySuccess = true;
             BeanFactory.register("isTraySuccess", true);
         } catch (Exception e) {
             FxDialogs.showException(TipConsts.TRAY_ERROR, e);
