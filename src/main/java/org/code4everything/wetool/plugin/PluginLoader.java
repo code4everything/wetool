@@ -5,10 +5,7 @@ import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
@@ -218,12 +215,18 @@ public final class PluginLoader {
             // 当前版本是否大于预加载的版本
             if (WeUtils.isRequiredVersion(plugin.getPluginInfo().getVersion(), another.getPluginInfo().getVersion())) {
                 PREPARED_PLUGINS.put(key, plugin);
-                FileUtil.del(another.getJarFile());
+                removeIfEnabled(another.getJarFile());
             } else {
-                FileUtil.del(plugin.getJarFile());
+                removeIfEnabled(plugin.getJarFile());
             }
         } else {
             PREPARED_PLUGINS.put(key, plugin);
+        }
+    }
+
+    private static void removeIfEnabled(File file) {
+        if (BooleanUtil.isTrue(WeUtils.getConfig().getAutoRemoveUnloadedPlugin())) {
+            FileUtil.del(file);
         }
     }
 
