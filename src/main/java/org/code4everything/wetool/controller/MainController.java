@@ -283,23 +283,15 @@ public class MainController {
         if (Objects.isNull(WeUtils.getConfig().getWinVirtualDesktopHotCorner()) || !SystemUtil.getOsInfo().isWindows()) {
             return;
         }
-        try {
-            Robot robot = new Robot();
-            EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, new BaseMouseCornerEventHandler() {
-                @Override
-                public void handleEvent0(String s, Date date, MouseCornerEventMessage message) {
-                    if (WeUtils.getConfig().getWinVirtualDesktopHotCorner() == message.getType()) {
-                        robot.keyPress(java.awt.event.KeyEvent.VK_WINDOWS);
-                        robot.keyPress(java.awt.event.KeyEvent.VK_TAB);
-                        robot.keyRelease(java.awt.event.KeyEvent.VK_WINDOWS);
-                        robot.keyRelease(java.awt.event.KeyEvent.VK_TAB);
-                    }
+
+        EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, new BaseMouseCornerEventHandler() {
+            @Override
+            public void handleEvent0(String s, Date date, MouseCornerEventMessage message) {
+                if (WeUtils.getConfig().getWinVirtualDesktopHotCorner() == message.getType()) {
+                    FxUtils.multiDesktopOnWindows();
                 }
-            });
-        } catch (AWTException e) {
-            // ignore
-            log.error("create robot error on windows: " + ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE));
-        }
+            }
+        });
     }
 
     public void loadPluginsHandy() {
