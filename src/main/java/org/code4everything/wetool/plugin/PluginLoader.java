@@ -9,6 +9,7 @@ import cn.hutool.core.util.*;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -187,11 +188,13 @@ public final class PluginLoader {
             addTabForSearch("", barMenu, info);
         }
         log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
-        // 注册成功回调
-        supporter.registered(info, barMenu, trayMenu);
-        if (BootConfig.isDebug()) {
-            supporter.debugCall();
-        }
+        Platform.runLater(() -> {
+            if (BootConfig.isDebug()) {
+                supporter.debugCall();
+            }
+            // 注册成功回调
+            supporter.registered(info, barMenu, trayMenu);
+        });
         return true;
     }
 
