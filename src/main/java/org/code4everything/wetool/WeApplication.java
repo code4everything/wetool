@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
@@ -12,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
+import com.dustinredmond.fxtrayicon.FXTrayIcon;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventType;
@@ -52,7 +54,6 @@ import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -260,9 +261,6 @@ public class WeApplication extends Application {
     @Override
     public void start(Stage stage) {
         BeanFactory.register(stage);
-        if (SystemUtil.getOsInfo().isWindows()) {
-            enableTray();
-        }
 
         // 注册并发布秒钟定时器事件
         String eventKey = EventCenter.EVENT_SECONDS_TIMER;
@@ -317,6 +315,7 @@ public class WeApplication extends Application {
 
         // 处理全局异常
         Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> FxDialogs.showException(TipConsts.APP_EXCEPTION, throwable));
+        enableTray(stage);
         log.info("wetool started");
     }
 
@@ -341,10 +340,33 @@ public class WeApplication extends Application {
     }
 
     /**
-     * 系统托盘
+     * 开启系统托盘图标
      */
-    private void enableTray() {
-        Platform.setImplicitExit(false);
+    private void enableTray(Stage stage) {
+        try {
+            FXTrayIcon icon = new FXTrayIcon(stage, getClass().getResource(ViewConsts.ICON));
+            icon.setApplicationTitle(FinalUtils.getAppTitle());
+            icon.setTrayIconTooltip(FinalUtils.getAppTitle());
+
+            icon.show();
+
+            WeUtils.execute(() -> {
+                ThreadUtil.sleep(500);
+                TrayIcon trayIcon = SystemTray.getSystemTray().getTrayIcons()[0];
+                trayIcon.setPopupMenu(getPopupMenu());
+                trayIcon.addMouseListener(new TrayMouseListener());
+                trayIcon.setImageAutoSize(true);
+
+                BeanFactory.register(icon);
+                BeanFactory.register(trayIcon);
+                BeanFactory.register("isTraySuccess", true);
+            });
+        } catch (Exception e) {
+            FxDialogs.showException(TipConsts.TRAY_ERROR, e);
+        }
+    }
+
+    private PopupMenu getPopupMenu() {
         // 添加托盘邮件菜单
         PopupMenu popupMenu = new PopupMenu();
         // 快捷打开
@@ -381,20 +403,7 @@ public class WeApplication extends Application {
         item = new MenuItem(TitleConsts.EXIT);
         item.addActionListener(e -> WeUtils.exitSystem());
         popupMenu.add(item);
-        // 添加系统托盘图标
-        try {
-            SystemTray tray = SystemTray.getSystemTray();
-            java.awt.Image image = ImageIO.read(getClass().getResourceAsStream(ViewConsts.ICON));
-            TrayIcon trayIcon = new TrayIcon(image, FinalUtils.getAppTitle(), popupMenu);
-            trayIcon.setImageAutoSize(true);
-            trayIcon.setToolTip(FinalUtils.getAppTitle());
-            trayIcon.addMouseListener(new TrayMouseListener());
-            tray.add(trayIcon);
-            BeanFactory.register(trayIcon);
-            BeanFactory.register("isTraySuccess", true);
-        } catch (Exception e) {
-            FxDialogs.showException(TipConsts.TRAY_ERROR, e);
-        }
+        return popupMenu;
     }
 
     private void addQuickOpenMenu(Menu menu) {
@@ -424,12 +433,18 @@ public class WeApplication extends Application {
         }
 
         @Override
-        public void mouseReleased(MouseEvent e) {log.debug("mouse released: {}", e.getPoint());}
+        public void mouseReleased(MouseEvent e) {
+            log.debug("mouse released: {}", e.getPoint());
+        }
 
         @Override
-        public void mouseEntered(MouseEvent e) {log.debug("mouse entered: {}", e.getPoint());}
+        public void mouseEntered(MouseEvent e) {
+            log.debug("mouse entered: {}", e.getPoint());
+        }
 
         @Override
-        public void mouseExited(MouseEvent e) {log.debug("mouse exited: {}", e.getPoint());}
+        public void mouseExited(MouseEvent e) {
+            log.debug("mouse exited: {}", e.getPoint());
+        }
     }
 }

@@ -37,6 +37,11 @@
     <!--添加编译参数：-D javafx.platform=win|mac|linux-->
     <dependencies>
         <dependency>
+            <groupId>com.dustinredmond.fxtrayicon</groupId>
+            <artifactId>FXTrayIcon</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.code4everything</groupId>
             <artifactId>wetool-plugin-support</artifactId>
             <version>${wetool.version}</version>

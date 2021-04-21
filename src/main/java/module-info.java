@@ -18,6 +18,7 @@ module org.code4everything.wetool {
     requires jnativehook;
     requires hutool.extra;
     requires io.netty.codec.http;
+    requires FXTrayIcon;
 
     requires transitive org.code4everything.wetool.plugin.support;
 
