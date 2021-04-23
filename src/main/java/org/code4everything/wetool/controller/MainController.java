@@ -183,7 +183,8 @@ public class MainController {
     private void runHutoolCmd(ActionEvent actionEvent) {
         String hutoolPath = StrUtil.removeSuffix(System.getenv("HUTOOL_PATH"), File.separator);
         if (!FileUtil.exist(hutoolPath)) {
-            FxDialogs.showError("请先配置HUTOOL_PATH变量");
+            FxDialogs.showError("请先安装HutoolCli工具");
+            FxUtils.openLink("https://gitee.com/code4everything/hutool-cli");
             return;
         }
 
