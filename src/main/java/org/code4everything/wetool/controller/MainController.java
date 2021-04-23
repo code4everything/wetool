@@ -2,24 +2,16 @@ package org.code4everything.wetool.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.exceptions.ExceptionUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.system.SystemUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -54,8 +46,7 @@ import org.code4everything.wetool.service.UpdateService;
 import org.code4everything.wetool.util.FinalUtils;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
-import java.awt.*;
-import java.util.List;
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -68,11 +59,12 @@ public class MainController {
 
     private static final Map<String, Pair<String, String>> TAB_MAP = new HashMap<>(16);
 
+    /**
+     * key以*结尾时，采用模式匹配，即仅匹配前缀
+     */
     private static final Map<String, EventHandler<ActionEvent>> ACTION_MAP = new ConcurrentHashMap<>();
 
     private static final Map<String, String> ACTION_NAME_PINYIN_MAP = new ConcurrentHashMap<>();
-
-    private static final ActionEvent EMPTY_EVENT = new ActionEvent();
 
     static {
         registerAction("FileManager", TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
@@ -117,12 +109,14 @@ public class MainController {
     }
 
     public static void registerAction(String name, EventHandler<ActionEvent> eventHandler) {
+        name = StrUtil.trim(name);
         ACTION_MAP.put(name, eventHandler);
         String pinyin = PinyinUtil.getPinyin(name);
         ACTION_NAME_PINYIN_MAP.put(name, StrUtil.cleanBlank(pinyin));
     }
 
     public static void unregisterAction(String name) {
+        name = StrUtil.trim(name);
         ACTION_MAP.remove(name);
         String pinyin = PinyinUtil.getPinyin(name);
         ACTION_NAME_PINYIN_MAP.remove(pinyin);
@@ -177,6 +171,26 @@ public class MainController {
         registerAction("检查更新-checkforupdate", actionEvent -> checkUpdate());
         registerAction("隐藏-hide", actionEvent -> FxUtils.hideStage());
         registerAction("插件仓库-pluginrepository", actionEvent -> FxUtils.openLink(TipConsts.REPO_LINK));
+
+        // 注册模式匹配动作
+        registerAction("hutool*", this::runHutoolCmd);
+        registerAction("env*", a -> {
+            String name = StrUtil.removePrefix(a.getSource().toString(), "env").trim();
+            FxDialogs.showInformation(StrUtil.format("{} 的环境变量", name), System.getenv(name));
+        });
+    }
+
+    private void runHutoolCmd(ActionEvent actionEvent) {
+        String hutoolPath = StrUtil.removeSuffix(System.getenv("HUTOOL_PATH"), File.separator);
+        if (!FileUtil.exist(hutoolPath)) {
+            FxDialogs.showError("请先配置HUTOOL_PATH变量");
+            return;
+        }
+
+        String cmd = StrUtil.removePrefix(actionEvent.getSource().toString(), "hutool").trim();
+        String jarCmd = StrUtil.format("java -jar {}{}hutool.jar {}", hutoolPath, File.separator, cmd);
+        String result = RuntimeUtil.execForStr(jarCmd);
+        FxDialogs.showTextAreaDialog(StrUtil.format("{} 命令执行结果", cmd), result);
     }
 
     private void closeSelectedTab() {
@@ -529,16 +543,37 @@ public class MainController {
             }
 
             if (Objects.isNull(eventHandler)) {
-                FxDialogs.showError("未找到工具！");
-            } else {
-                eventHandler.handle(EMPTY_EVENT);
+                // 模式匹配
+                for (Map.Entry<String, EventHandler<ActionEvent>> entry : ACTION_MAP.entrySet()) {
+                    String key = entry.getKey();
+                    if (key.endsWith("*")) {
+                        key = key.substring(0, key.length() - 1);
+                        if (keyword.startsWith(key)) {
+                            eventHandler = entry.getValue();
+                            if (Objects.nonNull(eventHandler)) {
+                                break;
+                            }
+                        }
+                    }
+                }
             }
+
+            if (Objects.isNull(eventHandler)) {
+                FxDialogs.showError("未找到对应的工具！");
+            } else {
+                eventHandler.handle(new ActionEvent(keyword, null));
+            }
+
             return;
         }
 
         toolSearchBox.getItems().clear();
         String[] tokenizer = StrUtil.splitTrim(keyword, " ").toArray(new String[0]);
         ACTION_MAP.forEach((k, v) -> {
+            if (k.endsWith("*")) {
+                // 模式匹配，不适用下拉框提示
+                return;
+            }
             String pinyin = ACTION_NAME_PINYIN_MAP.get(k);
             if (containsAllIgnoreCase(pinyin, tokenizer) || containsAllIgnoreCase(k, tokenizer)) {
                 toolSearchBox.getItems().add(k);

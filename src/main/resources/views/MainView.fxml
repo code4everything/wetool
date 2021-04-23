@@ -53,7 +53,7 @@
                 <MenuItem mnemonicParsing="false" onAction="#about" text="关于WeTool" />
             </Menu>
         </MenuBar>
-        <ComboBox fx:id="toolSearchBox" editable="true" onKeyReleased="#toolBoxKeyReleased" prefWidth="300.0" promptText="搜索工具 Ctrl+P" HBox.hgrow="NEVER">
+        <ComboBox fx:id="toolSearchBox" editable="true" onKeyReleased="#toolBoxKeyReleased" prefWidth="500.0" promptText="搜索工具或运行命令 Ctrl+P" HBox.hgrow="NEVER">
         </ComboBox>
         <TextField fx:id="hiddenControl" opacity="0.0" HBox.hgrow="NEVER" onKeyReleased="#locateControl" prefWidth="1"/>
     </HBox>
