@@ -1,5 +1,11 @@
 ## 更新历史
 
+#### [v1.6.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.6.0.zip)
+
+- 修复一些已知问题
+- 优化了系统托盘图标
+- 支持HutoolCli命令
+
 #### [v1.5.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.5.0.zip)
 
 - 新增鼠标键盘监听开关
