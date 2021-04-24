@@ -1,5 +1,7 @@
 package org.code4everything.wetool.controller;
 
+import cn.hutool.cache.Cache;
+import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
@@ -76,6 +78,8 @@ public class MainController {
         registerAction("NetworkTool", TitleConsts.NETWORK_TOOL, ViewConsts.NETWORK_TOOL);
         registerAction("NaryConverter", TitleConsts.NARY_CONVERTER, ViewConsts.NARY_CONVERTER);
     }
+
+    private final Cache<String, EventHandler<ActionEvent>> actionCache = CacheUtil.newFIFOCache(128);
 
     private final WeConfig config = WeUtils.getConfig();
 
@@ -553,26 +557,7 @@ public class MainController {
             String firstName = CollUtil.getFirst(toolSearchBox.getItems());
             toolSearchBox.getItems().clear();
             toolSearchBox.setValue(StrUtil.EMPTY);
-            EventHandler<ActionEvent> eventHandler = ACTION_MAP.get(keyword);
-            if (Objects.isNull(eventHandler) && StrUtil.isNotBlank(firstName)) {
-                eventHandler = ACTION_MAP.get(firstName);
-            }
-
-            if (Objects.isNull(eventHandler)) {
-                // 模式匹配
-                for (Map.Entry<String, EventHandler<ActionEvent>> entry : ACTION_MAP.entrySet()) {
-                    String key = entry.getKey();
-                    if (key.endsWith("*")) {
-                        key = key.substring(0, key.length() - 1);
-                        if (keyword.startsWith(key)) {
-                            eventHandler = entry.getValue();
-                            if (Objects.nonNull(eventHandler)) {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            EventHandler<ActionEvent> eventHandler = getActionEventEventHandler(keyword, firstName);
 
             if (Objects.isNull(eventHandler)) {
                 FxDialogs.showError("未找到对应的工具！");
@@ -599,6 +584,35 @@ public class MainController {
         if (CollUtil.isNotEmpty(toolSearchBox.getItems())) {
             toolSearchBox.show();
         }
+    }
+
+    private EventHandler<ActionEvent> getActionEventEventHandler(String keyword, String firstName) {
+        EventHandler<ActionEvent> eventHandler = ACTION_MAP.get(keyword);
+        if (Objects.isNull(eventHandler) && StrUtil.isNotBlank(firstName)) {
+            eventHandler = ACTION_MAP.get(firstName);
+        }
+        if (Objects.nonNull(eventHandler)) {
+            return eventHandler;
+        }
+
+        // 模式匹配
+        return actionCache.get(keyword, () -> {
+            for (Map.Entry<String, EventHandler<ActionEvent>> entry : ACTION_MAP.entrySet()) {
+                String key = entry.getKey();
+                if (!key.endsWith("*")) {
+                    continue;
+                }
+
+                key = key.substring(0, key.length() - 1);
+                if (keyword.startsWith(key)) {
+                    EventHandler<ActionEvent> handler = entry.getValue();
+                    if (Objects.nonNull(handler)) {
+                        return handler;
+                    }
+                }
+            }
+            return null;
+        });
     }
 
     public boolean containsAllIgnoreCase(String str, String[] keys) {
