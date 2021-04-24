@@ -157,10 +157,6 @@ public class WeApplication extends Application {
         } catch (NativeHookException ex) {
             log.error("register keyboard listener failed: {}", ExceptionUtil.stacktraceToString(ex, Integer.MAX_VALUE));
         }
-
-        List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_SHIFT,
-                NativeKeyEvent.VC_ENTER);
-        FxUtils.registerGlobalShortcuts(shortcuts, FxUtils::toggleStage);
     }
 
     private static void exportHttpService() {

@@ -131,6 +131,7 @@ public class MainController {
         BeanFactory.register(AppConsts.BeanKey.PLUGIN_MENU, pluginMenu);
         BeanFactory.register(AppConsts.BeanKey.TITLE_BAR, titleBar);
         hiddenControl.focusedProperty().addListener((observableValue, aBoolean, t1) -> hiddenControl.setText(StrUtil.EMPTY));
+        registerGlobalShortcuts();
         registerShortcuts();
 
         // 加载快速启动选项
@@ -283,6 +284,20 @@ public class MainController {
             shortcuts = List.of(NativeKeyEvent.VC_ALT, i + 1);
             FxUtils.registerShortcuts(shortcuts, () -> closeTab(idx));
         }
+    }
+
+    private void registerGlobalShortcuts() {
+        // 全局快捷键
+        List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_SHIFT,
+                NativeKeyEvent.VC_ENTER);
+        FxUtils.registerGlobalShortcuts(shortcuts, () -> {
+            if (FxUtils.getStage().isShowing()) {
+                FxUtils.hideStage();
+            } else {
+                FxUtils.showStage();
+                toolSearchBox.requestFocus();
+            }
+        });
     }
 
     private void closeTab(int idx) {
