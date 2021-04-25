@@ -1,5 +1,6 @@
 package org.code4everything.wetool.service;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Holder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -82,6 +83,11 @@ public class HttpFileBrowserService implements EventHandler<ActionEvent> {
             rootPath.set(segment[1]);
         } else {
             FxUtils.chooseFolder(file -> rootPath.set(file.getAbsolutePath()));
+        }
+
+        if (!FileUtil.exist(rootPath.get())) {
+            FxDialogs.showError("根目录未设置");
+            return;
         }
 
         browse(port, apiPattern, rootPath.get());
