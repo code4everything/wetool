@@ -10,6 +10,7 @@ import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.util.*;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.system.SystemUtil;
+import com.google.common.base.Preconditions;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -44,6 +45,7 @@ import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.service.HttpFileBrowserService;
 import org.code4everything.wetool.service.UpdateService;
 import org.code4everything.wetool.util.FinalUtils;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -114,7 +116,11 @@ public class MainController {
 
     public static void registerAction(String name, EventHandler<ActionEvent> eventHandler) {
         name = StrUtil.trim(name);
+        Preconditions.checkArgument(StrUtil.isNotBlank(name), "action name must not be blank");
         ACTION_MAP.put(name, eventHandler);
+        if (name.endsWith("*")) {
+            return;
+        }
         String pinyin = PinyinUtil.getPinyin(name);
         ACTION_NAME_PINYIN_MAP.put(name, StrUtil.cleanBlank(pinyin));
     }
@@ -179,6 +185,7 @@ public class MainController {
 
         // 注册模式匹配动作
         registerAction("hutool*", this::runHutoolCmd);
+        registerAction("file-browser*", HttpFileBrowserService.getInstance());
         registerAction("env*", a -> {
             String name = StrUtil.removePrefix(a.getSource().toString(), "env").trim();
             FxDialogs.showInformation(StrUtil.format("{} 的环境变量", name), System.getenv(name));
@@ -257,8 +264,7 @@ public class MainController {
         FxUtils.registerShortcuts(shortcuts, this::saveFile);
 
         // ctrl+alt+shift+r 重启
-        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_SHIFT,
-                NativeKeyEvent.VC_R);
+        shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_SHIFT, NativeKeyEvent.VC_R);
         FxUtils.registerShortcuts(shortcuts, this::restart);
 
         // ctrl+shift+p 打开插件面板
@@ -292,8 +298,7 @@ public class MainController {
 
     private void registerGlobalShortcuts() {
         // 全局快捷键
-        List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_SHIFT,
-                NativeKeyEvent.VC_ENTER);
+        List<Integer> shortcuts = List.of(NativeKeyEvent.VC_CONTROL, NativeKeyEvent.VC_ALT, NativeKeyEvent.VC_SHIFT, NativeKeyEvent.VC_ENTER);
         FxUtils.registerGlobalShortcuts(shortcuts, () -> {
             if (FxUtils.getStage().isShowing()) {
                 FxUtils.hideStage();
