@@ -73,14 +73,15 @@ public class HttpFileBrowserHandler implements HttpApiHandler {
             }
 
             File[] files = file.listFiles();
-            Arrays.sort(files, ComparatorChain.of(Comparator.comparing(o -> directorOrder.get(o.isDirectory())), (o1, o2) -> (int) (o1.lastModified() - o2.lastModified())));
+            Objects.requireNonNull(files);
+            Arrays.sort(files, ComparatorChain.of(Comparator.comparing(o -> directorOrder.get(o.isDirectory())), Comparator.comparing(File::lastModified)));
 
             for (File child : files) {
                 String name = child.getName();
                 if (child.getAbsolutePath().equals(file.getParent()) || name.startsWith(".")) {
                     continue;
                 }
-                String url = urlPrefix + "/" + filePath + "/" + name;
+                String url = urlPrefix + (StrUtil.isEmpty(filePath) ? "" : "/" + filePath) + "/" + name;
                 sb.append(DateUtil.formatDateTime(DateUtil.date(child.lastModified()))).append("&nbsp;&nbsp;&nbsp;&nbsp;");
                 if (child.isDirectory()) {
                     sb.append("<a href='").append(url).append("'>").append(name).append("</a><br/>");

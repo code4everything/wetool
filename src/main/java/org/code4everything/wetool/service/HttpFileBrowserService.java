@@ -7,6 +7,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.TextInputDialog;
 import org.code4everything.wetool.handler.HttpFileBrowserHandler;
 import org.code4everything.wetool.plugin.support.http.HttpService;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
@@ -14,6 +15,7 @@ import org.code4everything.wetool.plugin.support.util.FxUtils;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -22,11 +24,11 @@ import java.util.Set;
  */
 public class HttpFileBrowserService implements EventHandler<ActionEvent> {
 
-    private HttpFileBrowserService() {}
+    private static volatile HttpFileBrowserService httpFileBrowserService;
 
     private final Set<HttpFileBrowserHandler> handlerSet = new HashSet<>();
 
-    private static volatile HttpFileBrowserService httpFileBrowserService;
+    private HttpFileBrowserService() {}
 
     public static HttpFileBrowserService getInstance() {
         if (Objects.isNull(httpFileBrowserService)) {
@@ -56,8 +58,26 @@ public class HttpFileBrowserService implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
-        String cmd = StrUtil.removePrefix(event.getSource().toString(), "file-browser").trim();
-        String[] segment = StrUtil.split(cmd, " ");
+        String cmd = StrUtil.removePrefix(event.getSource().toString(), "file-browser");
+        if (StrUtil.isBlank(cmd)) {
+            httpFileBrowserDialog();
+            return;
+        }
+        handleExportCmd(cmd);
+    }
+
+    public void httpFileBrowserDialog() {
+        TextInputDialog dialog = FxDialogs.getTextInputDialog("开启HTTP文件浏览服务", "格式：[port:]get/api/file/* [/root/path]");
+        dialog.getEditor().setText("8080:get/file/* /home/test");
+        Optional<String> optional = dialog.showAndWait();
+        if (optional.isEmpty()) {
+            return;
+        }
+        httpFileBrowserService.handleExportCmd(optional.get());
+    }
+
+    private void handleExportCmd(String cmd) {
+        String[] segment = StrUtil.split(StrUtil.trim(cmd), " ");
         if (ArrayUtil.isEmpty(segment)) {
             FxDialogs.showError("命令格式错误！");
             return;

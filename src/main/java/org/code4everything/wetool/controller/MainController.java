@@ -705,4 +705,8 @@ public class MainController {
     public void checkUpdate() {
         new UpdateService().checkUpdate();
     }
+
+    public void httpFileBrowser() {
+        HttpFileBrowserService.getInstance().httpFileBrowserDialog();
+    }
 }
