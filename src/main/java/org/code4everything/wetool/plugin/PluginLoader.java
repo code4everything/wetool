@@ -18,6 +18,7 @@ import javafx.scene.control.MenuItem;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
+import org.code4everything.boot.config.BootConfig;
 import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.controller.MainController;
@@ -203,6 +204,9 @@ public final class PluginLoader {
         }
         log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
         Platform.runLater(() -> {
+            if (BootConfig.isDebug()) {
+                supporter.debugCall();
+            }
             // 注册成功回调
             supporter.registered(info, barMenu, trayMenu);
             if (BeanFactory.get(WePluginConfig.class).putInitBootIfNotExists(info, false)) {
