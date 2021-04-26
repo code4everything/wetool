@@ -8,6 +8,7 @@
 - 支持HutoolCli命令
 - 支持暴露模式匹配的HTTP接口
 - 支持HTTP文件浏览服务
+- 仅支持单实例运行
 
 #### [v1.5.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.5.0.zip)
 

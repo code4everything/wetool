@@ -7,7 +7,9 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -27,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.ObjectUtils;
 import org.code4everything.boot.base.constant.IntegerConsts;
+import org.code4everything.boot.config.BootConfig;
 import org.code4everything.wetool.adapter.NativeKeyEventAdapter;
 import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
@@ -67,6 +70,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * @author pantao
@@ -100,9 +104,23 @@ public class WeApplication extends Application {
     public static void main(String[] args) {
         log.info("starting wetool on os: {}", SystemUtil.getOsInfo().getName());
         log.info("default charset: {}", Charset.defaultCharset().name());
+        checkAlreadyRunning();
         parseConfig();
         initApp();
         launch(args);
+    }
+
+    private static void checkAlreadyRunning() {
+        if (BootConfig.isDebug()) {
+            return;
+        }
+
+        String result = RuntimeUtil.execForStr("jps");
+        if (Pattern.compile("wetool.*?\\.jar").matcher(result).find()) {
+            log.info("wetool is already running, show wetool now");
+            HttpUtil.get("http://127.0.0.1:8189/wetool/show");
+            System.exit(0);
+        }
     }
 
     public static void initApp() {
