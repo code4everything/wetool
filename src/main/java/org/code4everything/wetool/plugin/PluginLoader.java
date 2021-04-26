@@ -17,15 +17,17 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.code4everything.boot.config.BootConfig;
+import org.code4everything.boot.base.FileUtils;
 import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.controller.MainController;
 import org.code4everything.wetool.plugin.support.WePluginSupporter;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
+import org.code4everything.wetool.plugin.support.config.WePluginConfig;
 import org.code4everything.wetool.plugin.support.config.WePluginInfo;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
+import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
@@ -77,6 +79,17 @@ public final class PluginLoader {
         loadPluginFromPrepared();
         EventCenter.publishEvent(EventCenter.EVENT_ALL_PLUGIN_LOADED, DateUtil.date());
         addPluginForSearch("", null);
+
+        // 保存设置文件
+        WePluginConfig pluginConfig = BeanFactory.get(WePluginConfig.class);
+        if (pluginConfig.isChanged()) {
+            String filename = "we-plugin-config.json";
+            String path = WeUtils.parsePathByOs(filename);
+            if (StrUtil.isEmpty(path)) {
+                path = FileUtils.currentWorkDir(filename);
+            }
+            FileUtil.writeUtf8String(JSON.toJSONString(pluginConfig, true), path);
+        }
     }
 
     public static void addPluginForSearch(String prefix, Menu menu) {
@@ -130,6 +143,7 @@ public final class PluginLoader {
                 // 解析配置到对象中
                 String json = IoUtil.read(jar.getInputStream(entry), "utf-8");
                 WePluginInfo info = JSON.parseObject(json, WePluginInfo.class);
+                BeanFactory.get(WePluginConfig.class).putInitBootIfNotExists(info, false);
 
                 if (checkDisable && isDisabled(info)) {
                     // 插件被禁止加载
@@ -189,11 +203,11 @@ public final class PluginLoader {
         }
         log.info("plugin {}-{}-{} loaded", info.getAuthor(), info.getName(), info.getVersion());
         Platform.runLater(() -> {
-            if (BootConfig.isDebug()) {
-                supporter.debugCall();
-            }
             // 注册成功回调
             supporter.registered(info, barMenu, trayMenu);
+            if (BeanFactory.get(WePluginConfig.class).putInitBootIfNotExists(info, false)) {
+                supporter.initBootIfConfigured();
+            }
         });
         return true;
     }

@@ -34,6 +34,7 @@ import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.handler.MouseLocationListenerEventHandler;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
+import org.code4everything.wetool.plugin.support.config.WePluginConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
 import org.code4everything.wetool.plugin.support.druid.DruidSource;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
@@ -58,7 +59,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
@@ -77,8 +77,7 @@ public class WeApplication extends Application {
 
     private static final Menu PLUGIN_MENU = new Menu(TitleConsts.PLUGIN);
 
-    private static final ThreadFactory FACTORY =
-            ThreadFactoryBuilder.create().setDaemon(true).setUncaughtExceptionHandler((t, e) -> log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE))).build();
+    private static final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).setUncaughtExceptionHandler((t, e) -> log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE))).build();
 
     private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(2, FACTORY);
 
@@ -124,8 +123,7 @@ public class WeApplication extends Application {
         EventCenter.registerEvent(EventCenter.EVENT_MOUSE_PRESSED, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_ALL_PLUGIN_LOADED, EventMode.MULTI_SUB);
 
-        EXECUTOR.scheduleWithFixedDelay(() -> EventCenter.publishEvent(EventCenter.EVENT_100_MS_TIMER,
-                DateUtil.date()), 0, 100, TimeUnit.MILLISECONDS);
+        EXECUTOR.scheduleWithFixedDelay(() -> EventCenter.publishEvent(EventCenter.EVENT_100_MS_TIMER, DateUtil.date()), 0, 100, TimeUnit.MILLISECONDS);
 
         initKeyboardMouseListener();
         connectDb();
@@ -214,6 +212,9 @@ public class WeApplication extends Application {
         BeanFactory.register(config);
         // 检测空指针
         config.init();
+
+        path = WeUtils.parsePathByOs("we-plugin-config.json");
+        BeanFactory.register(Objects.isNull(path) ? new WePluginConfig() : JSON.parseObject(FileUtil.readUtf8String(path)));
     }
 
     public static boolean isRootPane() {
