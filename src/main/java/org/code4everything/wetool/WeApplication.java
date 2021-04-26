@@ -62,6 +62,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
@@ -70,7 +71,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 /**
  * @author pantao
@@ -115,11 +115,19 @@ public class WeApplication extends Application {
             return;
         }
 
-        String result = RuntimeUtil.execForStr("jps");
-        if (Pattern.compile("wetool.*?\\.jar").matcher(result).find()) {
-            log.info("wetool is already running, show wetool now");
-            HttpUtil.get("http://127.0.0.1:8189/wetool/show");
-            System.exit(0);
+        String pid = String.valueOf(WeUtils.getCurrentPid());
+        List<String> javaProcess = RuntimeUtil.execForLines("jps");
+        for (String process : javaProcess) {
+            process = StrUtil.trim(process);
+            if (process.startsWith(pid)) {
+                // 排除当前进程
+                continue;
+            }
+            if (StrUtil.containsIgnoreCase(process, "wetool")) {
+                log.info("wetool is already running, show wetool now");
+                HttpUtil.get("http://127.0.0.1:8189/wetool/show");
+                System.exit(0);
+            }
         }
     }
 
@@ -232,7 +240,7 @@ public class WeApplication extends Application {
         config.init();
 
         path = WeUtils.parsePathByOs("we-plugin-config.json");
-        BeanFactory.register(Objects.isNull(path) ? new WePluginConfig() : JSON.parseObject(FileUtil.readUtf8String(path)));
+        BeanFactory.register(JSON.parseObject(Objects.isNull(path) ? "{}" : FileUtil.readUtf8String(path), WePluginConfig.class));
     }
 
     public static boolean isRootPane() {
