@@ -11,6 +11,7 @@ import cn.hutool.core.util.*;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.system.SystemUtil;
 import com.google.common.base.Preconditions;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -303,8 +304,10 @@ public class MainController {
             if (FxUtils.getStage().isShowing()) {
                 FxUtils.hideStage();
             } else {
-                FxUtils.showStage();
-                toolSearchBox.requestFocus();
+                Platform.runLater(() -> {
+                    FxUtils.getStage().show();
+                    toolSearchBox.requestFocus();
+                });
             }
         });
     }
