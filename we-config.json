@@ -70,7 +70,7 @@
     /*windows虚拟桌面触发角：LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM*/
     "winVirtualDesktopHotCorner": "RIGHT_TOP",
     /*是否关闭鼠标键盘监听器*/
-    "disableKeyboardMouseListener": false,
+    "disableKeyboardMouseListener": true,
     /*是否关闭暗黑模式*/
     "disableDarkMode": false,
     /*自动移除未加载的插件*/

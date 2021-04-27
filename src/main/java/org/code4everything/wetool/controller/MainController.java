@@ -25,6 +25,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
+import org.code4everything.boot.base.constant.StringConsts;
 import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.constant.TipConsts;
@@ -119,7 +120,7 @@ public class MainController {
         name = StrUtil.trim(name);
         Preconditions.checkArgument(StrUtil.isNotBlank(name), "action name must not be blank");
         ACTION_MAP.put(name, eventHandler);
-        if (name.endsWith("*")) {
+        if (name.endsWith(StringConsts.Sign.STAR)) {
             return;
         }
         String pinyin = PinyinUtil.getPinyin(name);
@@ -185,7 +186,9 @@ public class MainController {
         registerAction("插件仓库-pluginrepository", actionEvent -> FxUtils.openLink(TipConsts.REPO_LINK));
 
         // 注册模式匹配动作
-        registerAction("hutool*", this::runHutoolCmd);
+        EventHandler<ActionEvent> runHutoolCmd = this::runHutoolCmd;
+        registerAction("hutool*", runHutoolCmd);
+        registerAction("*", runHutoolCmd);
         registerAction("file-browser*", HttpFileBrowserService.getInstance());
         registerAction("env*", a -> {
             String name = StrUtil.removePrefix(a.getSource().toString(), "env").trim();
@@ -579,7 +582,7 @@ public class MainController {
         toolSearchBox.getItems().clear();
         String[] tokenizer = StrUtil.splitTrim(keyword, " ").toArray(new String[0]);
         ACTION_MAP.forEach((k, v) -> {
-            if (k.endsWith("*")) {
+            if (k.endsWith(StringConsts.Sign.STAR)) {
                 // 模式匹配，不适用下拉框提示
                 return;
             }
@@ -605,21 +608,24 @@ public class MainController {
 
         // 模式匹配
         return actionCache.get(keyword, () -> {
+            EventHandler<ActionEvent> handler = null;
             for (Map.Entry<String, EventHandler<ActionEvent>> entry : ACTION_MAP.entrySet()) {
                 String key = entry.getKey();
-                if (!key.endsWith("*")) {
+                if (!key.endsWith(StringConsts.Sign.STAR)) {
+                    continue;
+                }
+
+                if (key.equals(StringConsts.Sign.STAR)) {
+                    handler = entry.getValue();
                     continue;
                 }
 
                 key = key.substring(0, key.length() - 1);
-                if (keyword.startsWith(key)) {
-                    EventHandler<ActionEvent> handler = entry.getValue();
-                    if (Objects.nonNull(handler)) {
-                        return handler;
-                    }
+                if (keyword.startsWith(key) && Objects.nonNull(entry.getValue())) {
+                    return entry.getValue();
                 }
             }
-            return null;
+            return handler;
         });
     }
 
