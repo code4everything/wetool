@@ -132,6 +132,9 @@ public class WeApplication extends Application {
     }
 
     public static void initApp() {
+        String path = WeUtils.parsePathByOs("we-plugin-config.json");
+        BeanFactory.register(JSON.parseObject(Objects.isNull(path) ? "{}" : FileUtil.readUtf8String(path), WePluginConfig.class));
+
         // 注册事件
         EventCenter.registerEvent(EventCenter.EVENT_QUICK_START_CLICKED, EventMode.MULTI_SUB);
         EventCenter.registerEvent(EventCenter.EVENT_CLEAR_FXML_CACHE, EventMode.MULTI_SUB);
@@ -238,9 +241,6 @@ public class WeApplication extends Application {
         BeanFactory.register(config);
         // 检测空指针
         config.init();
-
-        path = WeUtils.parsePathByOs("we-plugin-config.json");
-        BeanFactory.register(JSON.parseObject(Objects.isNull(path) ? "{}" : FileUtil.readUtf8String(path), WePluginConfig.class));
     }
 
     public static boolean isRootPane() {
@@ -367,7 +367,7 @@ public class WeApplication extends Application {
      */
     private void enableTray(Stage stage) {
         try {
-            FXTrayIcon icon = new FXTrayIcon(stage, getClass().getResource(ViewConsts.ICON));
+            FXTrayIcon icon = new FXTrayIcon(stage, WeApplication.class.getResource(ViewConsts.ICON));
             icon.setApplicationTitle(FinalUtils.getAppTitle());
             icon.setTrayIconTooltip(FinalUtils.getAppTitle());
 
@@ -385,7 +385,7 @@ public class WeApplication extends Application {
                 BeanFactory.register("isTraySuccess", true);
             });
         } catch (Exception e) {
-            FxDialogs.showException(TipConsts.TRAY_ERROR, e);
+            log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE));
         }
     }
 
