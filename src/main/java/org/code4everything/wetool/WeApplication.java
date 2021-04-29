@@ -9,6 +9,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.cron.CronUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
@@ -132,6 +133,7 @@ public class WeApplication extends Application {
     }
 
     public static void initApp() {
+        CronUtil.setMatchSecond(true);
         String path = WeUtils.parsePathByOs("we-plugin-config.json");
         BeanFactory.register(JSON.parseObject(Objects.isNull(path) ? "{}" : FileUtil.readUtf8String(path), WePluginConfig.class));
 

@@ -10,6 +10,7 @@ module org.code4everything.wetool {
     requires hutool.crypto;
     requires hutool.http;
     requires hutool.cache;
+    requires hutool.cron;
 
     requires boot.surface;
     requires fastjson;
