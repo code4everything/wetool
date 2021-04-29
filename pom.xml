@@ -13,9 +13,13 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <wetool.version>1.5.0</wetool.version>
-        <zxing.version>3.3.2</zxing.version>
-        <junit.version>4.13.1</junit.version>
-        <lombok.version>1.18.16</lombok.version>
+        <zxing.version>3.4.1</zxing.version>
+        <junit.version>4.13.2</junit.version>
+        <lombok.version>1.18.20</lombok.version>
+        <fxtrayicon.version>3.0.0</fxtrayicon.version>
+        <maven.shade.plugin.version>3.2.1</maven.shade.plugin.version>
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <javafx.maven.plugin.version>0.0.6</javafx.maven.plugin.version>
     </properties>
 
     <!--私有仓库-->
@@ -39,7 +43,7 @@
         <dependency>
             <groupId>com.dustinredmond.fxtrayicon</groupId>
             <artifactId>FXTrayIcon</artifactId>
-            <version>3.0.0</version>
+            <version>${fxtrayicon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.code4everything</groupId>
@@ -66,7 +70,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>${maven.shade.plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -89,7 +93,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <forceJavacCompilerUse>true</forceJavacCompilerUse>
                     <annotationProcessorPaths>
@@ -106,7 +110,7 @@
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.3</version>
+                <version>${javafx.maven.plugin.version}</version>
                 <configuration>
                     <mainClass>org.code4everything.wetool.WeApplication</mainClass>
                 </configuration>

@@ -3,8 +3,6 @@
  * @since 2020/1/9
  */
 module org.code4everything.wetool {
-    requires core;
-
     requires java.base;
 
     requires hutool.core;
@@ -20,6 +18,7 @@ module org.code4everything.wetool {
     requires hutool.extra;
     requires io.netty.codec.http;
     requires FXTrayIcon;
+    requires com.google.zxing;
 
     requires transitive org.code4everything.wetool.plugin.support;
 
