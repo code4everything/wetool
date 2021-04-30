@@ -171,7 +171,6 @@ public class MainController {
         // 监听鼠标位置
         EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_MOTION, new MouseMotionEventHandler());
         multiDesktopOnWindows();
-        WeUtils.execute(PluginLoader::loadPlugins);
 
         // 注册搜索动作
         registerAction("退出-exit", actionEvent -> WeUtils.exitSystem());
@@ -194,6 +193,8 @@ public class MainController {
             String name = StrUtil.removePrefix(a.getSource().toString(), "env").trim();
             FxDialogs.showInformation(StrUtil.format("{} 的环境变量", name), System.getenv(name));
         });
+
+        WeUtils.execute(PluginLoader::loadPlugins);
     }
 
     private void runHutoolCmd(ActionEvent actionEvent) {

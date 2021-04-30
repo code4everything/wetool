@@ -93,7 +93,7 @@ public final class PluginLoader {
         }
     }
 
-    public static void addPluginForSearch(String prefix, Menu menu) {
+    private static void addPluginForSearch(String prefix, Menu menu) {
         if (Objects.isNull(menu)) {
             menu = FxUtils.getPluginMenu();
         }
@@ -127,11 +127,12 @@ public final class PluginLoader {
         loadPluginFromPrepared();
     }
 
-    public static void registerPlugin(WePluginInfo info, WePluginSupporter supporter) {
-        registerPlugin(info, supporter, true);
+    public static void loadPluginForTest(WePluginInfo info) {
+        preparePlugin(FileUtil.file(FileUtils.currentWorkDir()), info, true);
+        loadPluginFromPrepared();
     }
 
-    private void preparePlugin(File file, boolean checkDisable) {
+    private static void preparePlugin(File file, boolean checkDisable) {
         if (file.exists() && file.isFile()) {
             // 包装成 JarFile
             try (JarFile jar = new JarFile(file)) {
@@ -145,35 +146,38 @@ public final class PluginLoader {
                 String json = IoUtil.read(jar.getInputStream(entry), "utf-8");
                 WePluginInfo info = JSON.parseObject(json, WePluginInfo.class);
                 BeanFactory.get(WePluginConfig.class).putInitBootIfNotExists(info, false);
-
-                if (checkDisable && isDisabled(info)) {
-                    // 插件被禁止加载
-                    log.info("plugin {}-{}-{} disabled", info.getAuthor(), info.getName(), info.getVersion());
-                    return;
-                }
-                // 兼容性检测
-                if (isIncompatible(info)) {
-                    return;
-                }
-                WePlugin plugin = new WePlugin(info, file);
-                // 检测插件是否已经加载
-                if (LOADED_PLUGINS.contains(plugin)) {
-                    // 插件已被加载
-                    log.info("plugin {}-{} already loaded", info.getAuthor(), info.getName());
-                    return;
-                }
-                if (info.getIsolated()) {
-                    // 隔离的插件使用单独的类加载器
-                    plugin.setLoaderName(info.getName());
-                }
-                replaceIfNewer(plugin);
+                preparePlugin(file, info, checkDisable);
             } catch (Exception e) {
                 FxDialogs.showException("plugin file load failed: " + file.getName(), e);
             }
         }
     }
 
-    private static boolean registerPlugin(WePluginInfo info, WePluginSupporter supporter, boolean checkCompatible) {
+    private static void preparePlugin(File jarFile, WePluginInfo info, boolean checkDisable) {
+        if (checkDisable && isDisabled(info)) {
+            // 插件被禁止加载
+            log.info("plugin {}-{}-{} disabled", info.getAuthor(), info.getName(), info.getVersion());
+            return;
+        }
+        // 兼容性检测
+        if (isIncompatible(info)) {
+            return;
+        }
+        WePlugin plugin = new WePlugin(info, jarFile);
+        // 检测插件是否已经加载
+        if (LOADED_PLUGINS.contains(plugin)) {
+            // 插件已被加载
+            log.info("plugin {}-{} already loaded", info.getAuthor(), info.getName());
+            return;
+        }
+        if (info.getIsolated()) {
+            // 隔离的插件使用单独的类加载器
+            plugin.setLoaderName(info.getName());
+        }
+        replaceIfNewer(plugin);
+    }
+
+    private static boolean registerPlugin(WePluginInfo info, WePluginSupporter supporter) {
         OsInfo osInfo = SystemUtil.getOsInfo();
 
         // @formatter:off
@@ -183,9 +187,6 @@ public final class PluginLoader {
         // @formatter:on
         if (!canRegister) {
             log.info("plugin {}-{}-{} not support this os", info.getAuthor(), info.getName(), info.getVersion());
-            return false;
-        }
-        if (checkCompatible && isIncompatible(info)) {
             return false;
         }
         // 初始化
@@ -261,7 +262,7 @@ public final class PluginLoader {
                 Class<?> clazz = plugin.getClassLoader().loadClass(plugin.getPluginInfo().getSupportedClass());
                 WePluginSupporter supporter = (WePluginSupporter) ReflectUtil.newInstance(clazz);
                 // 添加插件菜单
-                if (registerPlugin(plugin.getPluginInfo(), supporter, false)) {
+                if (registerPlugin(plugin.getPluginInfo(), supporter)) {
                     LOADED_PLUGINS.add(plugin);
                 }
             } catch (Exception e) {
