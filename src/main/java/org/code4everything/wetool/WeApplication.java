@@ -6,6 +6,7 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
@@ -80,6 +81,8 @@ import java.util.logging.Logger;
 @Slf4j
 public class WeApplication extends Application {
 
+    private static final Set<String> DEBUG_OPTIONS = Set.of("debug", "-d", "--debug");
+
     private static final Menu PLUGIN_MENU = new Menu(TitleConsts.PLUGIN);
 
     private static final ThreadFactory FACTORY = ThreadFactoryBuilder.create().setDaemon(true).setUncaughtExceptionHandler((t, e) -> log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE))).build();
@@ -103,10 +106,31 @@ public class WeApplication extends Application {
     }
 
     public static void main(String[] args) {
+        boolean debug = BootConfig.isDebug();
+        if (ArrayUtil.isNotEmpty(args)) {
+            for (String arg : args) {
+                if (DEBUG_OPTIONS.contains(arg)) {
+                    debug = true;
+                    BootConfig.setDebug(true);
+                    break;
+                }
+            }
+        }
+
         log.info("starting wetool on os: {}", SystemUtil.getOsInfo().getName());
         log.info("default charset: {}", Charset.defaultCharset().name());
-        checkAlreadyRunning();
+
         parseConfig();
+        if (debug) {
+            // 因配置文件可能会修改debug mode，所以这里需要确保解析配置文件后debug模式仍然为true
+            WeUtils.getConfig().setDebug(true);
+            BootConfig.setDebug(true);
+        }
+        if (BootConfig.isDebug()) {
+            log.info("debug mode enabled");
+        }
+
+        checkAlreadyRunning();
         initApp();
         launch(args);
     }
