@@ -50,7 +50,8 @@ public class HttpFileBrowserHandler implements HttpApiHandler {
         this.apiPattern = apiPattern;
         this.rootPath = StrUtil.removeSuffix(rootPath, File.separator);
         this.patternPrefix = StrUtil.removeSuffix(StrUtil.removeSuffix(apiPattern, "*"), "/");
-        this.urlPrefix = patternPrefix.substring(patternPrefix.indexOf("/"));
+        int idx = patternPrefix.indexOf("/");
+        this.urlPrefix = idx < 0 ? patternPrefix : patternPrefix.substring(idx);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class HttpFileBrowserHandler implements HttpApiHandler {
 
         if (file.isDirectory()) {
             StringBuilder sb = new StringBuilder("<!DOCTYPE html><html><head><meta charset='utf-8'><title>文件浏览</title></head><body>");
-            sb.append("<h1>当前文件夹：").append(StrUtil.emptyToDefault(filePath, "根目录")).append("</h1><hr/><br/>");
+            sb.append("<h1>当前文件夹：").append(StrUtil.emptyToDefault(filePath, "根目录")).append("</h1><hr/><br/><pre>");
 
             if (!absolutePath.equals(rootPath)) {
                 String parentUrl = urlPrefix + StrUtil.removePrefix(file.getParent(), rootPath).replace('\\', '/');
@@ -76,27 +77,43 @@ public class HttpFileBrowserHandler implements HttpApiHandler {
             Objects.requireNonNull(files);
             Arrays.sort(files, ComparatorChain.of(Comparator.comparing(o -> directorOrder.get(o.isDirectory())), Comparator.comparing(File::lastModified)));
 
+            int maxNameLen = getMaxNameLen(files);
             for (File child : files) {
                 String name = child.getName();
                 if (child.getAbsolutePath().equals(file.getParent()) || name.startsWith(".")) {
                     continue;
                 }
                 String url = urlPrefix + (StrUtil.isEmpty(filePath) ? "" : "/" + filePath) + "/" + name;
-                sb.append(DateUtil.formatDateTime(DateUtil.date(child.lastModified()))).append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                String txt = DateUtil.formatDateTime(DateUtil.date(child.lastModified())) + "  " + FileUtil.readableFileSize(child);
+                sb.append(StrUtil.padAfter(txt, 35, " "));
                 if (child.isDirectory()) {
                     sb.append("<a href='").append(url).append("'>").append(name).append("</a><br/>");
                 } else {
-                    sb.append("<a href='").append(url).append("' target='_blank'>").append(name).append("<a/>&nbsp;&nbsp;&nbsp;&nbsp;<a href='").append(url).append("?download='>下载<a/><br/>");
+                    sb.append("<a href='").append(url).append("' target='_blank'>").append(name).append("<a/>");
+                    sb.append(StrUtil.repeat(' ', maxNameLen - name.length()));
+                    sb.append("<a href='").append(url).append("?download='>下载<a/><br/>");
                 }
             }
 
-            return Https.responseHtml(fullHttpResponse, sb.append("</body></html>").toString());
+            return Https.responseHtml(fullHttpResponse, sb.append("</pre></body></html>").toString());
         }
 
         if (params.containsKey("download") || params.containsKey("dl")) {
             return Https.responseFile(fullHttpResponse, absolutePath);
         }
         return Https.responseMedia(fullHttpResponse, absolutePath);
+    }
+
+    private int getMaxNameLen(File[] files) {
+        int maxNameLen = 0;
+        for (File child : files) {
+            int len = child.getName().length();
+            if (len > maxNameLen) {
+                maxNameLen = len;
+            }
+        }
+        maxNameLen += 5;
+        return maxNameLen;
     }
 
     public void export() {
