@@ -12,6 +12,7 @@ import org.code4everything.wetool.handler.HttpFileBrowserHandler;
 import org.code4everything.wetool.plugin.support.http.HttpService;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
+import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -48,8 +49,7 @@ public class HttpFileBrowserService implements EventHandler<ActionEvent> {
     public synchronized void browse(int port, String apiPattern, String rootPath) {
         HttpFileBrowserHandler handler = new HttpFileBrowserHandler(port, apiPattern, rootPath);
         if (handlerSet.contains(handler)) {
-            FxDialogs.showError("接口已存在：" + apiPattern);
-            return;
+            WeUtils.throwInterruptDialog("接口已存在：{}", apiPattern);
         }
 
         handler.export();
@@ -79,14 +79,12 @@ public class HttpFileBrowserService implements EventHandler<ActionEvent> {
     private void handleExportCmd(String cmd) {
         String[] segment = StrUtil.split(StrUtil.trim(cmd), " ");
         if (ArrayUtil.isEmpty(segment)) {
-            FxDialogs.showError("命令格式错误！");
-            return;
+            WeUtils.throwInterruptDialog("命令格式错误！");
         }
 
         String[] api = StrUtil.split(segment[0], ":");
         if (ArrayUtil.isEmpty(segment)) {
-            FxDialogs.showError("命令格式错误！");
-            return;
+            WeUtils.throwInterruptDialog("命令格式错误！");
         }
 
         int port = HttpService.getDefaultPort();
@@ -106,8 +104,7 @@ public class HttpFileBrowserService implements EventHandler<ActionEvent> {
         }
 
         if (!FileUtil.exist(rootPath.get())) {
-            FxDialogs.showError("根目录未设置");
-            return;
+            WeUtils.throwInterruptDialog("根目录未设置");
         }
 
         browse(port, apiPattern, rootPath.get());

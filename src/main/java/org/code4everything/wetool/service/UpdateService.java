@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
+import org.code4everything.wetool.plugin.support.exception.ToDialogException;
 import org.code4everything.wetool.plugin.support.util.DialogWinnable;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
@@ -37,14 +38,12 @@ public class UpdateService {
     public void checkUpdate() {
         String history = HttpUtil.get("https://gitee.com/code4everything/wetool/raw/master/history.md");
         if (StrUtil.isEmpty(history)) {
-            FxDialogs.showError("网络异常");
-            return;
+            WeUtils.throwInterruptDialog("网络异常");
         }
 
         VersionInfo versionInfo = getNewestVersionInfo(history);
         if (Objects.isNull(versionInfo) || AppConsts.CURRENT_VERSION.equals(versionInfo.getVersion())) {
-            FxDialogs.showInformation(null, "当前已是最新版");
-            return;
+            throw ToDialogException.ofInfo("当前已是最新版");
         }
 
         StringJoiner joiner = new StringJoiner("\n");

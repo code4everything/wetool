@@ -47,6 +47,7 @@ import org.code4everything.wetool.plugin.support.event.EventMode;
 import org.code4everything.wetool.plugin.support.event.EventPublisher;
 import org.code4everything.wetool.plugin.support.event.message.KeyboardListenerEventMessage;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
+import org.code4everything.wetool.plugin.support.exception.ToDialogException;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.http.HttpService;
 import org.code4everything.wetool.plugin.support.http.ObjectResp;
@@ -363,7 +364,14 @@ public class WeApplication extends Application {
         }
 
         // 处理全局异常
-        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> FxDialogs.showException(TipConsts.APP_EXCEPTION, throwable));
+        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
+            ToDialogException dialogCaused = WeUtils.getDialogCaused(throwable);
+            if (Objects.isNull(dialogCaused)) {
+                FxDialogs.showException(TipConsts.APP_EXCEPTION, throwable);
+            } else {
+                FxDialogs.showDialog(dialogCaused);
+            }
+        });
         enableTray(stage);
         log.info("wetool started");
     }
