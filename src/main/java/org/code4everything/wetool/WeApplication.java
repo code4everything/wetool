@@ -268,6 +268,23 @@ public class WeApplication extends Application {
         BeanFactory.register(config);
         // 检测空指针
         config.init();
+
+        // 配置代理
+        String proxy = config.getProxy();
+        if (StrUtil.isBlank(proxy)) {
+            return;
+        }
+        int idx = proxy.indexOf(":");
+        if (idx < 1) {
+            log.warn("proxy config error, format: 127.0.0.1:7889");
+        }
+        String host = proxy.substring(0, idx);
+        String port = proxy.substring(idx + 1);
+        System.setProperty("http.proxyHost", host);
+        System.setProperty("http.proxyPort", port);
+        System.setProperty("https.proxyHost", host);
+        System.setProperty("https.proxyPort", port);
+        log.info("use proxy -> {}", proxy);
     }
 
     public static boolean isRootPane() {

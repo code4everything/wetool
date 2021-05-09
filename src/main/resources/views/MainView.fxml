@@ -31,15 +31,11 @@
                 <MenuItem id="NetworkTool" mnemonicParsing="false" text="网络工具"/>
                 <MenuItem id="JsonParser" mnemonicParsing="false" text="JSON解析"/>
                 <SeparatorMenuItem/>
-                <Menu mnemonicParsing="false" text="转换器">
-                    <MenuItem id="CharsetConverter" mnemonicParsing="false" text="编码转换器"/>
-                    <MenuItem id="NaryConverter" mnemonicParsing="false" text="进制转换器"/>
-                </Menu>
+                <MenuItem id="RandomGenerator" mnemonicParsing="false" text="随机生成器"/>
+                <MenuItem id="QrCodeGenerator" mnemonicParsing="false" text="二维码生成器"/>
                 <SeparatorMenuItem/>
-                <Menu mnemonicParsing="false" text="生成器">
-                    <MenuItem id="RandomGenerator" mnemonicParsing="false" text="随机生成器"/>
-                    <MenuItem id="QrCodeGenerator" mnemonicParsing="false" text="二维码生成器"/>
-                </Menu>
+                <MenuItem id="CharsetConverter" mnemonicParsing="false" text="编码转换器"/>
+                <MenuItem id="NaryConverter" mnemonicParsing="false" text="进制转换器"/>
             </Menu>
             <Menu fx:id="pluginMenu" mnemonicParsing="false" text="插件"/>
             <Menu mnemonicParsing="false" text="帮助">

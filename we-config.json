@@ -2,9 +2,9 @@
     /*初始化*/
     "initialize": {
         /*宽度*/
-        "width": 1000,
+        "width": 1300,
         /*高度*/
-        "height": 700,
+        "height": 900,
         /*是否全屏*/
         "fullscreen": false,
         /*启动时是否隐藏主界面*/
@@ -76,5 +76,11 @@
     /*自动移除未加载的插件*/
     "autoRemoveUnloadedPlugin": true,
     /*数据库连接配置*/
-    "dbConnections": []
+    "dbConnections": [],
+    /*网页工具*/
+    "webTools": {
+        "历史朝代表": "https://tool.lu/dynasty"
+    },
+    /*代理*/
+    "proxy": "127.0.0.1:6789"
 }

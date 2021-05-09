@@ -23,6 +23,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.boot.base.constant.StringConsts;
@@ -43,7 +45,10 @@ import org.code4everything.wetool.plugin.support.event.handler.BaseNoMessageEven
 import org.code4everything.wetool.plugin.support.event.message.ClipboardChangedEventMessage;
 import org.code4everything.wetool.plugin.support.event.message.MouseCornerEventMessage;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
+import org.code4everything.wetool.plugin.support.exception.ToDialogException;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
+import org.code4everything.wetool.plugin.support.func.FunctionCenter;
+import org.code4everything.wetool.plugin.support.func.MethodCallback;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
@@ -55,6 +60,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 /**
  * @author pantao
@@ -71,6 +77,10 @@ public class MainController {
     private static final Map<String, EventHandler<ActionEvent>> ACTION_MAP = new ConcurrentHashMap<>();
 
     private static final Map<String, String> ACTION_NAME_PINYIN_MAP = new ConcurrentHashMap<>();
+
+    private static final Map<String, WebView> WEB_TOOL_BROWSER_MAP = new ConcurrentHashMap<>();
+
+    private static final Pattern URL_PATTERN = Pattern.compile("^[a-z]+://.+$");
 
     static {
         registerAction("FileManager", TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
@@ -107,6 +117,8 @@ public class MainController {
 
     @FXML
     public HBox titleBar;
+
+    private WebView webView;
 
     private static void registerAction(String name, String title, String viewUrl) {
         TAB_MAP.put(name, new Pair<>(title, viewUrl));
@@ -147,7 +159,7 @@ public class MainController {
         registerShortcuts();
 
         // 加载快速启动选项
-        Set<WeStart> starts = WeUtils.getConfig().getQuickStarts();
+        Set<WeStart> starts = config.getQuickStarts();
         if (CollUtil.isNotEmpty(starts)) {
             Menu menu = new Menu(TitleConsts.QUICK_START);
             setQuickStartMenu(menu, starts);
@@ -159,6 +171,8 @@ public class MainController {
         loadToolMenus(toolMenu);
         // 加载默认选项卡
         loadTabs();
+        // 加载网页工具
+        addWebTool();
         // 监听剪贴板
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
         EventCenter.subscribeEvent(EventCenter.EVENT_SECONDS_TIMER, new BaseNoMessageEventHandler() {
@@ -172,6 +186,11 @@ public class MainController {
         EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_MOTION, new MouseMotionEventHandler());
         multiDesktopOnWindows();
 
+        registerActions();
+        WeUtils.execute(PluginLoader::loadPlugins);
+    }
+
+    private void registerActions() {
         // 注册搜索动作
         registerAction("退出-exit", actionEvent -> WeUtils.exitSystem());
         registerAction("重启-restart", actionEvent -> FxUtils.restart());
@@ -193,8 +212,119 @@ public class MainController {
             String name = StrUtil.removePrefix(a.getSource().toString(), "env").trim();
             FxDialogs.showInformation(StrUtil.format("{} 的环境变量", name), System.getenv(name));
         });
+        registerAction("go*", actionEvent -> {
+            String url = StrUtil.removePrefix(actionEvent.getSource().toString(), "go").trim();
+            if (StrUtil.isEmpty(url)) {
+                url = ClipboardUtil.getStr();
+            }
+            if (StrUtil.isNotBlank(url)) {
+                if (!URL_PATTERN.matcher(url).matches()) {
+                    url = "http://" + url;
+                }
+                getWebView().getEngine().load(url);
+            }
+            FinalUtils.openTab(getWebView(), "浏览器");
+        });
 
-        WeUtils.execute(PluginLoader::loadPlugins);
+        FunctionCenter.registerFunc(new MethodCallback() {
+            @Override
+            public String getUniqueMethodName() {
+                return "execute-wetool-action";
+            }
+
+            @Override
+            public String getDescription() {
+                return "执行工具命令";
+            }
+
+            @Override
+            public List<Class<?>> getParamTypes() {
+                return List.of(String.class);
+            }
+
+            @Override
+            public Object callMethod(List<Object> list) {
+                if (CollUtil.isEmpty(list)) {
+                    return false;
+                }
+
+                Object object = list.get(0);
+                String keyword = ObjectUtil.toString(object);
+                EventHandler<ActionEvent> eventHandler = getActionEventEventHandler(keyword, "");
+                if (Objects.isNull(eventHandler)) {
+                    return false;
+                }
+
+                eventHandler.handle(new ActionEvent(keyword, null));
+                return true;
+            }
+        });
+    }
+
+    private WebView getWebView() {
+        if (Objects.isNull(webView)) {
+            webView = new WebView();
+            webView.getEngine().setJavaScriptEnabled(true);
+        }
+        return webView;
+    }
+
+    private void addWebTool() {
+        LinkedHashMap<String, String> webTools = config.getWebTools();
+        if (Objects.isNull(webTools)) {
+            webTools = new LinkedHashMap<>();
+            config.setWebTools(webTools);
+        }
+
+        // 预定义网页工具
+        addWebToolIfNotExists("正则表达式", "https://c.runoob.com/front-end/854");
+        addWebToolIfNotExists("进制转换器", "https://c.runoob.com/front-end/58");
+        addWebToolIfNotExists("图片转BASE64", "https://c.runoob.com/front-end/59");
+        addWebToolIfNotExists("Unicode编码转换", "https://c.runoob.com/front-end/3602");
+        addWebToolIfNotExists("汉字转拼音", "https://c.runoob.com/front-end/5523");
+        addWebToolIfNotExists("繁体字转换器", "https://c.runoob.com/front-end/5579");
+        addWebToolIfNotExists("MAVEN包搜索", "https://search.maven.org");
+        addWebToolIfNotExists("文件对比", "https://tool.oschina.net/diff");
+
+        // 加载到菜单栏
+        Menu menu = new Menu("网页工具");
+        toolMenu.getItems().addAll(0, List.of(menu, new SeparatorMenuItem()));
+        webTools.forEach((k, v) -> {
+            EventHandler<ActionEvent> handler = actionEvent -> {
+                WebView browser = getWebView(k, v);
+                FinalUtils.openTab(browser, "网页工具-" + k);
+            };
+            menu.getItems().add(FxUtils.createBarMenuItem(k, handler));
+            registerAction("网页工具-webtool/" + k, handler);
+        });
+    }
+
+    private void addWebToolIfNotExists(String name, String url) {
+        Map<String, String> map = config.getWebTools();
+        if (map.containsKey(name)) {
+            return;
+        }
+        map.put(name, url);
+    }
+
+    private WebView getWebView(String name, String url) {
+        WebView browser = WEB_TOOL_BROWSER_MAP.get(name);
+        if (Objects.isNull(browser)) {
+            browser = new WebView();
+            browser.getEngine().setJavaScriptEnabled(true);
+            WEB_TOOL_BROWSER_MAP.put(name, browser);
+        }
+
+        WebEngine webEngine = browser.getEngine();
+        if (url.startsWith("file:")) {
+            webEngine.loadContent(FileUtil.readUtf8String(url.substring(5)));
+        } else if (url.startsWith("http:") || url.startsWith("https:")) {
+            webEngine.load(url);
+        } else {
+            throw ToDialogException.ofError("格式配置错误，格式请参考：file:c:\\Users\\tool.html, file:/root/tool.html, http://localhost:8080/tool.html");
+        }
+
+        return browser;
     }
 
     private void runHutoolCmd(ActionEvent actionEvent) {
@@ -326,14 +456,14 @@ public class MainController {
     }
 
     private void multiDesktopOnWindows() {
-        if (Objects.isNull(WeUtils.getConfig().getWinVirtualDesktopHotCorner()) || !SystemUtil.getOsInfo().isWindows()) {
+        if (Objects.isNull(config.getWinVirtualDesktopHotCorner()) || !SystemUtil.getOsInfo().isWindows()) {
             return;
         }
 
         EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, new BaseMouseCornerEventHandler() {
             @Override
             public void handleEvent0(String s, Date date, MouseCornerEventMessage message) {
-                if (WeUtils.getConfig().getWinVirtualDesktopHotCorner() == message.getType()) {
+                if (config.getWinVirtualDesktopHotCorner() == message.getType()) {
                     FxUtils.multiDesktopOnWindows();
                 }
             }
@@ -507,6 +637,7 @@ public class MainController {
     public void clearAllFxmlCache() {
         EventCenter.publishEvent(EventCenter.EVENT_CLEAR_FXML_CACHE, DateUtil.date());
         tabPane.getTabs().clear();
+        WEB_TOOL_BROWSER_MAP.clear();
         BeanFactory.clearCache();
     }
 
@@ -600,15 +731,12 @@ public class MainController {
 
     private EventHandler<ActionEvent> getActionEventEventHandler(String keyword, String firstName) {
         EventHandler<ActionEvent> eventHandler = ACTION_MAP.get(keyword);
-        if (Objects.isNull(eventHandler) && StrUtil.isNotBlank(firstName)) {
-            eventHandler = ACTION_MAP.get(firstName);
-        }
         if (Objects.nonNull(eventHandler)) {
             return eventHandler;
         }
 
         // 模式匹配
-        return actionCache.get(keyword, () -> {
+        eventHandler = actionCache.get(keyword, () -> {
             EventHandler<ActionEvent> handler = null;
             for (Map.Entry<String, EventHandler<ActionEvent>> entry : ACTION_MAP.entrySet()) {
                 String key = entry.getKey();
@@ -628,6 +756,8 @@ public class MainController {
             }
             return handler;
         });
+
+        return Objects.isNull(eventHandler) && StrUtil.isNotEmpty(firstName) ? ACTION_MAP.get(firstName) : eventHandler;
     }
 
     public boolean containsAllIgnoreCase(String str, String[] keys) {
