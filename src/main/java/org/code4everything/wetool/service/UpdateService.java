@@ -38,7 +38,7 @@ public class UpdateService {
     public void checkUpdate() {
         String history = HttpUtil.get("https://gitee.com/code4everything/wetool/raw/master/history.md");
         if (StrUtil.isEmpty(history)) {
-            WeUtils.throwInterruptDialog("网络异常");
+            throw ToDialogException.ofError("网络异常");
         }
 
         VersionInfo versionInfo = getNewestVersionInfo(history);
