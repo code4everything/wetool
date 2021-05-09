@@ -258,6 +258,11 @@ public class MainController {
                 eventHandler.handle(new ActionEvent(keyword, null));
                 return true;
             }
+
+            @Override
+            public Object checkAndCallMethod(List<Object> params) {
+                return callMethod(params);
+            }
         });
     }
 

@@ -19,6 +19,7 @@
 - 支持监听鼠标键盘
 - 支持暴露HTTP服务
 - 支持暗黑模式
+- 支持开启HTTP文件浏览服务（默认端口8189，未指定暴露的文件路径时会弹窗选择）
 - [更多功能来插件库查看哦](https://gitee.com/code4everything/wetool-plugin/tree/master/wetool-plugin-repository)
 
 ### 下载与使用
@@ -45,7 +46,7 @@ javaw -jar ./wetool.jar
 # mac或linux平台
 java -jar ./wetool.jar &
 ```
-> 说明运行软件需安装有Java11及以上版本，另外日志保存在路径：`${user.home}/logs/wetool/wetool.log`。
+> 说明：运行软件需安装有Java11及以上版本，另外日志文件保存路径：`${user.home}/logs/wetool/wetool.log`。
   
 ##### 插件的安装（使用`Ctrl+Shift+P`打开插件面板即可安装插件）
  
@@ -56,6 +57,19 @@ java -jar ./wetool.jar &
 ![wetool](images/wetool.png)
 
 ![wetool](images/wetool_2.png)
+
+![wetool](images/wetool_3.png)
+
+### 搜索框
+
+搜索框可以搜索本应用内工具（包括插件），搜索工具时输入关键字然后按空格触发下拉框，选择对应的工具回车即可。
+
+搜索框还支持执行命名，目前支持的命令如下：
+
+- hutool: 需要安装 [hutool-cli](https://gitee.com/code4everything/hutool-cli) ，安装完成记得重启wetool，同时支持无关键字触发，如 `hutool random-uuid` 可去掉hutool前缀变为 `random-uuid`。
+- env: 查看环境变量，如：`env HUTOOL_PATH`。
+- go: 用内置浏览器打开网页，如：`go baidu.com`。
+- file-browser: 开启http文件浏览服务，如：`file-browser 80:get/file/*`, `file-browser get/* c:\Users`
 
 ### 使用小技巧
 
