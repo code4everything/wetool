@@ -82,6 +82,8 @@ public class MainController {
 
     private static final Pattern URL_PATTERN = Pattern.compile("^[a-z]+://.+$");
 
+    private static final Pattern HUTOOL_CMD_PATTERN = Pattern.compile("^[a-z\\-]+.*[^\\s]$");
+
     static {
         registerAction("FileManager", TitleConsts.FILE_MANAGER, ViewConsts.FILE_MANAGER);
         registerAction("JsonParser", TitleConsts.JSON_PARSER, ViewConsts.JSON_PARSER);
@@ -96,6 +98,8 @@ public class MainController {
     private final Cache<String, EventHandler<ActionEvent>> actionCache = CacheUtil.newFIFOCache(128);
 
     private final WeConfig config = WeUtils.getConfig();
+
+    private final EventHandler<ActionEvent> hutoolCmdHandler = this::runHutoolCmd;
 
     @FXML
     public TabPane tabPane;
@@ -204,15 +208,13 @@ public class MainController {
         registerAction("插件仓库-pluginrepository", actionEvent -> FxUtils.openLink(TipConsts.REPO_LINK));
 
         // 注册模式匹配动作
-        EventHandler<ActionEvent> runHutoolCmd = this::runHutoolCmd;
-        registerAction("hutool*", runHutoolCmd);
-        registerAction("*", runHutoolCmd);
-        registerAction("file-browser*", HttpFileBrowserService.getInstance());
-        registerAction("env*", a -> {
+        registerAction("hutool *", hutoolCmdHandler);
+        registerAction("file-browser *", HttpFileBrowserService.getInstance());
+        registerAction("env *", a -> {
             String name = StrUtil.removePrefix(a.getSource().toString(), "env").trim();
             FxDialogs.showInformation(StrUtil.format("{} 的环境变量", name), System.getenv(name));
         });
-        registerAction("go*", actionEvent -> {
+        registerAction("go *", actionEvent -> {
             String url = StrUtil.removePrefix(actionEvent.getSource().toString(), "go").trim();
             if (StrUtil.isEmpty(url)) {
                 url = ClipboardUtil.getStr();
@@ -321,6 +323,7 @@ public class MainController {
         }
 
         WebEngine webEngine = browser.getEngine();
+        webEngine.getHistory().getEntries().clear();
         if (url.startsWith("file:")) {
             webEngine.loadContent(FileUtil.readUtf8String(url.substring(5)));
         } else if (url.startsWith("http:") || url.startsWith("https:")) {
@@ -696,7 +699,7 @@ public class MainController {
         }
 
         endCaretPosition();
-        String keyword = StrUtil.trim(toolSearchBox.getValue());
+        String keyword = toolSearchBox.getValue();
         if (StrUtil.isBlank(keyword)) {
             return;
         }
@@ -735,34 +738,33 @@ public class MainController {
     }
 
     private EventHandler<ActionEvent> getActionEventEventHandler(String keyword, String firstName) {
-        EventHandler<ActionEvent> eventHandler = ACTION_MAP.get(keyword);
+        keyword = StrUtil.nullToEmpty(keyword);
+        String trimmedKeyword = keyword.trim();
+        EventHandler<ActionEvent> eventHandler = ACTION_MAP.get(trimmedKeyword);
         if (Objects.nonNull(eventHandler)) {
             return eventHandler;
         }
 
         // 模式匹配
-        eventHandler = actionCache.get(keyword, () -> {
-            EventHandler<ActionEvent> handler = null;
+        eventHandler = actionCache.get(trimmedKeyword, () -> {
             for (Map.Entry<String, EventHandler<ActionEvent>> entry : ACTION_MAP.entrySet()) {
                 String key = entry.getKey();
-                if (!key.endsWith(StringConsts.Sign.STAR)) {
-                    continue;
-                }
-
-                if (key.equals(StringConsts.Sign.STAR)) {
-                    handler = entry.getValue();
+                if (!key.endsWith(StringConsts.Sign.STAR) || key.equals(StringConsts.Sign.STAR)) {
                     continue;
                 }
 
                 key = key.substring(0, key.length() - 1);
-                if (keyword.startsWith(key) && Objects.nonNull(entry.getValue())) {
+                if (trimmedKeyword.startsWith(key) && Objects.nonNull(entry.getValue())) {
                     return entry.getValue();
                 }
             }
-            return handler;
+            return null;
         });
 
-        return Objects.isNull(eventHandler) && StrUtil.isNotEmpty(firstName) ? ACTION_MAP.get(firstName) : eventHandler;
+        if (Objects.nonNull(eventHandler)) {
+            return eventHandler;
+        }
+        return StrUtil.isEmpty(firstName) || HUTOOL_CMD_PATTERN.matcher(keyword).matches() ? hutoolCmdHandler : ACTION_MAP.get(firstName);
     }
 
     public boolean containsAllIgnoreCase(String str, String[] keys) {
