@@ -270,10 +270,17 @@ public class MainController {
 
     private WebView getWebView() {
         if (Objects.isNull(webView)) {
-            webView = new WebView();
-            webView.getEngine().setJavaScriptEnabled(true);
+            webView = newWebView();
         }
         return webView;
+    }
+
+    private WebView newWebView() {
+        WebView view = new WebView();
+        WebEngine engine = view.getEngine();
+        engine.setJavaScriptEnabled(true);
+        engine.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36");
+        return view;
     }
 
     private void addWebTool() {
@@ -317,8 +324,7 @@ public class MainController {
     private WebView getWebView(String name, String url) {
         WebView browser = WEB_TOOL_BROWSER_MAP.get(name);
         if (Objects.isNull(browser)) {
-            browser = new WebView();
-            browser.getEngine().setJavaScriptEnabled(true);
+            browser = newWebView();
             WEB_TOOL_BROWSER_MAP.put(name, browser);
         }
 
