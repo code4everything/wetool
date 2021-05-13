@@ -13,7 +13,6 @@ import org.code4everything.wetool.plugin.support.exception.ToDialogException;
 import org.code4everything.wetool.plugin.support.http.HttpService;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
-import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -64,7 +63,8 @@ public class HttpFileBrowserService implements EventHandler<ActionEvent> {
             httpFileBrowserDialog();
             return;
         }
-        handleExportCmd(cmd);
+        handleExportCmd(cmd, true);
+        FxDialogs.showSuccess();
     }
 
     public void httpFileBrowserDialog() {
@@ -74,10 +74,11 @@ public class HttpFileBrowserService implements EventHandler<ActionEvent> {
         if (optional.isEmpty()) {
             return;
         }
-        httpFileBrowserService.handleExportCmd(optional.get());
+        httpFileBrowserService.handleExportCmd(optional.get(), true);
+        FxDialogs.showSuccess();
     }
 
-    private void handleExportCmd(String cmd) {
+    public void handleExportCmd(String cmd, boolean showFileChooseDialog) {
         String[] segment = StrUtil.split(StrUtil.trim(cmd), " ");
         if (ArrayUtil.isEmpty(segment)) {
             throw ToDialogException.ofError("命令格式错误！");
@@ -100,7 +101,7 @@ public class HttpFileBrowserService implements EventHandler<ActionEvent> {
         Holder<String> rootPath = new Holder<>();
         if (segment.length > 1) {
             rootPath.set(segment[1]);
-        } else {
+        } else if (showFileChooseDialog) {
             FxUtils.chooseFolder(file -> rootPath.set(file.getAbsolutePath()));
         }
 
@@ -109,6 +110,5 @@ public class HttpFileBrowserService implements EventHandler<ActionEvent> {
         }
 
         browse(port, apiPattern, rootPath.get());
-        FxDialogs.showSuccess();
     }
 }

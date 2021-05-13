@@ -82,5 +82,6 @@
         "历史朝代表": "https://tool.lu/dynasty"
     },
     /*代理*/
-    "proxy": "127.0.0.1:6789"
+    "proxy": "127.0.0.1:6789",
+    "httpFiles": ["get/file/* C:\\"]
 }

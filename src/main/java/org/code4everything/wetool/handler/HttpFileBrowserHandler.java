@@ -57,7 +57,7 @@ public class HttpFileBrowserHandler implements HttpApiHandler {
     @Override
     public Object handleApi(HttpRequest httpRequest, FullHttpResponse fullHttpResponse, JSONObject params, JSONObject body) {
         String filePath = StrUtil.strip(StrUtil.removePrefix(params.get(HttpService.REQ_API_KEY).toString(), patternPrefix), "/");
-        String absolutePath = Paths.get(rootPath, filePath.split("/")).toAbsolutePath().normalize().toString();
+        String absolutePath = StrUtil.removeSuffix(Paths.get(rootPath, filePath.split("/")).toAbsolutePath().normalize().toString(), File.separator);
         File file = FileUtil.file(absolutePath);
 
         if (!file.exists()) {

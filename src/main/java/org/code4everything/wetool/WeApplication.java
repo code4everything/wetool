@@ -56,6 +56,7 @@ import org.code4everything.wetool.plugin.support.listener.WeMouseListener;
 import org.code4everything.wetool.plugin.support.util.FxDialogs;
 import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
+import org.code4everything.wetool.service.HttpFileBrowserService;
 import org.code4everything.wetool.util.FinalUtils;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -225,6 +226,7 @@ public class WeApplication extends Application {
                     FxUtils.showStage();
                     return ObjectResp.of("status", "success");
                 });
+                WeUtils.getConfig().getHttpFiles().forEach(e -> HttpFileBrowserService.getInstance().handleExportCmd(e, false));
             } catch (Exception e) {
                 log.error(e.getMessage());
             }
