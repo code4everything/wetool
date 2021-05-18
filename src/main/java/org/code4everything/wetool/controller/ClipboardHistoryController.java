@@ -44,7 +44,7 @@ public class ClipboardHistoryController implements BaseViewController {
             insert(pair.getKey(), pair.getValue());
         }
 
-        EventCenter.subscribeEvent(EventCenter.EVENT_CLIPBOARD_CHANGED, new BaseClipboardChangedEventHandler() {
+        EventCenter.onClipboardChanged(new BaseClipboardChangedEventHandler() {
             @Override
             public void handleEvent0(String s, Date date, ClipboardChangedEventMessage message) {
                 Platform.runLater(() -> insert(date, message.getClipboardText()));

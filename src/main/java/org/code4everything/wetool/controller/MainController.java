@@ -7,7 +7,11 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
-import cn.hutool.core.util.*;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.system.SystemUtil;
 import com.google.common.base.Preconditions;
@@ -16,7 +20,18 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -58,7 +73,14 @@ import org.code4everything.wetool.util.FinalUtils;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -179,7 +201,7 @@ public class MainController {
         addWebTool();
         // 监听剪贴板
         config.appendClipboardHistory(new Date(), ClipboardUtil.getStr());
-        EventCenter.subscribeEvent(EventCenter.EVENT_SECONDS_TIMER, new BaseNoMessageEventHandler() {
+        EventCenter.onSecondTimer(new BaseNoMessageEventHandler() {
             @Override
             public void handleEvent0(String s, Date date) {
                 watchClipboard(date);
@@ -187,7 +209,7 @@ public class MainController {
         });
 
         // 监听鼠标位置
-        EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_MOTION, new MouseMotionEventHandler());
+        EventCenter.onMouseMotion(new MouseMotionEventHandler());
         multiDesktopOnWindows();
 
         registerActions();
@@ -474,7 +496,7 @@ public class MainController {
             return;
         }
 
-        EventCenter.subscribeEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, new BaseMouseCornerEventHandler() {
+        EventCenter.onSysCornerTrigger(new BaseMouseCornerEventHandler() {
             @Override
             public void handleEvent0(String s, Date date, MouseCornerEventMessage message) {
                 if (config.getWinVirtualDesktopHotCorner() == message.getType()) {

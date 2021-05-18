@@ -142,6 +142,7 @@ public class WeApplication extends Application {
     private static void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             EventCenter.publishEvent(EventCenter.EVENT_WETOOL_EXIT, DateUtil.date());
+            log.info("close druid data source connections");
             DruidSource.listAllDataSources().forEach(DruidDataSource::close);
 
             WeUtils.getThreadPoolExecutor().shutdown();
@@ -163,7 +164,7 @@ public class WeApplication extends Application {
                     log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE));
                 }
             }
-            log.info("wetool exited");
+            log.info("wetool exit");
         }));
     }
 
@@ -223,7 +224,7 @@ public class WeApplication extends Application {
             log.info("jnative keyboard mouse listener disabled");
             if (!SystemUtil.getOsInfo().isMac()) {
                 // 已知Mac平台下不能正常工作
-                EventCenter.subscribeEvent(EventCenter.EVENT_100_MS_TIMER, new MouseLocationListenerEventHandler());
+                EventCenter.on100MsTimer(new MouseLocationListenerEventHandler());
             }
             return;
         }
