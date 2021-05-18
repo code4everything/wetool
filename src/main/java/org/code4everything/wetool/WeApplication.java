@@ -13,6 +13,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.system.SystemUtil;
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -108,6 +109,7 @@ public class WeApplication extends Application {
     }
 
     public static void main(String[] args) {
+        addShutdownHook();
         boolean debug = BootConfig.isDebug();
         if (ArrayUtil.isNotEmpty(args)) {
             for (String arg : args) {
@@ -135,6 +137,34 @@ public class WeApplication extends Application {
         checkAlreadyRunning();
         initApp();
         launch(args);
+    }
+
+    private static void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            EventCenter.publishEvent(EventCenter.EVENT_WETOOL_EXIT, DateUtil.date());
+            DruidSource.listAllDataSources().forEach(DruidDataSource::close);
+
+            WeUtils.getThreadPoolExecutor().shutdown();
+            boolean shutdown = false;
+            try {
+                for (int retry = 0; retry < 3 && !shutdown; retry++) {
+                    log.info("waiting for thread pool shutdown...");
+                    shutdown = WeUtils.getThreadPoolExecutor().awaitTermination(1000, TimeUnit.MILLISECONDS);
+                }
+                if (!shutdown) {
+                    log.info("wait for thread pool shutdown expired, force exit thread pool");
+                    WeUtils.getThreadPoolExecutor().shutdownNow();
+                }
+            } catch (Exception e) {
+                log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE));
+                try {
+                    WeUtils.getThreadPoolExecutor().shutdownNow();
+                } catch (Exception exception) {
+                    log.error(ExceptionUtil.stacktraceToString(e, Integer.MAX_VALUE));
+                }
+            }
+            log.info("wetool exited");
+        }));
     }
 
     private static void checkAlreadyRunning() {

@@ -20,6 +20,7 @@ module org.code4everything.wetool {
     requires io.netty.codec.http;
     requires FXTrayIcon;
     requires com.google.zxing;
+    requires druid;
 
     requires transitive org.code4everything.wetool.plugin.support;
 
