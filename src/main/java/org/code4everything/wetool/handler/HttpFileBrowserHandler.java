@@ -75,7 +75,7 @@ public class HttpFileBrowserHandler implements HttpApiHandler {
     }
 
     private StringBuilder getFileListHtml(String filePath, String absolutePath, File file) {
-        StringBuilder sb = new StringBuilder("<!DOCTYPE html><html><head><meta charset='utf-8'><title>文件浏览</title></head><body>");
+        StringBuilder sb = new StringBuilder("<!DOCTYPE html><html><head><meta charset='utf-8'><title>静态文件浏览服务</title></head><body>");
         sb.append("<h1>当前文件夹：").append(StrUtil.emptyToDefault(filePath, "根目录")).append("</h1><hr/><br/><pre>");
 
         if (!absolutePath.equals(rootPath)) {
