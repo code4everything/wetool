@@ -83,5 +83,8 @@
     },
     /*代理*/
     "proxy": "127.0.0.1:6789",
-    "httpFiles": ["get/file/* C:\\"]
+    /*HTTP文件浏览服务接口，包括接口名及本地文件绝对路径*/
+    "httpFiles": ["get/file/* C:\\"],
+    /*上传文件保存路径，为空不允许上传文件，支持相对路径*/
+    "fileUploadDir": "upload"
 }

@@ -2,6 +2,8 @@
 /wetool/
 wetool-*.jar
 conf/
+upload
+src/main/resources/gitinfo
 
 # Compiled class file
 *.class

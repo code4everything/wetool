@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -19,6 +20,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.parser.Feature;
 import com.dustinredmond.fxtrayicon.FXTrayIcon;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventType;
@@ -48,9 +50,11 @@ import org.code4everything.wetool.plugin.support.event.EventMode;
 import org.code4everything.wetool.plugin.support.event.EventPublisher;
 import org.code4everything.wetool.plugin.support.event.message.KeyboardListenerEventMessage;
 import org.code4everything.wetool.plugin.support.event.message.QuickStartEventMessage;
+import org.code4everything.wetool.plugin.support.exception.HttpException;
 import org.code4everything.wetool.plugin.support.exception.ToDialogException;
 import org.code4everything.wetool.plugin.support.factory.BeanFactory;
 import org.code4everything.wetool.plugin.support.http.HttpService;
+import org.code4everything.wetool.plugin.support.http.Https;
 import org.code4everything.wetool.plugin.support.http.ObjectResp;
 import org.code4everything.wetool.plugin.support.listener.WeKeyboardListener;
 import org.code4everything.wetool.plugin.support.listener.WeMouseListener;
@@ -257,6 +261,15 @@ public class WeApplication extends Application {
                     FxUtils.showStage();
                     return ObjectResp.of("status", "success");
                 });
+                HttpService.exportHttp("post/wetool/file/upload", (req, resp, param, body) -> {
+                    String fileDir = BeanFactory.get(WeConfig.class).getFileUploadDir();
+                    if (StrUtil.isBlank(fileDir)) {
+                        throw new HttpException().setStatus(HttpResponseStatus.METHOD_NOT_ALLOWED).setMsg("文件上传未开启");
+                    }
+                    Https.writeMultipartFiles(req, fileDir);
+                    return null;
+                });
+                HttpService.exportHttp("get/upload.html", (req, resp, param, body) -> Https.responseHtml(resp, ResourceUtil.readUtf8Str("static/upload.html")));
                 WeUtils.getConfig().getHttpFiles().forEach(e -> HttpFileBrowserService.getInstance().handleExportCmd(e, false));
             } catch (Exception e) {
                 log.error(e.getMessage());

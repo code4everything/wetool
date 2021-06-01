@@ -5,6 +5,7 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.swing.clipboard.ClipboardUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -621,7 +622,17 @@ public class MainController {
     }
 
     public void about() {
-        FxDialogs.showInformation(TitleConsts.ABOUT_APP, TipConsts.ABOUT_APP);
+        String gitInfo = StrUtil.trim(ResourceUtil.readUtf8Str("gitinfo"));
+        String aboutApp = TipConsts.ABOUT_APP;
+        if (StrUtil.isNotEmpty(gitInfo) && !StrUtil.startWith(gitInfo, "master")) {
+            List<String> infos = StrUtil.splitTrim(gitInfo, ":");
+            aboutApp += "\r\n开发版分支：" + infos.get(0);
+            if (infos.size() > 1) {
+                aboutApp += "，提交：" + infos.get(1);
+            }
+            aboutApp += "\r\n";
+        }
+        FxDialogs.showInformation(TitleConsts.ABOUT_APP, aboutApp);
     }
 
     public void closeAllTab() {

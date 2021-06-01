@@ -2,7 +2,6 @@
 
 import os
 import re
-import shutil
 
 os.chdir('..')
 print(os.popen('git pull').read())
@@ -21,6 +20,11 @@ def package(os_name):
         os.remove(filename)
     os.rename('./target/wetool-%s.jar' % version, filename)
 
+
+with open('./src/main/resources/gitinfo', 'w+', encoding='utf-8') as fw:
+    branch = os.popen('git symbolic-ref --short -q HEAD').read().replace('\n', '')
+    last_commit = os.popen('git rev-parse --short HEAD').read().replace('\n', '')
+    fw.write("%s:%s" % (branch, last_commit))
 
 package('win')
 package('mac')
