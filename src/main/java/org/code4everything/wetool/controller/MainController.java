@@ -374,8 +374,10 @@ public class MainController {
 
         String cmd = StrUtil.removePrefix(actionEvent.getSource().toString(), "hutool").trim();
         String jarCmd = StrUtil.format("java -jar {}{}hutool.jar {}", hutoolPath, File.separator, cmd);
-        String result = RuntimeUtil.execForStr(jarCmd);
-        FxDialogs.showTextAreaDialog(StrUtil.format("{} 命令执行结果", cmd), result);
+        String result = StrUtil.trim(RuntimeUtil.execForStr(jarCmd));
+        if (StrUtil.isNotEmpty(result)) {
+            FxDialogs.showTextAreaDialog(StrUtil.format("{} 命令执行结果", cmd), result);
+        }
     }
 
     private void closeSelectedTab() {
