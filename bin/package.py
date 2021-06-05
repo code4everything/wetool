@@ -24,7 +24,9 @@ def package(os_name):
 with open('./src/main/resources/gitinfo', 'w+', encoding='utf-8') as fw:
     branch = os.popen('git symbolic-ref --short -q HEAD').read().replace('\n', '')
     last_commit = os.popen('git rev-parse --short HEAD').read().replace('\n', '')
-    fw.write("%s:%s" % (branch, last_commit))
+    date = os.popen('git log --pretty=format:"%%ct" %s -1' % last_commit).read().replace('\n', '')
+    info = os.popen('git log --pretty=format:"%%s" %s -1' % last_commit).read().replace('\n', '')
+    fw.write("%s:%s:%s:%s" % (branch, last_commit, date, info))
 
 package('win')
 package('mac')

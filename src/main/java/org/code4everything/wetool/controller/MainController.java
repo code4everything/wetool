@@ -229,6 +229,7 @@ public class MainController {
         registerAction("检查更新-checkforupdate", actionEvent -> checkUpdate());
         registerAction("隐藏-hide", actionEvent -> FxUtils.hideStage());
         registerAction("插件仓库-pluginrepository", actionEvent -> FxUtils.openLink(TipConsts.REPO_LINK));
+        registerAction("关于-about", event -> about());
 
         // 注册模式匹配动作
         registerAction("hutool *", hutoolCmdHandler);
@@ -627,10 +628,14 @@ public class MainController {
         String gitInfo = StrUtil.trim(ResourceUtil.readUtf8Str("gitinfo"));
         String aboutApp = TipConsts.ABOUT_APP;
         if (StrUtil.isNotEmpty(gitInfo) && !StrUtil.startWith(gitInfo, "master")) {
-            List<String> infos = StrUtil.splitTrim(gitInfo, ":");
+            List<String> infos = StrUtil.splitTrim(gitInfo, ":", 4);
             aboutApp += "\r\n开发版分支：" + infos.get(0);
             if (infos.size() > 1) {
                 aboutApp += "，提交：" + infos.get(1);
+            }
+            if (infos.size() > 3) {
+                aboutApp += "\r\n提交信息：" + infos.get(3);
+                aboutApp += "\r\n\r\n提交日期：" + DateUtil.formatDateTime(DateUtil.date(Long.parseLong(infos.get(2)) * 1000));
             }
             aboutApp += "\r\n";
         }
