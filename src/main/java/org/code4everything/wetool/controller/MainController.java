@@ -54,6 +54,7 @@ import org.code4everything.wetool.plugin.PluginLoader;
 import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
+import org.code4everything.wetool.plugin.support.config.WeStatus;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
 import org.code4everything.wetool.plugin.support.event.handler.BaseMouseCornerEventHandler;
@@ -215,6 +216,7 @@ public class MainController {
 
         registerActions();
         WeUtils.execute(PluginLoader::loadPlugins);
+        BeanFactory.get(WeStatus.class).setState(WeStatus.State.RUNNING);
     }
 
     private void registerActions() {

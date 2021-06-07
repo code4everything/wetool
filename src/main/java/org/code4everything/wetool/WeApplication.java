@@ -44,6 +44,7 @@ import org.code4everything.wetool.handler.MouseLocationListenerEventHandler;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WePluginConfig;
 import org.code4everything.wetool.plugin.support.config.WeStart;
+import org.code4everything.wetool.plugin.support.config.WeStatus;
 import org.code4everything.wetool.plugin.support.druid.DruidSource;
 import org.code4everything.wetool.plugin.support.event.EventCenter;
 import org.code4everything.wetool.plugin.support.event.EventMode;
@@ -113,6 +114,7 @@ public class WeApplication extends Application {
     }
 
     public static void main(String[] args) {
+        BeanFactory.register(new WeStatus().setState(WeStatus.State.STARTING));
         addShutdownHook();
         boolean debug = BootConfig.isDebug();
         if (ArrayUtil.isNotEmpty(args)) {
@@ -145,6 +147,7 @@ public class WeApplication extends Application {
 
     private static void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            BeanFactory.get(WeStatus.class).setState(WeStatus.State.TERMINATING);
             EventCenter.publishEvent(EventCenter.EVENT_WETOOL_EXIT, DateUtil.date());
             log.info("close druid data source connections");
             DruidSource.listAllDataSources().forEach(DruidDataSource::close);
@@ -186,9 +189,16 @@ public class WeApplication extends Application {
                 continue;
             }
             if (StrUtil.containsIgnoreCase(process, "wetool")) {
-                log.info("wetool is already running, show wetool now");
-                HttpUtil.get("http://127.0.0.1:8189/wetool/show");
-                System.exit(0);
+                try {
+                    WeStatus.State state = JSON.parseObject(HttpUtil.get("http://127.0.0.1:8189/wetool/status")).getObject("state", WeStatus.State.class);
+                    if (state != WeStatus.State.TERMINATING) {
+                        log.info("wetool is already running, show wetool now");
+                        HttpUtil.get("http://127.0.0.1:8189/wetool/show");
+                        System.exit(0);
+                    }
+                } catch (Exception e) {
+                    // ignore
+                }
             }
         }
     }
@@ -261,6 +271,7 @@ public class WeApplication extends Application {
                     FxUtils.showStage();
                     return ObjectResp.of("status", "success");
                 });
+                HttpService.exportHttp("get/wetool/status", (req, resp, param, body) -> BeanFactory.get(WeStatus.class));
                 HttpService.exportHttp("post/wetool/file/upload", (req, resp, param, body) -> {
                     String fileDir = BeanFactory.get(WeConfig.class).getFileUploadDir();
                     if (StrUtil.isBlank(fileDir)) {

@@ -21,6 +21,7 @@ module org.code4everything.wetool {
     requires FXTrayIcon;
     requires com.google.zxing;
     requires druid;
+    requires ch.qos.logback.classic;
 
     requires transitive org.code4everything.wetool.plugin.support;
 
