@@ -85,6 +85,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author pantao
@@ -163,6 +164,7 @@ public class MainController {
         if (name.endsWith(StringConsts.Sign.STAR)) {
             return;
         }
+        log.info("register search action: {}", name);
         String pinyin = PinyinUtil.getPinyin(name);
         ACTION_NAME_PINYIN_MAP.put(name, StrUtil.cleanBlank(pinyin));
     }
@@ -171,6 +173,7 @@ public class MainController {
         name = StrUtil.trim(name);
         ACTION_MAP.remove(name);
         String pinyin = PinyinUtil.getPinyin(name);
+        log.info("remove search action: {}", name);
         ACTION_NAME_PINYIN_MAP.remove(pinyin);
     }
 
@@ -211,6 +214,7 @@ public class MainController {
         });
 
         // 监听鼠标位置
+        log.info("add mouse corner trigger");
         EventCenter.onMouseMotion(new MouseMotionEventHandler());
         multiDesktopOnWindows();
 
@@ -334,6 +338,7 @@ public class MainController {
                 WebView browser = getWebView(k, v);
                 FinalUtils.openTab(browser, "网页工具-" + k);
             };
+            log.info("add web tool: {}", k);
             menu.getItems().add(FxUtils.createBarMenuItem(k, handler));
             registerAction("网页工具-webtool/" + k, handler);
         });
@@ -386,6 +391,7 @@ public class MainController {
     private void closeSelectedTab() {
         Tab tab = tabPane.getSelectionModel().getSelectedItem();
         if (Objects.nonNull(tab)) {
+            log.info("close tab: {}", tab.getText());
             tabPane.getTabs().remove(tab);
         }
     }
@@ -494,6 +500,7 @@ public class MainController {
             return;
         }
         idx = Math.min(idx, maxIdx);
+        log.info("close tab at idx: {}", idx);
         tabPane.getTabs().remove(idx);
     }
 
@@ -502,6 +509,7 @@ public class MainController {
             return;
         }
 
+        log.info("register windows hot corner trigger");
         EventCenter.onSysCornerTrigger(new BaseMouseCornerEventHandler() {
             @Override
             public void handleEvent0(String s, Date date, MouseCornerEventMessage message) {
@@ -537,6 +545,7 @@ public class MainController {
                     FxUtils.openFile(start.getLocation());
                 });
                 menu.getItems().add(item);
+                log.info("load quick start bar menu, name: {}, file: {}", start.getAlias(), start.getLocation());
             } else {
                 // 添加父级菜单
                 Menu subMenu = new Menu(start.getAlias());
@@ -588,6 +597,7 @@ public class MainController {
 
     public void openFile() {
         FxUtils.chooseFile(file -> {
+            log.info("choose file: {}", file.getAbsolutePath());
             BaseViewController controller = FxUtils.getSelectedTabController();
             if (ObjectUtil.isNotNull(controller)) {
                 controller.openFile(file);
@@ -598,6 +608,7 @@ public class MainController {
     public void saveFile() {
         FxUtils.saveFile(file -> {
             BaseViewController controller = FxUtils.getSelectedTabController();
+            log.info("save to file: {}", file.getAbsolutePath());
             if (ObjectUtil.isNotNull(controller)) {
                 controller.saveFile(file);
             }
@@ -607,6 +618,8 @@ public class MainController {
     public void openMultiFile() {
         FxUtils.chooseFiles(files -> {
             BaseViewController controller = FxUtils.getSelectedTabController();
+            List<String> list = files.stream().map(File::getAbsolutePath).collect(Collectors.toList());
+            log.info("choose multi files: {}", list);
             if (ObjectUtil.isNotNull(controller)) {
                 controller.openMultiFiles(files);
             }
@@ -616,6 +629,7 @@ public class MainController {
     public void openFolder() {
         FxUtils.chooseFolder(folder -> {
             BaseViewController controller = FxUtils.getSelectedTabController();
+            log.info("choose folder: {}", folder.getAbsolutePath());
             if (ObjectUtil.isNotNull(controller)) {
                 controller.openFolder(folder);
             }
@@ -645,6 +659,7 @@ public class MainController {
     }
 
     public void closeAllTab() {
+        log.info("close all tab");
         tabPane.getTabs().clear();
     }
 
@@ -653,6 +668,7 @@ public class MainController {
     }
 
     public void openLog() {
+        log.info("open log file");
         FxUtils.openFile(FileConsts.LOG);
     }
 
@@ -661,27 +677,33 @@ public class MainController {
     }
 
     public void openConfig() {
+        log.info("open config file");
         FinalUtils.openConfig();
     }
 
     public void pluginPane() {
+        log.info("open plugin page");
         Pane pane = FxUtils.loadFxml("/views/PluginManagerView.fxml", false);
         FxDialogs.showDialog("插件面板", pane, null);
     }
 
     public void openPluginFolder() {
+        log.info("open plugin folder");
         FinalUtils.openPluginFolder();
     }
 
     public void openLogFolder() {
+        log.info("open log folder");
         FxUtils.openFile(FileConsts.LOG_FOLDER);
     }
 
     public void openWorkFolder() {
+        log.info("open current work folder");
         FxUtils.openFile(FileUtils.currentWorkDir());
     }
 
     public void seeJavaInfo() {
+        log.info("show java info");
         TextArea area = new TextArea(getAllJavaInfos());
         VBox.setVgrow(area, Priority.ALWAYS);
         VBox box = new VBox(area);
@@ -691,6 +713,7 @@ public class MainController {
     }
 
     public void clearAllFxmlCache() {
+        log.info("close all fxml cache");
         EventCenter.publishEvent(EventCenter.EVENT_CLEAR_FXML_CACHE, DateUtil.date());
         tabPane.getTabs().clear();
         WEB_TOOL_BROWSER_MAP.clear();
@@ -761,6 +784,7 @@ public class MainController {
             if (Objects.isNull(eventHandler)) {
                 FxDialogs.showError("未找到对应的工具！");
             } else {
+                log.info("execute action: {}", keyword);
                 eventHandler.handle(new ActionEvent(keyword, null));
             }
 
@@ -803,6 +827,7 @@ public class MainController {
 
                 key = key.substring(0, key.length() - 1);
                 if (trimmedKeyword.startsWith(key) && Objects.nonNull(entry.getValue())) {
+                    log.info("get pattern[{}] matched action: {}", key, entry.getKey());
                     return entry.getValue();
                 }
             }

@@ -33,6 +33,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class NetworkToolController implements BaseViewController {
 
+    private static final List<Integer> POST_LIST = new ArrayList<>();
+
+    static {
+        for (int i = 1; i <= 65535; i++) {
+            POST_LIST.add(i);
+        }
+    }
+
     @FXML
     public TextField privateIpv4;
 
@@ -47,14 +55,6 @@ public class NetworkToolController implements BaseViewController {
 
     @FXML
     public TextField domainIp;
-
-    private static final List<Integer> POST_LIST = new ArrayList<>();
-
-    static {
-        for (int i = 1; i <= 65535; i++) {
-            POST_LIST.add(i);
-        }
-    }
 
     @FXML
     public TextField ipOfPortScan;
@@ -101,6 +101,7 @@ public class NetworkToolController implements BaseViewController {
         List<Future<Integer>> futureList = ListUtil.split(POST_LIST, 10000).stream().map(ports -> WeUtils.executeAsync(() -> {
             ports.forEach(port -> {
                 try {
+                    log.info("scanning port: {}", port);
                     Socket socket = new Socket();
                     SocketAddress socketAddress = new InetSocketAddress(ip, port);
                     socket.connect(socketAddress, 200);

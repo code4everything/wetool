@@ -114,6 +114,8 @@ public class WeApplication extends Application {
     }
 
     public static void main(String[] args) {
+        log.info("starting wetool on os: {}", SystemUtil.getOsInfo().getName());
+        log.info("default charset: {}", Charset.defaultCharset().name());
         BeanFactory.register(new WeStatus().setState(WeStatus.State.STARTING));
         addShutdownHook();
         boolean debug = BootConfig.isDebug();
@@ -127,9 +129,6 @@ public class WeApplication extends Application {
             }
         }
 
-        log.info("starting wetool on os: {}", SystemUtil.getOsInfo().getName());
-        log.info("default charset: {}", Charset.defaultCharset().name());
-
         parseConfig();
         if (debug) {
             // 因配置文件可能会修改debug mode，所以这里需要确保解析配置文件后debug模式仍然为true
@@ -137,7 +136,7 @@ public class WeApplication extends Application {
             BootConfig.setDebug(true);
         }
         if (BootConfig.isDebug()) {
-            log.info("debug mode enabled");
+            log.info("enable debug mode");
         }
 
         checkAlreadyRunning();
@@ -146,7 +145,9 @@ public class WeApplication extends Application {
     }
 
     private static void addShutdownHook() {
+        log.info("register shutdown hook");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            log.info("shutting down");
             BeanFactory.get(WeStatus.class).setState(WeStatus.State.TERMINATING);
             EventCenter.publishEvent(EventCenter.EVENT_WETOOL_EXIT, DateUtil.date());
             log.info("close druid data source connections");
@@ -160,7 +161,7 @@ public class WeApplication extends Application {
                     shutdown = WeUtils.getThreadPoolExecutor().awaitTermination(1000, TimeUnit.MILLISECONDS);
                 }
                 if (!shutdown) {
-                    log.info("wait for thread pool shutdown expired, force exit thread pool");
+                    log.info("thread pool shutdown expired, force exit");
                     WeUtils.getThreadPoolExecutor().shutdownNow();
                 }
             } catch (Exception e) {
@@ -189,8 +190,10 @@ public class WeApplication extends Application {
                 continue;
             }
             if (StrUtil.containsIgnoreCase(process, "wetool")) {
+                log.info("check process[{}] is running", process);
                 try {
-                    WeStatus.State state = JSON.parseObject(HttpUtil.get("http://127.0.0.1:8189/wetool/status")).getObject("state", WeStatus.State.class);
+                    WeStatus.State state = JSON.parseObject(HttpUtil.get("http://127.0.0.1:8189/wetool/status"), WeStatus.class).getState();
+                    log.info("process[{}] status: {}", process, state.name().toLowerCase());
                     if (state != WeStatus.State.TERMINATING) {
                         log.info("wetool is already running, show wetool now");
                         HttpUtil.get("http://127.0.0.1:8189/wetool/show");
@@ -235,9 +238,10 @@ public class WeApplication extends Application {
     private static void initKeyboardMouseListener() {
         FxUtils.listenKeyEvent();
         if (BooleanUtil.isTrue(WeUtils.getConfig().getDisableKeyboardMouseListener())) {
-            log.info("jnative keyboard mouse listener disabled");
+            log.info("disable jnative keyboard mouse listener");
             if (!SystemUtil.getOsInfo().isMac()) {
                 // 已知Mac平台下不能正常工作
+                log.info("register mouse location listener");
                 EventCenter.on100MsTimer(new MouseLocationListenerEventHandler());
             }
             return;
@@ -248,6 +252,7 @@ public class WeApplication extends Application {
         logger.setLevel(Level.OFF);
         logger.setUseParentHandlers(false);
 
+        log.info("register jnative keyboard mouse listener");
         try {
             GlobalScreen.registerNativeHook();
             GlobalScreen.addNativeKeyListener(new WeKeyboardListener());
@@ -354,12 +359,14 @@ public class WeApplication extends Application {
     }
 
     public static void recoverRootPane() {
+        log.info("recover scene root pane");
         FxUtils.getStage().setTitle(FinalUtils.getAppTitle());
         getRootScene().setRoot(getRootPane());
         FxUtils.getStage().setScene(getRootScene());
     }
 
     private void listenKeyboard() {
+        log.info("add javafx keyboard listener");
         FxUtils.getStage().getScene().addEventFilter(EventType.ROOT, event -> {
             if (event instanceof KeyEvent) {
                 String eventType = event.getEventType().toString();
@@ -384,6 +391,7 @@ public class WeApplication extends Application {
 
     @Override
     public void start(Stage stage) {
+        log.info("starting javafx stage");
         BeanFactory.register(stage);
 
         // 注册并发布秒钟定时器事件
@@ -393,6 +401,7 @@ public class WeApplication extends Application {
         EXECUTOR.scheduleWithFixedDelay(publisher::publishEvent, 0, 1, TimeUnit.SECONDS);
 
         // 加载主界面
+        log.info("loading wetool main fxml");
         Pane root = FxUtils.loadFxml(WeApplication.class, ViewConsts.MAIN, false);
         if (Objects.isNull(root)) {
             FxDialogs.showError(TipConsts.INIT_ERROR);
@@ -461,6 +470,7 @@ public class WeApplication extends Application {
                     FxUtils.openFile(start.getLocation());
                 });
                 menu.add(item);
+                log.info("load quick start tray menu, name: {}, file: {}", start.getAlias(), start.getLocation());
             } else {
                 // 添加父级菜单
                 Menu subMenu = new Menu(start.getAlias());
@@ -474,6 +484,7 @@ public class WeApplication extends Application {
      * 开启系统托盘图标
      */
     private void enableTray(Stage stage) {
+        log.info("enable tray icon");
         try {
             FXTrayIcon icon = new FXTrayIcon(stage, WeApplication.class.getResource(ViewConsts.ICON));
             icon.setApplicationTitle(FinalUtils.getAppTitle());
@@ -498,6 +509,7 @@ public class WeApplication extends Application {
     }
 
     private PopupMenu getPopupMenu() {
+        log.info("add tray popup menu");
         // 添加托盘邮件菜单
         PopupMenu popupMenu = new PopupMenu();
         // 快捷打开

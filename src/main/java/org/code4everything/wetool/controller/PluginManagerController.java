@@ -111,8 +111,10 @@ public class PluginManagerController {
                 return;
             }
             File pluginFolder = WeUtils.getPluginFolder();
+            log.info("downloading plugin from url: {}", url);
             File plugin = HttpUtil.downloadFileFromUrl(url, pluginFolder);
             if (isZip(plugin.getName())) {
+                log.info("unzip plugin file to plugin folder");
                 ZipUtil.unzip(plugin, pluginFolder);
                 try (ZipFile zipFile = new ZipFile(plugin)) {
                     ZipUtil.listFileNames(zipFile, "").forEach(e -> loadPlugin(FileUtil.file(pluginFolder, e)));

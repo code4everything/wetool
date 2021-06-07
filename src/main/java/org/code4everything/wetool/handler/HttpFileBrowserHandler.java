@@ -9,6 +9,7 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.code4everything.wetool.plugin.support.exception.HttpException;
 import org.code4everything.wetool.plugin.support.http.HttpApiHandler;
 import org.code4everything.wetool.plugin.support.http.HttpService;
@@ -26,6 +27,7 @@ import java.util.Objects;
  * @since 2021/4/25
  */
 @Data
+@Slf4j
 public class HttpFileBrowserHandler implements HttpApiHandler {
 
     private final int port;
@@ -56,7 +58,8 @@ public class HttpFileBrowserHandler implements HttpApiHandler {
 
     @Override
     public Object handleApi(HttpRequest httpRequest, FullHttpResponse fullHttpResponse, JSONObject params, JSONObject body) {
-        String filePath = StrUtil.strip(StrUtil.removePrefix(params.get(HttpService.REQ_API_KEY).toString(), patternPrefix), "/");
+        String api = params.get(HttpService.REQ_API_KEY).toString();
+        String filePath = StrUtil.strip(StrUtil.removePrefix(api, patternPrefix), "/");
         String absolutePath = StrUtil.removeSuffix(Paths.get(rootPath, filePath.split("/")).toAbsolutePath().normalize().toString(), File.separator);
         File file = FileUtil.file(absolutePath);
 
@@ -65,7 +68,8 @@ public class HttpFileBrowserHandler implements HttpApiHandler {
         }
 
         if (file.isDirectory()) {
-            StringBuilder sb = getFileListHtml(filePath, absolutePath, file);
+            log.info("response folder children: {}", file.getAbsolutePath());
+            StringBuilder sb = getFileListHtml(filePath, file);
             return Https.responseHtml(fullHttpResponse, sb.toString());
         }
         if (params.containsKey("download") || params.containsKey("dl")) {
@@ -74,11 +78,11 @@ public class HttpFileBrowserHandler implements HttpApiHandler {
         return Https.responseMedia(fullHttpResponse, absolutePath);
     }
 
-    private StringBuilder getFileListHtml(String filePath, String absolutePath, File file) {
+    private StringBuilder getFileListHtml(String filePath, File file) {
         StringBuilder sb = new StringBuilder("<!DOCTYPE html><html><head><meta charset='utf-8'><title>静态文件浏览服务</title></head><body>");
         sb.append("<h1>当前文件夹：").append(StrUtil.emptyToDefault(filePath, "根目录")).append("</h1><hr/><br/><pre>");
 
-        if (!absolutePath.equals(rootPath)) {
+        if (!file.getAbsolutePath().equals(rootPath)) {
             String parentUrl = urlPrefix + StrUtil.removePrefix(file.getParent(), rootPath).replace('\\', '/');
             sb.append("<a href='").append(parentUrl).append("/'>上一级</a><br/><br/>");
         }
@@ -121,6 +125,7 @@ public class HttpFileBrowserHandler implements HttpApiHandler {
     }
 
     public void export() {
+        log.info("export http file browser, port {}, api-pattern {}, root-path {}", port, apiPattern, rootPath);
         HttpService.exportHttp(port, apiPattern, this);
     }
 

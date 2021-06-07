@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.code4everything.boot.base.FileUtils;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
 import org.code4everything.wetool.plugin.support.exception.ToDialogException;
@@ -33,15 +34,18 @@ import java.util.stream.Collectors;
  * @author pantao
  * @since 2020/11/30
  */
+@Slf4j
 public class UpdateService {
 
     public void checkUpdate() {
+        log.info("get version info to check update");
         String history = HttpUtil.get("https://gitee.com/code4everything/wetool/raw/master/history.md");
         if (StrUtil.isEmpty(history)) {
             throw ToDialogException.ofError("网络异常");
         }
 
         VersionInfo versionInfo = getNewestVersionInfo(history);
+        log.info("current version: {}, get new version: {}", AppConsts.CURRENT_VERSION, versionInfo.toString());
         if (Objects.isNull(versionInfo) || AppConsts.CURRENT_VERSION.equals(versionInfo.getVersion())) {
             throw ToDialogException.ofInfo("当前已是最新版");
         }
@@ -73,6 +77,7 @@ public class UpdateService {
     }
 
     public void update(String downloadUrl) {
+        log.info("update to new version");
         File downloadHome = FileUtil.file(FileUtil.getUserHomePath(), "Downloads");
         File file = HttpUtil.downloadFileFromUrl(downloadUrl, downloadHome);
 
@@ -83,6 +88,7 @@ public class UpdateService {
         OsInfo osInfo = SystemUtil.getOsInfo();
         String jarName = null;
 
+        log.info("replace wetool jar file");
         if (osInfo.isWindows()) {
             jarName = "wetool-win.jar";
             String newJar = FileUtil.file(wetool.getAbsolutePath(), jarName).getAbsolutePath();

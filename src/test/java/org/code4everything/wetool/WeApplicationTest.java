@@ -2,8 +2,6 @@ package org.code4everything.wetool;
 
 import org.code4everything.boot.config.BootConfig;
 import org.code4everything.wetool.plugin.support.http.HttpService;
-import org.code4everything.wetool.plugin.support.util.WeUtils;
-import org.slf4j.MDC;
 
 /**
  * @author pantao

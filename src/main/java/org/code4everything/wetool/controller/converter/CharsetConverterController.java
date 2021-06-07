@@ -133,7 +133,9 @@ public class CharsetConverterController extends AbstractConverter {
         FxUtils.chooseFile(file -> {
             // 设置文件路径
             filePath.setText(file.getAbsolutePath());
-            fileCharset.setText(EncodingDetect.getJavaEncode(file.getAbsolutePath()));
+            String charset = EncodingDetect.getJavaEncode(file.getAbsolutePath());
+            log.info("recognize file[{}] charset: {}", file.getAbsolutePath(), charset);
+            fileCharset.setText(charset);
         });
     }
 
@@ -157,6 +159,7 @@ public class CharsetConverterController extends AbstractConverter {
         if (file.exists()) {
             String content = FileUtil.readString(file, fileCharset.getText());
             Charset charset = Charset.forName(targetCharset.getValue());
+            log.info("convert file[{}] to charset: {}", file.getAbsolutePath(), charset.name());
             FileUtil.writeString(content, file, charset);
             fileCharset.setText(charset.toString());
         }
@@ -189,6 +192,7 @@ public class CharsetConverterController extends AbstractConverter {
                 if (file.isFile()) {
                     String srcCharset = EncodingDetect.getJavaEncode(file.getAbsolutePath());
                     FileUtil.writeString(FileUtil.readString(file, srcCharset), file, charset);
+                    log.info("convert file[{}] to charset: {}", file.getAbsolutePath(), charset.name());
                 }
                 if (file.isDirectory()) {
                     File[] fileArr = file.listFiles();

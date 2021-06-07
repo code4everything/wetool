@@ -5,7 +5,11 @@ import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.*;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.BooleanUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.alibaba.fastjson.JSON;
@@ -34,7 +38,12 @@ import org.code4everything.wetool.plugin.support.util.FxUtils;
 import org.code4everything.wetool.plugin.support.util.WeUtils;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -137,6 +146,7 @@ public final class PluginLoader {
             // 包装成 JarFile
             try (JarFile jar = new JarFile(file)) {
                 // 读取插件信息
+                log.info("prepare plugin: {}", file.getAbsolutePath());
                 ZipEntry entry = jar.getEntry("plugin.json");
                 if (Objects.isNull(entry)) {
                     log.error(StrUtil.format("plugin {} load failed: {}", file.getName(), "plugin.json not found"));
@@ -256,6 +266,7 @@ public final class PluginLoader {
         Iterator<Map.Entry<String, WePlugin>> iterator = PREPARED_PLUGINS.entrySet().iterator();
         while (iterator.hasNext()) {
             WePlugin plugin = iterator.next().getValue();
+            log.info("loading plugin from prepared: {}", plugin.toJsonString());
             try {
                 // 加载插件类
                 plugin.getClassLoader().addJar(plugin.getJarFile());
