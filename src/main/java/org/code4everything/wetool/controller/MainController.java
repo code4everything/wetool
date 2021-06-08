@@ -50,6 +50,7 @@ import org.code4everything.wetool.constant.TipConsts;
 import org.code4everything.wetool.constant.TitleConsts;
 import org.code4everything.wetool.constant.ViewConsts;
 import org.code4everything.wetool.handler.MouseMotionEventHandler;
+import org.code4everything.wetool.logback.AppNameConverter;
 import org.code4everything.wetool.plugin.PluginLoader;
 import org.code4everything.wetool.plugin.support.BaseViewController;
 import org.code4everything.wetool.plugin.support.config.WeConfig;
@@ -219,6 +220,7 @@ public class MainController {
         multiDesktopOnWindows();
 
         registerActions();
+        AppNameConverter.registerToFunctionCenter();
         WeUtils.execute(PluginLoader::loadPlugins);
         BeanFactory.get(WeStatus.class).setState(WeStatus.State.RUNNING);
     }
