@@ -1,7 +1,7 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="org.code4everything.wetool.logback.ExtendedPatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%pid] [%thread] %5p %c{0}:%L - %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%pid] [%app] [%thread] %5p %c{0}:%L - %m%n</pattern>
         </encoder>
     </appender>
 

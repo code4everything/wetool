@@ -15,6 +15,7 @@ public class ExtendedPatternLayoutEncoder extends PatternLayoutEncoder {
     public void start() {
         log.info("register logback pid converter");
         PatternLayout.defaultConverterMap.put("pid", PidConverter.class.getName());
+        PatternLayout.defaultConverterMap.put("app", AppNameConverter.class.getName());
         super.start();
     }
 }

@@ -10,10 +10,10 @@ import org.code4everything.wetool.plugin.support.util.WeUtils;
  */
 public class PidConverter extends ClassicConverter {
 
-    private static final String pid = String.valueOf(WeUtils.getCurrentPid());
+    private static final String PID = String.valueOf(WeUtils.getCurrentPid());
 
     @Override
     public String convert(ILoggingEvent iLoggingEvent) {
-        return pid;
+        return PID;
     }
 }

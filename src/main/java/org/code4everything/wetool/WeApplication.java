@@ -391,6 +391,7 @@ public class WeApplication extends Application {
 
     @Override
     public void start(Stage stage) {
+        Thread.currentThread().setName("javafx");
         log.info("starting javafx stage");
         BeanFactory.register(stage);
 

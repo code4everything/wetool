@@ -26,8 +26,8 @@ import org.code4everything.boot.config.BootConfig;
 import org.code4everything.wetool.WeApplication;
 import org.code4everything.wetool.constant.FileConsts;
 import org.code4everything.wetool.controller.MainController;
+import org.code4everything.wetool.logback.AppNameConverter;
 import org.code4everything.wetool.plugin.support.WePluginSupporter;
-import org.code4everything.wetool.plugin.support.config.WeConfig;
 import org.code4everything.wetool.plugin.support.config.WePluginConfig;
 import org.code4everything.wetool.plugin.support.config.WePluginInfo;
 import org.code4everything.wetool.plugin.support.constant.AppConsts;
@@ -57,8 +57,6 @@ import java.util.zip.ZipEntry;
 public final class PluginLoader {
 
     private static final Set<WePlugin> LOADED_PLUGINS = new ConcurrentHashSet<>();
-
-    private static final WeConfig CONFIG = WeUtils.getConfig();
 
     private static final Map<String, WePlugin> PREPARED_PLUGINS = new ConcurrentHashMap<>();
 
@@ -266,16 +264,18 @@ public final class PluginLoader {
         Iterator<Map.Entry<String, WePlugin>> iterator = PREPARED_PLUGINS.entrySet().iterator();
         while (iterator.hasNext()) {
             WePlugin plugin = iterator.next().getValue();
+            WePluginInfo pluginInfo = plugin.getPluginInfo();
             log.info("loading plugin from prepared: {}", plugin.toJsonString());
             try {
                 // 加载插件类
                 plugin.getClassLoader().addJar(plugin.getJarFile());
-                Class<?> clazz = plugin.getClassLoader().loadClass(plugin.getPluginInfo().getSupportedClass());
+                Class<?> clazz = plugin.getClassLoader().loadClass(pluginInfo.getSupportedClass());
                 WePluginSupporter supporter = (WePluginSupporter) ReflectUtil.newInstance(clazz);
                 // 添加插件菜单
-                if (registerPlugin(plugin.getPluginInfo(), supporter)) {
+                if (registerPlugin(pluginInfo, supporter)) {
                     LOADED_PLUGINS.add(plugin);
                 }
+                AppNameConverter.putName(supporter.getClass().getPackageName(), pluginInfo.getAuthor() + "-" + pluginInfo.getName());
             } catch (Exception e) {
                 FxDialogs.showException("plugin file load failed: " + plugin.getJarFile().getName(), e);
             }
@@ -301,7 +301,8 @@ public final class PluginLoader {
     }
 
     private static boolean isDisabled(WePluginInfo pluginInfo) {
-        for (WePluginInfo disableInfo : CONFIG.getPluginDisables()) {
+        Set<WePluginInfo> pluginDisables = WeUtils.getConfig().getPluginDisables();
+        for (WePluginInfo disableInfo : pluginDisables) {
             // @formatter:off
             boolean disabled = (StrUtil.isEmpty(disableInfo.getAuthor()) || disableInfo.getAuthor().equals(pluginInfo.getAuthor()))
                     && (StrUtil.isEmpty(disableInfo.getName()) || disableInfo.getName().equals(pluginInfo.getName()))
