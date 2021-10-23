@@ -11,6 +11,7 @@ import org.jnativehook.mouse.NativeMouseEvent;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author pantao
@@ -50,17 +51,24 @@ public class MouseMotionEventHandler extends BaseMouseEventHandler {
         lastPosX = posX;
         lastPosY = posY;
 
-        MouseCornerEventMessage message = null;
-        if (posX == 0 && posY == 0) {
-            message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.LEFT_TOP, posX, posY);
-        } else if (posX == 0 && posY >= HEIGHT) {
-            message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.LEFT_BOTTOM, posX, posY);
-        } else if (posY == 0 && posX >= WIDTH) {
-            message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.RIGHT_TOP, posX, posY);
-        } else if (posX >= WIDTH && posY >= HEIGHT) {
-            message = MouseCornerEventMessage.of(MouseCornerEventMessage.LocationTypeEnum.RIGHT_BOTTOM, posX, posY);
+        MouseCornerEventMessage.LocationTypeEnum event = null;
+        if (posX == 0) {
+            if (posY == 0) {
+                event = MouseCornerEventMessage.LocationTypeEnum.LEFT_TOP;
+            } else if (posY >= HEIGHT) {
+                event = MouseCornerEventMessage.LocationTypeEnum.LEFT_BOTTOM;
+            } else {
+                event = MouseCornerEventMessage.LocationTypeEnum.LEFT_SIDE;
+            }
+        } else if (posY == 0) {
+            event = posX > WIDTH ? MouseCornerEventMessage.LocationTypeEnum.RIGHT_TOP : MouseCornerEventMessage.LocationTypeEnum.TOP_LINE;
+        } else if (posX > WIDTH) {
+            event = posY > HEIGHT ? MouseCornerEventMessage.LocationTypeEnum.RIGHT_BOTTOM : MouseCornerEventMessage.LocationTypeEnum.RIGHT_SIDE;
+        } else if (posY > HEIGHT) {
+            event = MouseCornerEventMessage.LocationTypeEnum.BOTTOM_LINE;
         }
 
+        MouseCornerEventMessage message = Optional.ofNullable(event).map(e -> MouseCornerEventMessage.of(e, posX, posY)).orElse(null);
         if (Objects.nonNull(message)) {
             EventCenter.publishEvent(EventCenter.EVENT_MOUSE_CORNER_TRIGGER, now, message);
             lastEventTimestamp = timestamp;

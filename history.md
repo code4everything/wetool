@@ -11,6 +11,7 @@
 - 支持HTTP文件上传
 - 仅支持单实例运行
 - 支持添加网页工具
+- 新增屏幕四周触发事件
 
 #### [v1.5.0](http://share.qiniu.easepan.xyz/tool/wetool/wetool-1.5.0.zip)
 
